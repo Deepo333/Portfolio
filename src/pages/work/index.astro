@@ -1,0 +1,150 @@
+---
+/*
+ * Work Samples hub. The title, intro, and category list come from
+ * content/pages/work.md. Each card is a file in content/work/.
+ */
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import WorkCard from '../../components/WorkCard.astro';
+import { getCategories, getPage, getWorkSamples } from '../../lib/content';
+
+const page = await getPage('work');
+const { Content } = await render(page);
+const samples = await getWorkSamples();
+const groups = (await getCategories())
+  .map((category) => ({
+    ...category,
+    samples: samples.filter((sample) => sample.data.category === category.name),
+  }))
+  .filter((group) => group.samples.length > 0);
+---
+
+<BaseLayout title={page.data.title} description={page.data.description}>
+  <header class="page-header container">
+    <h1>{page.data.title}</h1>
+    <div class="lead prose">
+      <Content />
+    </div>
+
+    <nav class="jump-nav" aria-label="Categories">
+      <ul>
+        {
+          groups.map((group) => (
+            <li>
+              <a href={`#${group.slug}`}>
+                {group.name}
+                <span class="count">{group.samples.length}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </header>
+
+  {
+    groups.map((group) => (
+      <section class="category container" id={group.slug} aria-labelledby={`${group.slug}-heading`}>
+        <div class="category-heading">
+          <h2 id={`${group.slug}-heading`}>{group.name}</h2>
+          <p>{group.description}</p>
+        </div>
+        <div class="category-grid">
+          {group.samples.map((sample) => (
+            <WorkCard sample={sample} showCategory={false} />
+          ))}
+        </div>
+      </section>
+    ))
+  }
+</BaseLayout>
+
+<style>
+  .jump-nav {
+    margin-top: 2rem;
+  }
+
+  .jump-nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .jump-nav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 40px;
+    padding: 0.4rem 0.6rem 0.4rem 1rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    color: var(--text);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition:
+      border-color 0.15s ease,
+      background-color 0.15s ease;
+  }
+
+  .jump-nav a:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .count {
+    display: inline-grid;
+    place-items: center;
+    min-width: 1.5rem;
+    height: 1.5rem;
+    padding-inline: 0.4rem;
+    border-radius: 999px;
+    background: var(--bg-subtle);
+    color: var(--text-muted);
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .category {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr);
+    gap: 1.5rem clamp(2rem, 5vw, 4rem);
+    align-items: start;
+    padding-block: clamp(2.5rem, 6vw, 4rem);
+    border-top: 1px solid var(--border);
+  }
+
+  .category-heading {
+    position: sticky;
+    top: calc(var(--header-height) + 2rem);
+  }
+
+  .category-heading h2 {
+    font-size: clamp(1.375rem, 2.6vw, 1.625rem);
+  }
+
+  .category-heading p {
+    margin-top: 0.5rem;
+    color: var(--text-muted);
+    font-size: 0.96875rem;
+  }
+
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+    gap: clamp(1.25rem, 3vw, 2rem);
+  }
+
+  @media (max-width: 860px) {
+    .category {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .category-heading {
+      position: static;
+    }
+  }
+</style>

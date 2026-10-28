@@ -1,0 +1,69 @@
+---
+interface Props {
+  settings: {
+    name: string;
+    email: string;
+    linkedin: string;
+    sourceCode?: string;
+  };
+}
+
+const { settings } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <p class="copyright">© {year} {settings.name}</p>
+    <ul class="footer-links">
+      <li><a href={`mailto:${settings.email}`}>Email</a></li>
+      <li><a href={settings.linkedin} rel="me noopener" target="_blank">LinkedIn</a></li>
+      {
+        settings.sourceCode && (
+          <li>
+            <a href={settings.sourceCode} rel="noopener" target="_blank">
+              Built as docs-as-code
+            </a>
+          </li>
+        )
+      }
+    </ul>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: clamp(3rem, 8vw, 5rem);
+    border-top: 1px solid var(--border);
+    color: var(--text-subtle);
+    font-size: 0.9375rem;
+  }
+
+  .footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    padding-block: 2rem;
+  }
+
+  .footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .footer-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+
+  .footer-links a:hover {
+    color: var(--text);
+    text-decoration: underline;
+  }
+</style>

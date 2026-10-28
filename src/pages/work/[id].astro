@@ -1,0 +1,401 @@
+---
+/*
+ * Template for every work sample detail page.
+ * One page is created for each file in content/work/. The file name becomes
+ * the web address: content/work/onboarding-guide.md -> /work/onboarding-guide/
+ */
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PdfViewer from '../../components/PdfViewer.astro';
+import {
+  categoryHref,
+  formatDate,
+  getWorkSamples,
+  url,
+  type WorkSample,
+} from '../../lib/content';
+
+export async function getStaticPaths() {
+  const samples = await getWorkSamples();
+  return samples.map((sample, index) => ({
+    params: { id: sample.id },
+    props: {
+      sample,
+      newer: samples[index - 1],
+      older: samples[index + 1],
+    },
+  }));
+}
+
+interface Props {
+  sample: WorkSample;
+  newer?: WorkSample;
+  older?: WorkSample;
+}
+
+const { sample, newer, older } = Astro.props;
+const { title, summary, category, date, role, audience, tools, pdf, images, link } = sample.data;
+const { Content, headings } = await render(sample);
+
+const hasSample = Boolean(pdf || images.length > 0 || link);
+const toc = [
+  ...headings.filter((heading) => heading.depth === 2),
+  ...(hasSample ? [{ slug: 'the-sample', text: 'The sample' }] : []),
+];
+
+const facts = [
+  { label: 'Category', value: category },
+  { label: 'My role', value: role },
+  { label: 'Audience', value: audience },
+  { label: 'Tools', value: tools.join(', ') },
+  { label: 'Date', value: formatDate(date) },
+].filter((fact) => fact.value);
+---
+
+<BaseLayout title={title} description={summary}>
+  <article>
+    <header class="page-header container detail-header">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href={url('/work/')}>Work samples</a></li>
+          <li><a href={categoryHref(category)}>{category}</a></li>
+        </ol>
+      </nav>
+      <h1>{title}</h1>
+      <p class="lead">{summary}</p>
+    </header>
+
+    <div class="container detail-layout">
+      <aside class="detail-aside">
+        <dl class="facts">
+          {
+            facts.map((fact) => (
+              <div>
+                <dt>{fact.label}</dt>
+                <dd>{fact.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+
+        {
+          toc.length > 1 && (
+            <nav class="toc" aria-label="On this page">
+              <p class="toc-title">On this page</p>
+              <ul>
+                {toc.map((heading) => (
+                  <li>
+                    <a href={`#${heading.slug}`}>{heading.text}</a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )
+        }
+      </aside>
+
+      <div class="detail-main">
+        <div class="prose">
+          <Content />
+        </div>
+
+        {
+          hasSample && (
+            <section class="sample" aria-labelledby="the-sample">
+              <h2 id="the-sample">The sample</h2>
+
+              {pdf && <PdfViewer src={pdf} title={title} />}
+
+              {images.length > 0 && (
+                <div class="gallery">
+                  {images.map((image) => (
+                    <figure>
+                      <a href={image.src.src} target="_blank" rel="noopener">
+                        <Image
+                          src={image.src}
+                          alt={image.alt}
+                          widths={[640, 1024, 1600]}
+                          sizes="(max-width: 1120px) 100vw, 760px"
+                        />
+                        <span class="visually-hidden">(opens full size in a new tab)</span>
+                      </a>
+                      {image.caption && <figcaption>{image.caption}</figcaption>}
+                    </figure>
+                  ))}
+                </div>
+              )}
+
+              {link && (
+                <p class="external">
+                  <a class="button button-secondary" href={link.url} target="_blank" rel="noopener">
+                    {link.label}
+                    <svg viewBox="0 0 16 16" aria-hidden="true">
+                      <path d="M6 3h7v7M13 3 4 12" />
+                    </svg>
+                  </a>
+                </p>
+              )}
+            </section>
+          )
+        }
+      </div>
+    </div>
+
+    <nav class="container pager" aria-label="More work samples">
+      {
+        newer && (
+          <a class="pager-link" href={url(`/work/${newer.id}/`)} rel="prev">
+            <span class="pager-label">← Previous</span>
+            <span class="pager-title">{newer.data.title}</span>
+          </a>
+        )
+      }
+      {
+        older && (
+          <a class="pager-link next" href={url(`/work/${older.id}/`)} rel="next">
+            <span class="pager-label">Next →</span>
+            <span class="pager-title">{older.data.title}</span>
+          </a>
+        )
+      }
+    </nav>
+  </article>
+</BaseLayout>
+
+<style>
+  .detail-header {
+    padding-bottom: clamp(2rem, 5vw, 3rem);
+  }
+
+  .detail-header h1 {
+    max-width: 22ch;
+  }
+
+  .breadcrumb ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0 0 1.25rem;
+    padding: 0;
+    list-style: none;
+    font-size: 0.875rem;
+  }
+
+  .breadcrumb li + li::before {
+    content: '/';
+    margin-right: 0.5rem;
+    color: var(--text-subtle);
+  }
+
+  .breadcrumb a {
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    color: var(--accent);
+  }
+
+  .detail-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 260px;
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: start;
+    padding-top: clamp(2rem, 5vw, 3rem);
+    border-top: 1px solid var(--border);
+  }
+
+  .detail-aside {
+    grid-column: 2;
+    grid-row: 1;
+    position: sticky;
+    top: calc(var(--header-height) + 2rem);
+    display: grid;
+    gap: 2rem;
+  }
+
+  .detail-main {
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
+  }
+
+  .facts {
+    display: grid;
+    gap: 1rem;
+    margin: 0;
+  }
+
+  .facts dt {
+    color: var(--text-subtle);
+    font-size: 0.8125rem;
+    font-weight: 500;
+  }
+
+  .facts dd {
+    margin: 0.15rem 0 0;
+    font-size: 0.9375rem;
+    font-weight: 500;
+  }
+
+  .toc {
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .toc-title {
+    margin-bottom: 0.75rem;
+    color: var(--text-subtle);
+    font-size: 0.8125rem;
+    font-weight: 500;
+  }
+
+  .toc ul {
+    display: grid;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .toc a {
+    display: block;
+    padding: 0.2rem 0 0.2rem 0.75rem;
+    border-left: 2px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.9375rem;
+    text-decoration: none;
+  }
+
+  .toc a:hover {
+    border-left-color: var(--accent);
+    color: var(--text);
+  }
+
+  .sample {
+    margin-top: clamp(3rem, 7vw, 4.5rem);
+  }
+
+  .sample h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+  }
+
+  .gallery {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .gallery + .external,
+  :global(.pdf-viewer) + .gallery,
+  :global(.pdf-viewer) + .external {
+    margin-top: 2rem;
+  }
+
+  .gallery figure {
+    margin: 0;
+  }
+
+  .gallery a {
+    display: block;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+  }
+
+  .gallery img {
+    width: 100%;
+  }
+
+  .gallery figcaption {
+    margin-top: 0.75rem;
+    color: var(--text-muted);
+    font-size: 0.9375rem;
+  }
+
+  .external svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: clamp(3rem, 8vw, 5rem);
+  }
+
+  .pager-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    color: var(--text);
+    text-decoration: none;
+    transition: border-color 0.15s ease;
+  }
+
+  .pager-link:hover {
+    border-color: var(--accent);
+    color: var(--text);
+  }
+
+  .pager-link.next {
+    grid-column: 2;
+    text-align: right;
+  }
+
+  .pager-label {
+    color: var(--text-subtle);
+    font-size: 0.875rem;
+  }
+
+  .pager-title {
+    font-weight: 600;
+  }
+
+  @media (max-width: 900px) {
+    .detail-layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .detail-aside,
+    .detail-main {
+      grid-column: 1;
+      grid-row: auto;
+    }
+
+    .detail-aside {
+      position: static;
+    }
+
+    .facts {
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      padding: 1.25rem;
+      border-radius: var(--radius);
+      background: var(--bg-subtle);
+    }
+
+    .toc {
+      display: none;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .pager {
+      grid-template-columns: 1fr;
+    }
+
+    .pager-link.next {
+      grid-column: 1;
+    }
+  }
+</style>

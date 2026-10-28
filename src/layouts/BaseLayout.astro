@@ -1,0 +1,57 @@
+---
+import '@fontsource-variable/inter';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { getSettings, url } from '../lib/content';
+
+interface Props {
+  /** Shown in the browser tab, before your name. Leave empty on the home page. */
+  title?: string;
+  /** Short summary for search engines and link previews. */
+  description?: string;
+}
+
+const settings = await getSettings();
+const { title, description = settings.description } = Astro.props;
+const pageTitle = title ? `${title} | ${settings.name}` : `${settings.name} | ${settings.role}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
+    <meta name="generator" content={Astro.generator} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0c0c10" media="(prefers-color-scheme: dark)" />
+
+    <script is:inline>
+      // Apply the saved light/dark choice before the page draws, to avoid a flash.
+      try {
+        const theme = localStorage.getItem('theme');
+        if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Header name={settings.name} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer settings={settings} />
+  </body>
+</html>

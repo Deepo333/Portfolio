@@ -1,0 +1,260 @@
+---
+import { url } from '../lib/content';
+
+interface Props {
+  name: string;
+}
+
+const { name } = Astro.props;
+
+// The links in the top navigation bar, in order.
+const links = [
+  { label: 'Work samples', href: '/work/' },
+  { label: 'About', href: '/about/' },
+  { label: 'Résumé', href: '/resume/' },
+  { label: 'Contact', href: '/contact/' },
+];
+
+const current = Astro.url.pathname.replace(/\/?$/, '/');
+const isActive = (href: string) => current.startsWith(url(href));
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="wordmark" href={url('/')}>{name}</a>
+
+    <nav class="site-nav" aria-label="Main">
+      <button
+        class="icon-button menu-button"
+        type="button"
+        aria-expanded="false"
+        aria-controls="nav-links"
+      >
+        <span class="visually-hidden">Menu</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-open">
+          <path d="M4 7h16M4 12h16M4 17h16" />
+        </svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-close">
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+
+      <ul id="nav-links" class="nav-links">
+        {
+          links.map((link) => (
+            <li>
+              <a href={url(link.href)} aria-current={isActive(link.href) ? 'page' : undefined}>
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <button class="icon-button theme-toggle" type="button" aria-label="Switch to dark mode">
+      <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-moon">
+        <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" />
+      </svg>
+      <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-sun">
+        <circle cx="12" cy="12" r="4" />
+        <path
+          d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+        />
+      </svg>
+    </button>
+  </div>
+</header>
+
+<script>
+  const root = document.documentElement;
+  const toggle = document.querySelector<HTMLButtonElement>('.theme-toggle');
+  const dark = window.matchMedia('(prefers-color-scheme: dark)');
+
+  const isDark = () => (root.dataset.theme ? root.dataset.theme === 'dark' : dark.matches);
+  const updateLabel = () =>
+    toggle?.setAttribute('aria-label', isDark() ? 'Switch to light mode' : 'Switch to dark mode');
+
+  updateLabel();
+  dark.addEventListener('change', updateLabel);
+  toggle?.addEventListener('click', () => {
+    const next = isDark() ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try {
+      localStorage.setItem('theme', next);
+    } catch {}
+    updateLabel();
+  });
+
+  const menuButton = document.querySelector<HTMLButtonElement>('.menu-button');
+  menuButton?.addEventListener('click', () => {
+    const open = menuButton.getAttribute('aria-expanded') !== 'true';
+    menuButton.setAttribute('aria-expanded', String(open));
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && menuButton?.getAttribute('aria-expanded') === 'true') {
+      menuButton.setAttribute('aria-expanded', 'false');
+      menuButton.focus();
+    }
+  });
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: saturate(180%) blur(14px);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    height: var(--header-height);
+  }
+
+  .wordmark {
+    margin-right: auto;
+    color: var(--text);
+    font-weight: 650;
+    font-size: 1.0625rem;
+    letter-spacing: -0.015em;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .wordmark:hover {
+    color: var(--text);
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nav-links a {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    border-radius: 999px;
+    color: var(--text-muted);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition:
+      color 0.15s ease,
+      background-color 0.15s ease;
+  }
+
+  .nav-links a:hover {
+    color: var(--text);
+    background: var(--bg-subtle);
+  }
+
+  .nav-links a[aria-current='page'] {
+    color: var(--text);
+    background: var(--bg-subtle);
+  }
+
+  .icon-button {
+    display: inline-grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    background: none;
+    color: var(--text-muted);
+    cursor: pointer;
+  }
+
+  .icon-button:hover {
+    color: var(--text);
+    background: var(--bg-subtle);
+  }
+
+  .icon-button svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .icon-sun,
+  :global(:root[data-theme='dark']) .icon-moon {
+    display: none;
+  }
+
+  :global(:root[data-theme='dark']) .icon-sun {
+    display: block;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme='light'])) .icon-moon {
+      display: none;
+    }
+
+    :global(:root:not([data-theme='light'])) .icon-sun {
+      display: block;
+    }
+  }
+
+  .menu-button {
+    display: none;
+  }
+
+  @media (max-width: 720px) {
+    .site-nav {
+      order: 2;
+    }
+
+    .menu-button {
+      display: inline-grid;
+    }
+
+    .menu-button .icon-close,
+    .menu-button[aria-expanded='true'] .icon-open {
+      display: none;
+    }
+
+    .menu-button[aria-expanded='true'] .icon-close {
+      display: block;
+    }
+
+    .nav-links {
+      display: none;
+      position: absolute;
+      top: var(--header-height);
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      padding: 0.5rem var(--gutter) 1rem;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .menu-button[aria-expanded='true'] + .nav-links {
+      display: flex;
+    }
+
+    .nav-links a {
+      padding: 0.875rem 0.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 1.0625rem;
+    }
+  }
+</style>

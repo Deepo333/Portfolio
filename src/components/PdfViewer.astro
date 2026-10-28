@@ -1,0 +1,105 @@
+---
+import { url } from '../lib/content';
+
+interface Props {
+  /** Path to a PDF in the public/ folder, such as "/files/resume.pdf". */
+  src: string;
+  /** Describes the PDF for screen readers, such as "Résumé". */
+  title: string;
+  /** Name for the downloaded file. Defaults to the file's own name. */
+  downloadName?: string;
+}
+
+const { src, title, downloadName } = Astro.props;
+const href = url(src);
+const fileName = downloadName ?? src.split('/').pop();
+---
+
+<figure class="pdf-viewer">
+  <div class="toolbar">
+    <span class="file">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path>
+        <path d="M14 3v5h5"></path>
+      </svg>
+      {fileName}
+    </span>
+    <span class="actions">
+      <a class="button button-secondary small" href={href} target="_blank" rel="noopener">
+        Open
+        <span class="visually-hidden">{title} (PDF) in a new tab</span>
+      </a>
+      <a class="button button-primary small" href={href} download={fileName}>
+        Download
+        <span class="visually-hidden">{title} (PDF)</span>
+      </a>
+    </span>
+  </div>
+  <iframe src={`${href}#view=FitH`} title={`${title} (PDF)`} loading="lazy"></iframe>
+</figure>
+
+<style>
+  .pdf-viewer {
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--bg-subtle);
+  }
+
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.75rem 0.75rem 0.75rem 1rem;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .file {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+    overflow-wrap: anywhere;
+  }
+
+  .file svg {
+    width: 18px;
+    height: 18px;
+    flex: none;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linejoin: round;
+  }
+
+  .actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .small {
+    min-height: 36px;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.875rem;
+  }
+
+  iframe {
+    width: 100%;
+    height: min(85vh, 1000px);
+    border: 0;
+    background: var(--bg-subtle);
+  }
+
+  @media (max-width: 720px) {
+    iframe {
+      height: 70vh;
+    }
+  }
+</style>

@@ -1,0 +1,76 @@
+# Builds the site and publishes it to GitHub Pages.
+#
+# - Every pull request: builds the site to check for mistakes (nothing is published).
+# - Every push or merge into main: builds the site and publishes it.
+#
+# The published files are stored on the "gh-pages" branch, which GitHub Pages
+# serves. That branch is generated automatically; never edit it by hand.
+
+name: Build and publish site
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Never run two publishes at the same time.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Work out the site's web address
+        run: |
+          owner="${GITHUB_REPOSITORY_OWNER,,}"
+          repo="${GITHUB_REPOSITORY#*/}"
+          if [ -f public/CNAME ]; then
+            # A custom domain is set up: the site lives at the root of that domain.
+            echo "SITE_URL=https://$(head -n 1 public/CNAME | tr -d '[:space:]')" >> "$GITHUB_ENV"
+            echo "BASE_PATH=/" >> "$GITHUB_ENV"
+          elif [ "${repo,,}" = "${owner}.github.io" ]; then
+            echo "SITE_URL=https://${owner}.github.io" >> "$GITHUB_ENV"
+            echo "BASE_PATH=/" >> "$GITHUB_ENV"
+          else
+            echo "SITE_URL=https://${owner}.github.io" >> "$GITHUB_ENV"
+            echo "BASE_PATH=/${repo}" >> "$GITHUB_ENV"
+          fi
+
+      - name: Build the site
+        run: npm run build
+
+      - name: Publish to GitHub Pages
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        working-directory: dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          touch .nojekyll
+          git init --quiet --initial-branch gh-pages
+          git add --all
+          git -c user.name="github-actions[bot]" \
+              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit --quiet --message "Publish site from ${GITHUB_SHA::7}"
+          git push --force --quiet \
+            "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" gh-pages
+          echo "Published to ${SITE_URL}${BASE_PATH%/}/" >> "$GITHUB_STEP_SUMMARY"

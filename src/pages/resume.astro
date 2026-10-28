@@ -1,0 +1,64 @@
+---
+/* Résumé page. The words and PDF location come from content/pages/resume.md. */
+import { render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PdfViewer from '../components/PdfViewer.astro';
+import { formatDate, getPage, getSettings, url } from '../lib/content';
+
+const settings = await getSettings();
+const page = await getPage('resume');
+const { Content } = await render(page);
+const { title, description, pdf, updated } = page.data;
+const downloadName = `${settings.name} - Resume.pdf`;
+---
+
+<BaseLayout title={title} description={description}>
+  <header class="page-header container">
+    <h1>{title}</h1>
+    <div class="lead prose">
+      <Content />
+    </div>
+    {
+      pdf && (
+        <div class="button-row">
+          <a class="button button-primary" href={url(pdf)} download={downloadName}>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 4v11M7 10l5 5 5-5M5 20h14" />
+            </svg>
+            Download PDF
+          </a>
+          {updated && <p class="updated">Last updated {formatDate(updated, 'day')}</p>}
+        </div>
+      )
+    }
+  </header>
+
+  {
+    pdf && (
+      <section class="container" aria-label="Résumé preview">
+        <PdfViewer src={pdf} title={title} downloadName={downloadName} />
+      </section>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .button-row {
+    align-items: center;
+    margin-top: 2rem;
+    gap: 1rem 1.5rem;
+  }
+
+  .button svg {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .updated {
+    color: var(--text-subtle);
+    font-size: 0.9375rem;
+  }
+</style>
