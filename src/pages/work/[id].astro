@@ -7,6 +7,7 @@
 import { Image } from 'astro:assets';
 import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
 import PdfViewer from '../../components/PdfViewer.astro';
 import {
   categoryHref,
@@ -102,7 +103,7 @@ const facts = [
 
         {
           hasSample && (
-            <section class="sample" aria-labelledby="the-sample">
+            <section class="sample" aria-labelledby="the-sample" data-reveal>
               <h2 id="the-sample">The sample</h2>
 
               {pdf && <PdfViewer src={pdf} title={title} />}
@@ -130,9 +131,7 @@ const facts = [
                 <p class="external">
                   <a class="button button-secondary" href={link.url} target="_blank" rel="noopener">
                     {link.label}
-                    <svg viewBox="0 0 16 16" aria-hidden="true">
-                      <path d="M6 3h7v7M13 3 4 12" />
-                    </svg>
+                    <Icon name="external" />
                   </a>
                 </p>
               )}
@@ -146,7 +145,7 @@ const facts = [
       {
         newer && (
           <a class="pager-link" href={url(`/work/${newer.id}/`)} rel="prev">
-            <span class="pager-label">← Previous</span>
+            <span class="pager-label">Previous sample</span>
             <span class="pager-title">{newer.data.title}</span>
           </a>
         )
@@ -154,7 +153,7 @@ const facts = [
       {
         older && (
           <a class="pager-link next" href={url(`/work/${older.id}/`)} rel="next">
-            <span class="pager-label">Next →</span>
+            <span class="pager-label">Next sample</span>
             <span class="pager-title">{older.data.title}</span>
           </a>
         )
@@ -169,17 +168,19 @@ const facts = [
   }
 
   .detail-header h1 {
-    max-width: 22ch;
+    max-width: 20ch;
+    font-variation-settings: 'SOFT' 100, 'WONK' 0;
+    font-weight: 450;
   }
 
   .breadcrumb ol {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
-    margin: 0 0 1.25rem;
+    margin: 0 0 1.5rem;
     padding: 0;
     list-style: none;
-    font-size: 0.875rem;
+    font-size: 0.9rem;
   }
 
   .breadcrumb li + li::before {
@@ -193,14 +194,20 @@ const facts = [
     text-decoration: none;
   }
 
+  .breadcrumb li:last-child a {
+    color: var(--sage-text);
+    font-weight: 550;
+  }
+
   .breadcrumb a:hover {
-    color: var(--accent);
+    color: var(--primary);
+    text-decoration: underline;
   }
 
   .detail-layout {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 260px;
-    gap: clamp(2rem, 5vw, 4.5rem);
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: clamp(2rem, 5vw, 5rem);
     align-items: start;
     padding-top: clamp(2rem, 5vw, 3rem);
     border-top: 1px solid var(--border);
@@ -223,8 +230,12 @@ const facts = [
 
   .facts {
     display: grid;
-    gap: 1rem;
+    gap: 1.1rem;
     margin: 0;
+    padding: 1.5rem;
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
   }
 
   .facts dt {
@@ -235,13 +246,10 @@ const facts = [
 
   .facts dd {
     margin: 0.15rem 0 0;
+    color: var(--text);
     font-size: 0.9375rem;
     font-weight: 500;
-  }
-
-  .toc {
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--border);
+    line-height: 1.5;
   }
 
   .toc-title {
@@ -253,7 +261,7 @@ const facts = [
 
   .toc ul {
     display: grid;
-    gap: 0.25rem;
+    gap: 0.15rem;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -261,16 +269,19 @@ const facts = [
 
   .toc a {
     display: block;
-    padding: 0.2rem 0 0.2rem 0.75rem;
-    border-left: 2px solid var(--border);
+    padding: 0.3rem 0 0.3rem 0.9rem;
+    border-left: 1.5px solid var(--border);
     color: var(--text-muted);
     font-size: 0.9375rem;
     text-decoration: none;
+    transition:
+      border-color 0.2s var(--ease),
+      color 0.2s var(--ease);
   }
 
   .toc a:hover {
-    border-left-color: var(--accent);
-    color: var(--text);
+    border-left-color: var(--blush);
+    color: var(--heading);
   }
 
   .sample {
@@ -279,12 +290,12 @@ const facts = [
 
   .sample h2 {
     margin-bottom: 1.5rem;
-    font-size: 1.5rem;
+    font-size: clamp(1.625rem, 3vw, 1.875rem);
   }
 
   .gallery {
     display: grid;
-    gap: 2rem;
+    gap: 2.25rem;
   }
 
   .gallery + .external,
@@ -301,7 +312,13 @@ const facts = [
     display: block;
     overflow: hidden;
     border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.3s var(--ease);
+  }
+
+  .gallery a:hover {
+    box-shadow: var(--shadow);
   }
 
   .gallery img {
@@ -309,43 +326,42 @@ const facts = [
   }
 
   .gallery figcaption {
-    margin-top: 0.75rem;
+    margin-top: 0.85rem;
     color: var(--text-muted);
     font-size: 0.9375rem;
   }
 
-  .external svg {
-    width: 14px;
-    height: 14px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 1.75;
-    stroke-linecap: round;
-    stroke-linejoin: round;
+  .external :global(.icon) {
+    width: 16px;
+    height: 16px;
   }
 
   .pager {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
-    margin-top: clamp(3rem, 8vw, 5rem);
+    padding-block: clamp(3rem, 8vw, 5rem) var(--section-space);
   }
 
   .pager-link {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
-    padding: 1.25rem 1.5rem;
+    gap: 0.3rem;
+    padding: 1.4rem 1.6rem;
+    background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-md);
     color: var(--text);
     text-decoration: none;
-    transition: border-color 0.15s ease;
+    transition:
+      border-color 0.25s var(--ease),
+      transform 0.25s var(--ease);
   }
 
   .pager-link:hover {
-    border-color: var(--accent);
+    border-color: var(--primary);
     color: var(--text);
+    transform: translateY(-2px);
   }
 
   .pager-link.next {
@@ -359,7 +375,10 @@ const facts = [
   }
 
   .pager-title {
-    font-weight: 600;
+    color: var(--heading);
+    font-family: var(--font-serif);
+    font-size: 1.1875rem;
+    font-variation-settings: 'SOFT' 100, 'WONK' 0;
   }
 
   @media (max-width: 900px) {
@@ -379,9 +398,6 @@ const facts = [
 
     .facts {
       grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      padding: 1.25rem;
-      border-radius: var(--radius);
-      background: var(--bg-subtle);
     }
 
     .toc {

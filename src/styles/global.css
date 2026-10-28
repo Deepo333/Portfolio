@@ -1,45 +1,66 @@
 /*
  * Site-wide styles.
  *
- * To change the accent color, edit the two values on the --accent line below:
- * the first is used in light mode, the second in dark mode.
+ * Colors: each line below gives the light-mode color first and the dark-mode
+ * color second. Change a color here and it updates everywhere on the site.
  */
 
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
 
-  --accent: light-dark(#4f46e5, #a5b4fc);
-  --accent-strong: light-dark(#4338ca, #c7d2fe);
-  --accent-soft: light-dark(#eef0ff, rgb(129 140 248 / 0.12));
-  --on-accent: light-dark(#ffffff, #12122a);
+  /* Page and surfaces */
+  --bg: light-dark(#faf7f2, #1f1c19); /* warm ivory / warm soft dark */
+  --surface: light-dark(#ffffff, #28241f); /* cards */
+  --section: light-dark(#ede6db, #2b2622); /* warm sand section backgrounds */
 
-  --bg: light-dark(#ffffff, #0c0c10);
-  --bg-subtle: light-dark(#f7f7f9, #131318);
-  --surface: light-dark(#ffffff, #15151b);
-  --border: light-dark(#e7e7ec, #26262e);
-  --border-strong: light-dark(#d4d4dc, #3a3a44);
-  --text: light-dark(#16161d, #ececf1);
-  --text-muted: light-dark(#55555f, #a3a3ae);
-  --text-subtle: light-dark(#6e6e78, #8b8b96);
-  --shadow-color: light-dark(rgb(16 16 24 / 0.12), rgb(0 0 0 / 0.6));
-  --shadow: 0 1px 2px rgb(16 16 24 / 0.04), 0 12px 32px -16px var(--shadow-color);
+  /* Text */
+  --text: light-dark(#1c1c1e, #f2ede6); /* charcoal */
+  --text-muted: light-dark(#5e5a55, #c4baae);
+  --text-subtle: light-dark(#6f6a64, #a89e92);
+  --heading: light-dark(#1f2a44, #e6e9f2);
 
+  /* Accents */
+  --primary: light-dark(#1f2a44, #b9c4e0); /* deep navy: buttons, links */
+  --primary-hover: light-dark(#2d3c5e, #cdd5ea);
+  --on-primary: light-dark(#ffffff, #1c1c1e);
+  --sage: light-dark(#7d8f76, #a3b49b); /* icons and small highlights */
+  --sage-text: light-dark(#4e5f49, #b5c4ae); /* sage that is dark enough for text */
+  --sage-tint: light-dark(#e8ede5, rgb(163 180 155 / 0.14));
+  --blush: light-dark(#d9b8a8, #c9a493); /* used sparingly */
+  --blush-tint: light-dark(#f5ebe5, rgb(217 184 168 / 0.12));
+
+  /* Lines */
+  --border: light-dark(#e6ded2, #3b352f);
+  --border-strong: light-dark(#d3c9ba, #4d453d);
+
+  --shadow-color: light-dark(rgb(74 56 36 / 0.1), rgb(0 0 0 / 0.45));
+  --shadow-sm: 0 1px 2px light-dark(rgb(74 56 36 / 0.06), rgb(0 0 0 / 0.3));
+  --shadow: 0 1px 2px light-dark(rgb(74 56 36 / 0.05), rgb(0 0 0 / 0.3)),
+    0 14px 36px -18px var(--shadow-color);
+  --shadow-lg: 0 2px 4px light-dark(rgb(74 56 36 / 0.05), rgb(0 0 0 / 0.3)),
+    0 28px 60px -28px var(--shadow-color);
+
+  /* Type */
+  --font-serif: 'Fraunces Variable', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
   --font-mono: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
 
-  --radius-sm: 8px;
-  --radius: 12px;
-  --radius-lg: 16px;
+  /* Shape: larger elements get softer corners */
+  --radius-xs: 8px;
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+  --radius-xl: 36px;
 
-  --page-width: 1120px;
-  --prose-width: 68ch;
-  --gutter: clamp(1rem, 4vw, 2rem);
-  --header-height: 64px;
-}
+  /* Layout */
+  --page-width: 1160px;
+  --prose-width: 66ch;
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+  --header-height: 72px;
+  --section-space: clamp(4.5rem, 10vw, 7.5rem);
 
-:root[data-theme='light'] {
-  color-scheme: light;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 :root[data-theme='dark'] {
@@ -69,8 +90,8 @@ body {
   color: var(--text);
   font-family: var(--font-sans);
   font-size: 1.0625rem;
-  line-height: 1.65;
-  font-feature-settings: 'cv11', 'ss01';
+  line-height: 1.7;
+  font-feature-settings: 'cv11';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -91,23 +112,28 @@ img {
 }
 
 a {
-  color: var(--accent);
+  color: var(--primary);
+  text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
   text-decoration-thickness: 1px;
-  text-underline-offset: 0.2em;
+  text-underline-offset: 0.22em;
+  transition:
+    color 0.2s var(--ease),
+    text-decoration-color 0.2s var(--ease);
 }
 
 a:hover {
-  color: var(--accent-strong);
+  color: var(--primary-hover);
+  text-decoration-color: currentColor;
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--primary);
   outline-offset: 3px;
   border-radius: 4px;
 }
 
 ::selection {
-  background: var(--accent-soft);
+  background: var(--blush-tint);
   color: var(--text);
 }
 
@@ -116,9 +142,13 @@ h2,
 h3,
 h4 {
   margin: 0;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-  font-weight: 650;
+  color: var(--heading);
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-optical-sizing: auto;
+  font-variation-settings: 'SOFT' 60, 'WONK' 0;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
   text-wrap: balance;
 }
 
@@ -145,20 +175,37 @@ p {
   top: -100px;
   z-index: 100;
   padding: 0.5rem 1rem;
-  background: var(--text);
-  color: var(--bg);
-  border-radius: var(--radius-sm);
+  background: var(--primary);
+  color: var(--on-primary);
+  border-radius: var(--radius-xs);
   font-weight: 600;
   text-decoration: none;
 }
 
 .skip-link:focus {
   top: 1rem;
-  color: var(--bg);
+  color: var(--on-primary);
 }
+
+/* ---------- Motion ---------- */
 
 @view-transition {
   navigation: auto;
+}
+
+/* Sections marked data-reveal fade in gently as they scroll into view.
+   The "motion" class is only added when the visitor hasn't asked for reduced motion. */
+.motion [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.8s var(--ease),
+    transform 0.8s var(--ease);
+}
+
+.motion [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -170,6 +217,7 @@ p {
   *::before,
   *::after {
     transition: none !important;
+    animation: none !important;
     scroll-behavior: auto !important;
   }
 }
@@ -183,42 +231,34 @@ p {
   padding-inline: var(--gutter);
 }
 
-.section {
-  padding-block: clamp(3rem, 8vw, 5.5rem);
+.band {
+  padding-block: var(--section-space);
 }
 
-.section + .section {
-  border-top: 1px solid var(--border);
+.band-sand {
+  background: var(--section);
 }
 
 .page-header {
-  padding-block: clamp(3rem, 9vw, 6rem) clamp(2rem, 5vw, 3rem);
+  padding-block: clamp(3.5rem, 9vw, 6.5rem) clamp(2rem, 5vw, 3.5rem);
 }
 
 .page-header h1 {
-  font-size: clamp(2.25rem, 5vw, 3.25rem);
-  letter-spacing: -0.035em;
+  font-size: clamp(2.5rem, 5.5vw, 3.75rem);
+  font-variation-settings: 'SOFT' 100, 'WONK' 0;
+  font-weight: 450;
+  line-height: 1.08;
 }
 
 .page-header .lead {
-  margin-top: 1rem;
+  margin-top: 1.25rem;
   max-width: 60ch;
-}
-
-.eyebrow {
-  display: inline-block;
-  margin-bottom: 0.75rem;
-  color: var(--accent);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
 }
 
 .lead {
   color: var(--text-muted);
   font-size: clamp(1.125rem, 2vw, 1.25rem);
-  line-height: 1.6;
+  line-height: 1.65;
 }
 
 .section-heading {
@@ -226,37 +266,50 @@ p {
   flex-wrap: wrap;
   align-items: end;
   justify-content: space-between;
-  gap: 0.75rem 2rem;
-  margin-bottom: 2rem;
+  gap: 1rem 2.5rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
 }
 
 .section-heading h2 {
-  font-size: clamp(1.5rem, 3vw, 1.875rem);
+  font-size: clamp(2rem, 4vw, 2.75rem);
 }
 
-.section-heading p {
-  margin-top: 0.5rem;
+.section-heading .intro {
+  margin-top: 0.75rem;
+  max-width: 56ch;
   color: var(--text-muted);
-  max-width: 60ch;
 }
 
 .text-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  font-weight: 550;
+  gap: 0.5rem;
+  font-weight: 600;
   text-decoration: none;
   white-space: nowrap;
 }
 
-.text-link:hover {
-  text-decoration: underline;
+.text-link .icon {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.25s var(--ease);
 }
 
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
-  gap: clamp(1.25rem, 3vw, 2rem);
+.text-link:hover .icon {
+  transform: translateX(3px);
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0.15rem 0.7rem;
+  border-radius: 999px;
+  background: var(--sage-tint);
+  color: var(--sage-text);
+  font-size: 0.8125rem;
+  font-weight: 550;
+  line-height: 1.3;
 }
 
 /* ---------- Buttons ---------- */
@@ -271,48 +324,59 @@ p {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  min-height: 44px;
-  padding: 0.625rem 1.125rem;
-  border: 1px solid transparent;
+  gap: 0.55rem;
+  min-height: 50px;
+  padding: 0.75rem 1.5rem;
+  border: 1.5px solid transparent;
   border-radius: 999px;
   font: inherit;
-  font-size: 0.9375rem;
+  font-size: 0.9875rem;
   font-weight: 600;
   line-height: 1.2;
   text-decoration: none;
   cursor: pointer;
   transition:
-    background-color 0.15s ease,
-    border-color 0.15s ease,
-    color 0.15s ease;
+    background-color 0.25s var(--ease),
+    border-color 0.25s var(--ease),
+    color 0.25s var(--ease),
+    box-shadow 0.25s var(--ease),
+    transform 0.25s var(--ease);
 }
 
-.button svg {
-  width: 1.1em;
-  height: 1.1em;
+.button .icon {
+  width: 19px;
+  height: 19px;
   flex: none;
 }
 
 .button-primary {
-  background: var(--accent);
-  color: var(--on-accent);
+  background: var(--primary);
+  color: var(--on-primary);
+  box-shadow: 0 8px 20px -10px light-dark(rgb(31 42 68 / 0.55), rgb(0 0 0 / 0.5));
 }
 
 .button-primary:hover {
-  background: var(--accent-strong);
-  color: var(--on-accent);
+  background: var(--primary-hover);
+  color: var(--on-primary);
+  transform: translateY(-1px);
 }
 
 .button-secondary {
   background: var(--surface);
   border-color: var(--border-strong);
-  color: var(--text);
+  color: var(--primary);
 }
 
 .button-secondary:hover {
-  border-color: var(--text-subtle);
-  color: var(--text);
+  border-color: var(--primary);
+  color: var(--primary);
+  transform: translateY(-1px);
+}
+
+.button-small {
+  min-height: 40px;
+  padding: 0.45rem 1rem;
+  font-size: 0.875rem;
 }
 
 /* ---------- Prose (text written in Markdown) ---------- */
@@ -326,13 +390,13 @@ p {
 }
 
 .prose h2 {
-  margin-top: 2.5em;
-  font-size: 1.5rem;
+  margin-top: 2.25em;
+  font-size: clamp(1.625rem, 3vw, 1.875rem);
 }
 
 .prose h3 {
   margin-top: 2em;
-  font-size: 1.1875rem;
+  font-size: 1.3125rem;
 }
 
 .prose h2 + *,
@@ -346,33 +410,33 @@ p {
 
 .prose ul,
 .prose ol {
-  padding-left: 1.4em;
+  padding-left: 1.3em;
 }
 
 .prose li + li {
-  margin-top: 0.4em;
+  margin-top: 0.5em;
 }
 
 .prose li::marker {
-  color: var(--text-subtle);
+  color: var(--sage);
 }
 
 .prose strong {
   font-weight: 650;
+  color: var(--text);
 }
 
 .prose blockquote {
   margin-inline: 0;
   padding: 0.25em 0 0.25em 1.25em;
-  border-left: 3px solid var(--accent);
+  border-left: 3px solid var(--blush);
   color: var(--text-muted);
 }
 
 .prose code {
-  padding: 0.15em 0.35em;
-  border-radius: 5px;
-  background: var(--bg-subtle);
-  border: 1px solid var(--border);
+  padding: 0.15em 0.4em;
+  border-radius: 6px;
+  background: var(--section);
   font-family: var(--font-mono);
   font-size: 0.875em;
 }
@@ -380,22 +444,19 @@ p {
 .prose pre {
   padding: 1rem 1.25rem;
   overflow-x: auto;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   font-size: 0.875rem;
   line-height: 1.6;
 }
 
 .prose pre code {
   padding: 0;
-  border: 0;
   background: none;
   font-size: inherit;
 }
 
 .prose img {
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
 }
 
 .prose hr {

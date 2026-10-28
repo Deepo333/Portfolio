@@ -53,7 +53,26 @@ export async function getSettings() {
   return entry.data;
 }
 
-export async function getPage(id: 'home' | 'work' | 'about' | 'resume' | 'contact'): Promise<Page> {
+const homeFiles = {
+  homeIntro: 'intro',
+  homeStats: 'stats',
+  homeFeatured: 'featured',
+  homeCapabilities: 'capabilities',
+  homeTools: 'tools',
+  homeProcess: 'process',
+  homeClosing: 'closing',
+} as const;
+
+/** One section of the home page, from its file in content/home/. */
+export async function getHomeSection<C extends keyof typeof homeFiles>(
+  collection: C,
+): Promise<CollectionEntry<C>> {
+  const [entry] = await getCollection(collection);
+  if (!entry) throw new Error(`Missing content/home/${homeFiles[collection]}.md.`);
+  return entry;
+}
+
+export async function getPage(id: 'work' | 'about' | 'resume' | 'contact'): Promise<Page> {
   const page = await getEntry('pages', id);
   if (!page) throw new Error(`Missing content/pages/${id}.md.`);
   if (page.data.pdf) assertPublicFile(page.data.pdf, `content/pages/${id}.md`);

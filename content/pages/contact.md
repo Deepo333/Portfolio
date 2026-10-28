@@ -3,7 +3,7 @@
 # Your email address and LinkedIn link are set in content/settings.md.
 # Delete the "availability" line if you don't want the green status badge.
 
-title: Let's work together
+title: Let’s work together
 description: Get in touch by email or LinkedIn.
 availability: Open to new opportunities
 ---

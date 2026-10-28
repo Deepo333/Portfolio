@@ -2,12 +2,13 @@
 # ABOUT PAGE  →  /about/
 # To change your photo, put a new image in content/pages/images/
 # and update the "headshot" line to match its file name.
-# A square photo works best (at least 800 × 800 pixels).
+# This photo also appears at the top of the home page.
+# Use a high-quality JPG with your face near the center.
 
 title: About me
-description: Background, approach, and tools.
-headshot: ./images/headshot.png
-headshotAlt: Headshot of Your Name
+description: About Dairyia Porter, technical writer.
+headshot: ./images/headshot.jpg
+headshotAlt: Dairyia Porter smiling, with long dark wavy hair and a white button-up shirt
 ---
 
 I'm a technical writer who believes good documentation is invisible: people find what they need, follow it, and get back to work.
@@ -21,10 +22,6 @@ More recently I've brought a docs-as-code approach to my teams: writing in Markd
 - **Plain language.** Clear, scannable writing that meets accessibility and plain-language standards.
 - **Process thinking.** I map the workflow before I write a word, so the document matches how work actually happens.
 - **Collaboration.** I'm comfortable leading reviews with engineers, managers, and legal and compliance teams.
-
-## Tools
-
-Markdown, Git and GitHub, Astro, MadCap Flare, Confluence, Adobe Acrobat, Microsoft Word and PowerPoint, Figma, and Snagit.
 
 ## Outside of work
 

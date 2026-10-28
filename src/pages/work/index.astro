@@ -44,7 +44,12 @@ const groups = (await getCategories())
 
   {
     groups.map((group) => (
-      <section class="category container" id={group.slug} aria-labelledby={`${group.slug}-heading`}>
+      <section
+        class="category container"
+        id={group.slug}
+        aria-labelledby={`${group.slug}-heading`}
+        data-reveal
+      >
         <div class="category-heading">
           <h2 id={`${group.slug}-heading`}>{group.name}</h2>
           <p>{group.description}</p>
@@ -77,22 +82,23 @@ const groups = (await getCategories())
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    min-height: 40px;
-    padding: 0.4rem 0.6rem 0.4rem 1rem;
+    min-height: 44px;
+    padding: 0.4rem 0.6rem 0.4rem 1.1rem;
     border: 1px solid var(--border-strong);
     border-radius: 999px;
-    color: var(--text);
+    background: var(--surface);
+    color: var(--heading);
     font-size: 0.9375rem;
     font-weight: 500;
     text-decoration: none;
     transition:
-      border-color 0.15s ease,
-      background-color 0.15s ease;
+      border-color 0.25s var(--ease),
+      background-color 0.25s var(--ease);
   }
 
   .jump-nav a:hover {
-    border-color: var(--accent);
-    background: var(--accent-soft);
+    border-color: var(--sage);
+    background: var(--sage-tint);
   }
 
   .count {
@@ -102,19 +108,24 @@ const groups = (await getCategories())
     height: 1.5rem;
     padding-inline: 0.4rem;
     border-radius: 999px;
-    background: var(--bg-subtle);
+    background: var(--section);
     color: var(--text-muted);
     font-size: 0.8125rem;
     font-variant-numeric: tabular-nums;
   }
 
   .category {
+    scroll-margin-top: calc(var(--header-height) + 1rem);
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr);
     gap: 1.5rem clamp(2rem, 5vw, 4rem);
     align-items: start;
-    padding-block: clamp(2.5rem, 6vw, 4rem);
+    padding-block: clamp(2.75rem, 6vw, 4.5rem);
     border-top: 1px solid var(--border);
+  }
+
+  .category:last-of-type {
+    padding-bottom: var(--section-space);
   }
 
   .category-heading {
@@ -123,7 +134,7 @@ const groups = (await getCategories())
   }
 
   .category-heading h2 {
-    font-size: clamp(1.375rem, 2.6vw, 1.625rem);
+    font-size: clamp(1.75rem, 3vw, 2.125rem);
   }
 
   .category-heading p {

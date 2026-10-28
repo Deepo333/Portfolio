@@ -6,12 +6,12 @@
 # change them here, once.
 # ─────────────────────────────────────────────────────────────
 
-name: Your Name
+name: Dairyia Porter
 role: Technical Writer
 
 # One or two sentences that search engines and link previews
 # (LinkedIn, Slack, etc.) show for your site.
-description: Technical writer specializing in procedures, forms, and docs-as-code documentation.
+description: Dairyia Porter is a technical writer specializing in procedures, forms, and docs-as-code documentation.
 
 email: you@example.com
 linkedin: https://www.linkedin.com/in/your-profile
