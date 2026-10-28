@@ -4,7 +4,7 @@ My technical writing portfolio, built with [Astro](https://astro.build) using a 
 Every page is written in Markdown. When a change is merged into `main`, GitHub Actions rebuilds
 the site and publishes it to GitHub Pages automatically.
 
-**Live site:** https://deepo333.github.io/DP-Portfolio-/
+**Live site:** https://deepo333.github.io/Portfolio/
 
 ---
 
@@ -16,12 +16,33 @@ Everything you'll normally edit is in the **`content/`** folder (words and image
 | Page | Address | File to edit |
 | --- | --- | --- |
 | Your name, email, LinkedIn (shown on every page) | — | `content/settings.md` |
-| Home | `/` | `content/pages/home.md` |
+| Home (one file per section, listed below) | `/` | `content/home/` |
 | Work Samples hub, including the category names and descriptions | `/work/` | `content/pages/work.md` |
 | Each work sample's detail page | `/work/<file-name>/` | `content/work/<file-name>.md` |
 | About | `/about/` | `content/pages/about.md` |
 | Résumé | `/resume/` | `content/pages/resume.md`, plus the PDF at `public/files/resume.pdf` |
 | Contact | `/contact/` | `content/pages/contact.md` |
+
+### The home page, section by section
+
+Each section of the home page has its own file in `content/home/`, in the order they appear:
+
+| Section | File | What you edit there |
+| --- | --- | --- |
+| Hero | `content/home/intro.md` | Headline, intro paragraph, and the two button labels |
+| Stats bar | `content/home/stats.md` | The four numbers and their labels (see "Replace the placeholder stats" below) |
+| Featured work | `content/home/featured.md` | Section heading and intro. The cards are the work samples marked `featured: true` |
+| Core capabilities | `content/home/capabilities.md` | Each capability's name, icon, and description |
+| Tools & technologies | `content/home/tools.md` | Each tool's name and icon |
+| My process | `content/home/process.md` | Each step's name and description (numbered automatically) |
+| Let's work together | `content/home/closing.md` | Heading, text, and link labels. Email and LinkedIn come from `content/settings.md` |
+
+Your name comes from `content/settings.md` and your photo from `content/pages/about.md`,
+so you only set them once.
+
+**Icons:** capabilities and tools each have an `icon:` line. The comment at the top of
+`capabilities.md` and `tools.md` lists every icon name you can use (for example `procedure`,
+`form`, `code`, `document`, `pdf`, `git`, `slides`).
 
 ### How a Markdown file is organized
 
@@ -43,7 +64,7 @@ Lines in the frontmatter that start with `#` are notes to you. They never appear
 | What | Where to put it | How to refer to it |
 | --- | --- | --- |
 | Images for work samples | `content/work/images/` | `./images/my-picture.png` |
-| Your headshot | `content/pages/images/` | `./images/headshot.jpg` |
+| Your headshot (used on Home and About) | `content/pages/images/` | `./images/headshot.jpg` |
 | PDFs (samples and résumé) | `public/files/` | `/files/my-document.pdf` |
 
 ### Linking to other pages
@@ -118,6 +139,8 @@ publishing, so most errors name the file and the problem, for example:
 - `Could not find requested image ./images/cover.png`: the image is missing from the `images` folder,
   or its name is spelled differently.
 - `title: Required` (or another field name): a required field is missing from the frontmatter.
+- `items.0.icon: Invalid option: expected one of "procedure"|"form"|...`: an icon name is misspelled.
+  Use one of the listed names. Items are counted from 0, so `items.0` is the first item in the list.
 
 Because the build stops on errors, a mistake never reaches your live site. The last good version stays up.
 
@@ -126,24 +149,30 @@ Because the build stops on errors, a mistake never reaches your live site. The l
 ## Common changes
 
 - **Change your name, email, or LinkedIn:** edit `content/settings.md`.
-- **Change the home page headline or intro:** edit `content/pages/home.md`.
+- **Change the home page headline or intro:** edit `content/home/intro.md`.
+- **Replace the placeholder stats:** in `content/home/stats.md`, change each `"00"` to your real
+  number (keep the quotes, for example `"45+"`), then delete that stat's `placeholder: true` line
+  so the "Placeholder" tag disappears.
+- **Add, remove, or reorder capabilities, tools, or process steps:** edit the list in the matching
+  file in `content/home/`. Copy an existing item (all of its lines, starting with `- name:`) to add one.
 - **Replace your résumé:** upload your new PDF to `public/files/` as `resume.pdf` (replacing the old one),
   then update `updated:` in `content/pages/resume.md`.
-- **Change your headshot:** add the photo to `content/pages/images/` and update `headshot:` in
-  `content/pages/about.md`. A square photo works best.
-- **Rename or add a category:** edit the `categories` list in `content/pages/work.md`, then update the
-  `category` of any samples that used the old name.
-- **Change the accent color:** edit the `--accent` and `--accent-strong` lines at the top of
-  `src/styles/global.css`. The first color is for light mode, the second for dark mode.
+- **Change your headshot:** replace `content/pages/images/headshot.jpg` with your new photo, keeping
+  the same file name. It appears on the Home and About pages. Use a high-quality JPG with your face
+  near the center; the arch-shaped frame trims the edges, never the middle.
+- **Change the colors:** edit the lines at the top of `src/styles/global.css`. Each line gives the
+  light-mode color first and the dark-mode color second, for example
+  `--primary: light-dark(#1f2a44, #b9c4e0);` for the navy buttons and links.
 - **Change the top navigation:** edit the `links` list in `src/components/Header.astro`.
 
-### Renaming the repository (for example, to `portfolio`)
+### Renaming the repository
 
-The site's address follows the repository's name, so renaming is safe:
+The site's address follows the repository's name (the repository is currently named `Portfolio`,
+so the site is at `https://deepo333.github.io/Portfolio/`). To rename it again:
 
-1. On GitHub, open **Settings → General**, change **Repository name** to `portfolio`, and select **Rename**.
+1. On GitHub, open **Settings → General**, change **Repository name**, and select **Rename**.
 2. Open **Actions → Build and publish site → Run workflow** to republish at the new address:
-   `https://deepo333.github.io/portfolio/`.
+   `https://deepo333.github.io/<new-name>/`. Capital letters in the name matter in the address.
 3. Update the old address where it appears: the **Live site** line at the top of this file,
    `sourceCode` in `content/settings.md`, and the `link` in `content/work/docs-site-migration.md`.
 
@@ -165,8 +194,9 @@ You don't need this to publish, but it lets you see changes before pushing them.
 | File or folder | What it does |
 | --- | --- |
 | `src/pages/` | One template per page type. `src/pages/work/[id].astro` is the work sample detail template. |
-| `src/components/` | Reusable pieces: header, footer, sample cards, PDF viewer. |
-| `src/styles/global.css` | Fonts, colors, spacing, and light/dark mode. |
+| `src/components/` | Reusable pieces: header, footer, sample cards, the arch-framed portrait, icons, PDF viewer. |
+| `src/lib/icons.ts` | The thin-line icons you can pick with `icon:` in Markdown. |
+| `src/styles/global.css` | Colors, fonts (Fraunces for headings, Inter for text), spacing, and light/dark mode. |
 | `src/content.config.ts` | The list of fields each Markdown file can have, and which are required. |
 | `src/lib/content.ts` | Loads the content and produces the friendly error messages. |
 | `.github/workflows/deploy.yml` | The GitHub Actions workflow that builds and publishes the site. |

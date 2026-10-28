@@ -1,7 +1,10 @@
 ---
+import { url } from '../lib/content';
+
 interface Props {
   settings: {
     name: string;
+    role: string;
     email: string;
     linkedin: string;
     sourceCode?: string;
@@ -14,7 +17,10 @@ const year = new Date().getFullYear();
 
 <footer class="site-footer">
   <div class="container footer-inner">
-    <p class="copyright">© {year} {settings.name}</p>
+    <div class="identity">
+      <a class="footer-name" href={url('/')}>{settings.name}</a>
+      <p>{settings.role}</p>
+    </div>
     <ul class="footer-links">
       <li><a href={`mailto:${settings.email}`}>Email</a></li>
       <li><a href={settings.linkedin} rel="me noopener" target="_blank">LinkedIn</a></li>
@@ -28,30 +34,41 @@ const year = new Date().getFullYear();
         )
       }
     </ul>
+    <p class="copyright">© {year} {settings.name}</p>
   </div>
 </footer>
 
 <style>
   .site-footer {
-    margin-top: clamp(3rem, 8vw, 5rem);
     border-top: 1px solid var(--border);
-    color: var(--text-subtle);
+    color: var(--text-muted);
     font-size: 0.9375rem;
   }
 
   .footer-inner {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr auto;
     align-items: center;
-    justify-content: space-between;
-    gap: 1rem 2rem;
-    padding-block: 2rem;
+    gap: 1.25rem 2rem;
+    padding-block: 2.75rem;
+  }
+
+  .footer-name {
+    color: var(--heading);
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-variation-settings: 'SOFT' 100, 'WONK' 0;
+    text-decoration: none;
+  }
+
+  .identity p {
+    margin-top: 0.15rem;
   }
 
   .footer-links {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem 1.5rem;
+    gap: 0.5rem 1.75rem;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -63,7 +80,21 @@ const year = new Date().getFullYear();
   }
 
   .footer-links a:hover {
-    color: var(--text);
+    color: var(--primary);
     text-decoration: underline;
+  }
+
+  .copyright {
+    grid-column: 1 / -1;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+    color: var(--text-subtle);
+    font-size: 0.875rem;
+  }
+
+  @media (max-width: 640px) {
+    .footer-inner {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

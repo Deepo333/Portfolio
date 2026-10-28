@@ -24,7 +24,7 @@ images:
     caption: Merging a change publishes the updated page automatically.
 link:
   label: View the source repository
-  url: https://github.com/Deepo333/DP-Portfolio-
+  url: https://github.com/Deepo333/Portfolio
 ---
 
 ## Overview

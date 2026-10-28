@@ -25,11 +25,11 @@ const fileName = downloadName ?? src.split('/').pop();
       {fileName}
     </span>
     <span class="actions">
-      <a class="button button-secondary small" href={href} target="_blank" rel="noopener">
+      <a class="button button-secondary button-small" href={href} target="_blank" rel="noopener">
         Open
         <span class="visually-hidden">{title} (PDF) in a new tab</span>
       </a>
-      <a class="button button-primary small" href={href} download={fileName}>
+      <a class="button button-primary button-small" href={href} download={fileName}>
         Download
         <span class="visually-hidden">{title} (PDF)</span>
       </a>
@@ -44,7 +44,8 @@ const fileName = downloadName ?? src.split('/').pop();
     overflow: hidden;
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    background: var(--bg-subtle);
+    background: var(--section);
+    box-shadow: var(--shadow-sm);
   }
 
   .toolbar {
@@ -53,7 +54,7 @@ const fileName = downloadName ?? src.split('/').pop();
     align-items: center;
     justify-content: space-between;
     gap: 0.75rem;
-    padding: 0.75rem 0.75rem 0.75rem 1rem;
+    padding: 0.75rem 0.75rem 0.75rem 1.25rem;
     background: var(--surface);
     border-bottom: 1px solid var(--border);
   }
@@ -84,17 +85,11 @@ const fileName = downloadName ?? src.split('/').pop();
     gap: 0.5rem;
   }
 
-  .small {
-    min-height: 36px;
-    padding: 0.4rem 0.9rem;
-    font-size: 0.875rem;
-  }
-
   iframe {
     width: 100%;
     height: min(85vh, 1000px);
     border: 0;
-    background: var(--bg-subtle);
+    background: var(--section);
   }
 
   @media (max-width: 720px) {

@@ -1,11 +1,14 @@
 ---
 /* About page. The words and headshot come from content/pages/about.md. */
-import { Image } from 'astro:assets';
 import { render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getPage, url } from '../lib/content';
+import Icon from '../components/Icon.astro';
+import Portrait from '../components/Portrait.astro';
+import { getPage, getSettings, url } from '../lib/content';
 
+const settings = await getSettings();
 const page = await getPage('about');
+const resume = await getPage('resume');
 const { Content } = await render(page);
 const { title, description, headshot, headshotAlt } = page.data;
 ---
@@ -14,14 +17,8 @@ const { title, description, headshot, headshotAlt } = page.data;
   <div class="container about">
     {
       headshot && (
-        <div class="headshot">
-          <Image
-            src={headshot}
-            alt={headshotAlt ?? ''}
-            widths={[320, 480, 720]}
-            sizes="(max-width: 800px) 240px, 320px"
-            loading="eager"
-          />
+        <div class="portrait-column">
+          <Portrait src={headshot} alt={headshotAlt ?? settings.name} eager />
         </div>
       )
     }
@@ -31,7 +28,14 @@ const { title, description, headshot, headshotAlt } = page.data;
         <Content />
       </div>
       <div class="button-row">
-        <a class="button button-primary" href={url('/resume/')}>View résumé</a>
+        <a
+          class="button button-primary"
+          href={resume.data.pdf ? url(resume.data.pdf) : url('/resume/')}
+          download={resume.data.pdf ? `${settings.name} - Resume.pdf` : undefined}
+        >
+          <Icon name="download" />
+          Download résumé
+        </a>
         <a class="button button-secondary" href={url('/contact/')}>Get in touch</a>
       </div>
     </div>
@@ -41,51 +45,45 @@ const { title, description, headshot, headshotAlt } = page.data;
 <style>
   .about {
     display: grid;
-    grid-template-columns: 320px minmax(0, 1fr);
-    gap: clamp(2rem, 6vw, 5rem);
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: clamp(2.5rem, 7vw, 6rem);
     align-items: start;
-    padding-block: clamp(3rem, 9vw, 6rem) 0;
+    padding-block: clamp(3rem, 8vw, 6rem) var(--section-space);
   }
 
-  .headshot {
+  .portrait-column {
     position: sticky;
-    top: calc(var(--header-height) + 2rem);
-    overflow: hidden;
-    aspect-ratio: 1;
-    border-radius: 24px;
-    border: 1px solid var(--border);
-    background: var(--bg-subtle);
-  }
-
-  .headshot img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    top: calc(var(--header-height) + 2.5rem);
+    padding-right: 7%;
   }
 
   h1 {
-    margin-bottom: 1.5rem;
-    font-size: clamp(2.25rem, 5vw, 3.25rem);
-    letter-spacing: -0.035em;
+    margin-bottom: 1.75rem;
+    font-size: clamp(2.5rem, 5.5vw, 3.75rem);
+    font-variation-settings: 'SOFT' 100, 'WONK' 0;
+    font-weight: 450;
   }
 
   .prose :global(p:first-of-type) {
     color: var(--text-muted);
-    font-size: 1.1875rem;
+    font-size: clamp(1.1875rem, 2vw, 1.3125rem);
+    line-height: 1.6;
   }
 
   .button-row {
-    margin-top: 2.5rem;
+    margin-top: 2.75rem;
   }
 
-  @media (max-width: 800px) {
+  @media (max-width: 860px) {
     .about {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
     }
 
-    .headshot {
+    .portrait-column {
       position: static;
-      width: min(240px, 70%);
+      width: min(68%, 300px);
+      margin-left: 4%;
+      padding-right: 0;
     }
   }
 </style>

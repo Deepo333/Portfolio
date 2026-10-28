@@ -1,165 +1,636 @@
 ---
 /*
- * Home page. The words on this page come from content/pages/home.md and
- * content/settings.md. Featured samples are the work samples marked
- * `featured: true` in content/work/.
+ * Home page. Every word on this page comes from a Markdown file:
+ *   content/settings.md              your name, email, and LinkedIn
+ *   content/home/intro.md            hero headline, intro, and button labels
+ *   content/home/stats.md            the stats bar
+ *   content/home/featured.md         featured work heading (cards come from content/work/)
+ *   content/home/capabilities.md     core capabilities
+ *   content/home/tools.md            tools & technologies
+ *   content/home/process.md          my process
+ *   content/home/closing.md          the "Let's work together" band
+ *   content/pages/about.md           your photo
  */
 import { render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import Portrait from '../components/Portrait.astro';
 import WorkCard from '../components/WorkCard.astro';
-import {
-  categoryHref,
-  getCategories,
-  getPage,
-  getSettings,
-  getWorkSamples,
-  url,
-} from '../lib/content';
+import { getHomeSection, getPage, getSettings, getWorkSamples, url } from '../lib/content';
 
 const settings = await getSettings();
-const page = await getPage('home');
-const { Content } = await render(page);
-const samples = await getWorkSamples();
-const featured = samples.filter((sample) => sample.data.featured);
-const categories = (await getCategories()).filter((category) =>
-  samples.some((sample) => sample.data.category === category.name),
-);
+const [intro, stats, featured, capabilities, tools, process, closing] = await Promise.all([
+  getHomeSection('homeIntro'),
+  getHomeSection('homeStats'),
+  getHomeSection('homeFeatured'),
+  getHomeSection('homeCapabilities'),
+  getHomeSection('homeTools'),
+  getHomeSection('homeProcess'),
+  getHomeSection('homeClosing'),
+]);
+const [about, resume] = await Promise.all([getPage('about'), getPage('resume')]);
+
+const { Content: IntroText } = await render(intro);
+const { Content: FeaturedText } = await render(featured);
+const { Content: CapabilitiesText } = await render(capabilities);
+const { Content: ToolsText } = await render(tools);
+const { Content: ProcessText } = await render(process);
+const { Content: ClosingText } = await render(closing);
+
+const featuredSamples = (await getWorkSamples()).filter((s) => s.data.featured).slice(0, 3);
+const resumeHref = resume.data.pdf ? url(resume.data.pdf) : url('/resume/');
+const resumeFileName = `${settings.name} - Resume.pdf`;
+const linkedinHandle = settings.linkedin.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
 ---
 
-<BaseLayout description={page.data.description}>
-  <section class="hero container">
-    <h1>{settings.name}</h1>
-    {page.data.headline && <p class="headline">{page.data.headline}</p>}
-    <div class="intro prose">
-      <Content />
+<BaseLayout description={intro.data.description}>
+  <section class="hero container" aria-labelledby="hero-name">
+    <div class="hero-text">
+      <h1 id="hero-name" class="hero-name">{settings.name}</h1>
+      <p class="hero-headline">{intro.data.headline}</p>
+      <div class="hero-intro">
+        <IntroText />
+      </div>
+      <div class="button-row">
+        <a class="button button-primary" href={url('/work/')}>{intro.data.primaryButton}</a>
+        <a
+          class="button button-secondary"
+          href={resumeHref}
+          download={resume.data.pdf ? resumeFileName : undefined}
+        >
+          <Icon name="download" />
+          {intro.data.secondaryButton}
+        </a>
+      </div>
     </div>
-    <div class="button-row">
-      <a class="button button-primary" href={url('/work/')}>View work samples</a>
-      <a class="button button-secondary" href={url('/resume/')}>Résumé</a>
-    </div>
+    {
+      about.data.headshot && (
+        <Portrait
+          class="hero-portrait"
+          src={about.data.headshot}
+          alt={about.data.headshotAlt ?? settings.name}
+          eager
+        />
+      )
+    }
+  </section>
+
+  <section class="container stats-section" aria-label="At a glance">
+    <dl class="stats" style={`--count: ${stats.data.stats.length}`}>
+      {
+        stats.data.stats.map((stat) => (
+          <div class="stat">
+            <dt>{stat.label}</dt>
+            <dd>
+              <span class="stat-value">{stat.value}</span>
+              {stat.placeholder && <span class="placeholder">Placeholder</span>}
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
   </section>
 
   {
-    featured.length > 0 && (
-      <section class="section container" aria-labelledby="featured-heading">
-        <div class="section-heading">
-          <div>
-            <h2 id="featured-heading">Featured work</h2>
-            <p>A few samples that show how I approach a documentation problem.</p>
+    featuredSamples.length > 0 && (
+      <section class="band" aria-labelledby="featured-heading" data-reveal>
+        <div class="container">
+          <div class="section-heading">
+            <div>
+              <h2 id="featured-heading">{featured.data.title}</h2>
+              <div class="intro">
+                <FeaturedText />
+              </div>
+            </div>
+            <a class="all-link" href={url('/work/')}>
+              {featured.data.linkLabel}
+            </a>
           </div>
-          <a class="text-link" href={url('/work/')}>
-            All work samples <span aria-hidden="true">→</span>
-          </a>
-        </div>
-        <div class="card-grid">
-          {featured.map((sample) => (
-            <WorkCard sample={sample} />
-          ))}
+          <div class="featured-grid">
+            {featuredSamples.map((sample) => (
+              <WorkCard sample={sample} showSummary={false} />
+            ))}
+          </div>
         </div>
       </section>
     )
   }
 
-  <section class="section container" aria-labelledby="focus-heading">
-    <div class="section-heading">
-      <div>
-        <h2 id="focus-heading">What I write</h2>
+  <section class="band band-sand" aria-labelledby="capabilities-heading" data-reveal>
+    <div class="container">
+      <div class="section-heading">
+        <div>
+          <h2 id="capabilities-heading">{capabilities.data.title}</h2>
+          <div class="intro">
+            <CapabilitiesText />
+          </div>
+        </div>
       </div>
+      <ul class="capabilities">
+        {
+          capabilities.data.items.map((item) => (
+            <li class="capability">
+              <Icon name={item.icon} size={30} class="capability-icon" />
+              <h3>{item.name}</h3>
+              <p>{item.description}</p>
+            </li>
+          ))
+        }
+      </ul>
     </div>
-    <ul class="focus-list">
-      {
-        categories.map((category) => (
-          <li>
-            <a href={categoryHref(category.name)}>
-              <span class="focus-name">{category.name}</span>
-              <span class="focus-description">{category.description}</span>
-            </a>
-          </li>
-        ))
-      }
-    </ul>
+  </section>
+
+  <section class="band" aria-labelledby="tools-heading" data-reveal>
+    <div class="container tools-layout">
+      <div class="section-heading">
+        <div>
+          <h2 id="tools-heading">{tools.data.title}</h2>
+          <div class="intro">
+            <ToolsText />
+          </div>
+        </div>
+      </div>
+      <ul class="tools">
+        {
+          tools.data.items.map((tool) => (
+            <li>
+              <Icon name={tool.icon} size={22} />
+              {tool.name}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="band process-band" aria-labelledby="process-heading" data-reveal>
+    <div class="container">
+      <div class="section-heading">
+        <div>
+          <h2 id="process-heading">{process.data.title}</h2>
+          <div class="intro">
+            <ProcessText />
+          </div>
+        </div>
+      </div>
+      <ol class="process">
+        {
+          process.data.steps.map((step, index) => (
+            <li>
+              <span class="step-number" aria-hidden="true">
+                {index + 1}
+              </span>
+              <h3>{step.name}</h3>
+              <p>{step.description}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="band band-sand closing" aria-labelledby="closing-heading" data-reveal>
+    <div class="container closing-inner">
+      <div class="closing-text">
+        <h2 id="closing-heading">{closing.data.title}</h2>
+        <div class="lead">
+          <ClosingText />
+        </div>
+      </div>
+      <ul class="contact-links">
+        <li>
+          <a class="contact-link" href={`mailto:${settings.email}`}>
+            <span class="contact-icon"><Icon name="mail" /></span>
+            <span>
+              <span class="contact-label">{closing.data.emailButton}</span>
+              <span class="contact-value">{settings.email}</span>
+            </span>
+          </a>
+        </li>
+        <li>
+          <a class="contact-link" href={settings.linkedin} target="_blank" rel="me noopener">
+            <span class="contact-icon"><Icon name="linkedin" /></span>
+            <span>
+              <span class="contact-label">{closing.data.linkedinButton}</span>
+              <span class="contact-value">{linkedinHandle}</span>
+            </span>
+          </a>
+        </li>
+      </ul>
+    </div>
   </section>
 </BaseLayout>
 
 <style>
+  /* ---------- Hero ---------- */
+
   .hero {
-    padding-block: clamp(4rem, 12vw, 8rem) clamp(3rem, 8vw, 5rem);
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    align-items: center;
+    gap: clamp(2.5rem, 6vw, 5.5rem);
+    padding-block: clamp(2.5rem, 7vw, 5.5rem) clamp(2rem, 4vw, 3rem);
   }
 
-  .hero h1 {
-    font-size: clamp(2.75rem, 8vw, 4.75rem);
-    font-weight: 700;
-    letter-spacing: -0.045em;
-    line-height: 1.02;
+  .hero-name {
+    font-size: clamp(3.25rem, 8vw, 6.25rem);
+    font-weight: 450;
+    font-variation-settings: 'SOFT' 100, 'WONK' 0;
+    letter-spacing: -0.025em;
+    line-height: 0.98;
   }
 
-  .headline {
-    margin-top: 1.25rem;
-    color: var(--accent);
-    font-size: clamp(1.125rem, 2.4vw, 1.375rem);
+  .hero-headline {
+    margin-top: 1.5rem;
+    color: var(--text);
+    font-size: clamp(1.125rem, 2.1vw, 1.375rem);
     font-weight: 550;
     letter-spacing: -0.01em;
+    line-height: 1.4;
   }
 
-  .intro {
-    margin-top: 1.5rem;
-    max-width: 62ch;
+  .hero-intro {
+    margin-top: 1.25rem;
+    max-width: 50ch;
     color: var(--text-muted);
-    font-size: clamp(1.0625rem, 2vw, 1.1875rem);
+    font-size: clamp(1.0625rem, 1.6vw, 1.1875rem);
   }
 
-  .button-row {
+  .hero .button-row {
     margin-top: 2.25rem;
   }
 
-  .focus-list {
+  .hero :global(.hero-portrait) {
+    justify-self: center;
+    width: min(100%, 430px);
+  }
+
+  /* ---------- Stats ---------- */
+
+  .stats-section {
+    padding-bottom: clamp(1rem, 3vw, 2rem);
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(var(--count, 4), minmax(0, 1fr));
+    margin: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    gap: 0.35rem;
+    padding: clamp(1.5rem, 3vw, 2rem) clamp(1.25rem, 2.5vw, 2rem);
+    /* Dividers between stats; the outer edges are hidden by the panel. */
+    border-left: 1px solid var(--border);
+    border-top: 1px solid var(--border);
+    margin: -1px 0 0 -1px;
+  }
+
+  .stat dt {
+    color: var(--text-muted);
+    font-size: 0.9375rem;
+    line-height: 1.45;
+  }
+
+  .stat dd {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.75rem;
+    margin: 0;
+  }
+
+  .stat-value {
+    color: var(--heading);
+    font-family: var(--font-serif);
+    font-size: clamp(2.25rem, 4vw, 2.875rem);
+    font-variation-settings: 'SOFT' 100, 'WONK' 0;
+    font-weight: 450;
+    line-height: 1.1;
+  }
+
+  .placeholder {
+    padding: 0.1rem 0.55rem;
+    border: 1px dashed var(--blush);
+    border-radius: 999px;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  /* ---------- Featured work ---------- */
+
+  .all-link {
+    font-weight: 600;
+    text-underline-offset: 0.3em;
+  }
+
+  .featured-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    gap: clamp(1.25rem, 2.5vw, 2rem);
+  }
+
+  /* ---------- Capabilities ---------- */
+
+  .capabilities {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    gap: clamp(1rem, 2vw, 1.5rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .capability {
+    padding: clamp(1.5rem, 3vw, 2rem);
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    transition:
+      transform 0.35s var(--ease),
+      box-shadow 0.35s var(--ease);
+  }
+
+  .capability:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+  }
+
+  .capability :global(.capability-icon) {
+    color: var(--sage);
+  }
+
+  .capability h3 {
+    margin-top: 1.25rem;
+    font-size: 1.3125rem;
+  }
+
+  .capability p {
+    margin-top: 0.5rem;
+    color: var(--text-muted);
+    font-size: 0.96875rem;
+    line-height: 1.6;
+  }
+
+  /* ---------- Tools ---------- */
+
+  .tools-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr);
+    gap: clamp(1.5rem, 5vw, 4.5rem);
+    align-items: start;
+  }
+
+  .tools-layout .section-heading {
+    margin-bottom: 0;
+  }
+
+  .tools {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(46%, 210px), 1fr));
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .tools li {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    min-height: 58px;
+    padding: 0.75rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 0.96875rem;
+    font-weight: 500;
+    line-height: 1.3;
+    transition: border-color 0.25s var(--ease);
+  }
+
+  .tools li:hover {
+    border-color: var(--sage);
+  }
+
+  .tools :global(.icon) {
+    flex: none;
+    color: var(--sage);
+  }
+
+  /* ---------- Process ---------- */
+
+  .process-band {
+    border-top: 1px solid var(--border);
+  }
+
+  .process {
+    --step-gap: clamp(1rem, 2vw, 1.75rem);
+    --dot: 52px;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: var(--step-gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .process li {
+    position: relative;
+  }
+
+  /* The thin line that connects one step to the next. */
+  .process li:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: calc(var(--dot) / 2);
+    left: calc(var(--dot) + 0.75rem);
+    right: calc(var(--step-gap) * -1 + 0.75rem);
+    height: 1.5px;
+    background: var(--blush);
+  }
+
+  .step-number {
+    display: grid;
+    place-items: center;
+    width: var(--dot);
+    height: var(--dot);
+    border: 1.5px solid var(--primary);
+    border-radius: 50%;
+    background: var(--surface);
+    color: var(--primary);
+    font-family: var(--font-serif);
+    font-size: 1.375rem;
+    font-variation-settings: 'SOFT' 100, 'WONK' 0;
+    line-height: 1;
+  }
+
+  .process h3 {
+    margin-top: 1.25rem;
+    font-size: 1.375rem;
+  }
+
+  .process p {
+    margin-top: 0.5rem;
+    color: var(--text-muted);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+  }
+
+  /* ---------- Closing band ---------- */
+
+  .closing-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+
+  .closing h2 {
+    font-size: clamp(2.375rem, 5.5vw, 3.75rem);
+    font-variation-settings: 'SOFT' 100, 'WONK' 0;
+    font-weight: 450;
+    letter-spacing: -0.02em;
+  }
+
+  .closing .lead {
+    margin-top: 1rem;
+    max-width: 46ch;
+  }
+
+  .contact-links {
+    display: grid;
     gap: 1rem;
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
-  .focus-list a {
+  .contact-link {
     display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    height: 100%;
-    padding: 1.5rem;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    color: inherit;
+    align-items: center;
+    gap: 1.1rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--surface);
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    color: var(--text);
     text-decoration: none;
     transition:
-      border-color 0.15s ease,
-      background-color 0.15s ease;
+      transform 0.3s var(--ease),
+      box-shadow 0.3s var(--ease),
+      border-color 0.3s var(--ease);
   }
 
-  .focus-list a:hover {
-    border-color: var(--border-strong);
-    background: var(--bg-subtle);
+  .contact-link:hover {
+    transform: translateY(-2px);
+    border-color: var(--primary);
+    box-shadow: var(--shadow);
+    color: var(--text);
   }
 
-  .focus-name {
+  .contact-icon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: var(--on-primary);
+  }
+
+  .contact-label {
+    display: block;
+    color: var(--heading);
     font-weight: 650;
-    letter-spacing: -0.01em;
   }
 
-  .focus-name::after {
-    content: ' →';
-    color: var(--accent);
-    opacity: 0;
-    transition: opacity 0.15s ease;
-  }
-
-  .focus-list a:hover .focus-name::after {
-    opacity: 1;
-  }
-
-  .focus-description {
+  .contact-value {
+    display: block;
     color: var(--text-muted);
     font-size: 0.9375rem;
-    line-height: 1.55;
+    overflow-wrap: anywhere;
+  }
+
+  /* ---------- Smaller screens ---------- */
+
+  @media (max-width: 1000px) {
+    .stats {
+      grid-template-columns: repeat(min(var(--count, 4), 2), minmax(0, 1fr));
+    }
+
+    .process {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 0;
+      max-width: 640px;
+    }
+
+    .process li {
+      display: grid;
+      grid-template-columns: var(--dot) minmax(0, 1fr);
+      column-gap: 1.25rem;
+      padding-bottom: 2rem;
+    }
+
+    .process li:not(:last-child)::after {
+      top: calc(var(--dot) + 0.5rem);
+      bottom: 0.5rem;
+      left: calc(var(--dot) / 2);
+      right: auto;
+      width: 1.5px;
+      height: auto;
+    }
+
+    .step-number {
+      grid-row: span 2;
+    }
+
+    .process h3 {
+      margin-top: 0.6rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+
+    .stat {
+      padding: 1.25rem 1.1rem;
+    }
+
+    .stat dt {
+      font-size: 0.875rem;
+    }
+
+    .tools li {
+      gap: 0.65rem;
+      padding: 0.65rem 0.8rem;
+      font-size: 0.9375rem;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .hero,
+    .tools-layout,
+    .closing-inner {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .hero :global(.hero-portrait) {
+      order: -1;
+      justify-self: start;
+      width: min(68%, 300px);
+      margin-left: 4%;
+    }
   }
 </style>
