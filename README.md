@@ -4,7 +4,7 @@ My technical writing portfolio, built with [Astro](https://astro.build) using a 
 Every page is written in Markdown. When a change is merged into `main`, GitHub Actions rebuilds
 the site and publishes it to GitHub Pages automatically.
 
-**Live site:** https://deepo333.github.io/DP-Portfolio-/
+**Live site:** https://deepo333.github.io/Portfolio/
 
 ---
 
@@ -165,13 +165,14 @@ Because the build stops on errors, a mistake never reaches your live site. The l
   `--primary: light-dark(#1f2a44, #b9c4e0);` for the navy buttons and links.
 - **Change the top navigation:** edit the `links` list in `src/components/Header.astro`.
 
-### Renaming the repository (for example, to `portfolio`)
+### Renaming the repository
 
-The site's address follows the repository's name, so renaming is safe:
+The site's address follows the repository's name (the repository is currently named `Portfolio`,
+so the site is at `https://deepo333.github.io/Portfolio/`). To rename it again:
 
-1. On GitHub, open **Settings → General**, change **Repository name** to `portfolio`, and select **Rename**.
+1. On GitHub, open **Settings → General**, change **Repository name**, and select **Rename**.
 2. Open **Actions → Build and publish site → Run workflow** to republish at the new address:
-   `https://deepo333.github.io/portfolio/`.
+   `https://deepo333.github.io/<new-name>/`. Capital letters in the name matter in the address.
 3. Update the old address where it appears: the **Live site** line at the top of this file,
    `sourceCode` in `content/settings.md`, and the `link` in `content/work/docs-site-migration.md`.
 
