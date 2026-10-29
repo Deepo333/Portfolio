@@ -61,19 +61,28 @@ I'm a technical writer...  ← Everything below is the page text, written in nor
 ```
 
 Lines in the frontmatter that start with `#` are notes to you. They never appear on the site.
+Below the frontmatter, anything between `<!--` and `-->` is also a note to you, and it's removed
+before the site is published (it doesn't even appear in the page's source code).
+
+### Finding what still needs your input
+
+Every place that needs a fact from you is marked **TODO**. To find them all, search the
+repository for `TODO` (on GitHub, press `/` on the repository's main page and type `TODO`), or
+open each file in `content/` and look for `# TODO` and `<!-- TODO`. Delete each note once you've
+dealt with it.
 
 ### Where files go
 
 | What | Where to put it | How to refer to it |
 | --- | --- | --- |
 | Images for work samples | `content/work/images/` | `./images/my-picture.png` |
-| Your headshot (used on Home and About) | `content/pages/images/` | `./images/headshot.jpg` |
-| PDFs (samples and résumé) | `public/files/` | `/files/my-document.pdf` |
+| Your headshot (used on Home and About) | `content/pages/images/` | `./images/headshot-cutout.png` |
+| PDFs (samples and résumé) | `public/files/` | `/files/my-document.pdf` (use lowercase words joined by hyphens, with no spaces) |
 
 ### Linking to other pages
 
 In Markdown, link to another page on your site by starting the address with `/`, for example
-`[see my résumé](/resume/)` or `[the calibration SOP](/work/equipment-calibration-sop/)`.
+`[see my résumé](/resume/)` or `[the declaration procedure](/work/wildfire-season-declaration-procedure/)`.
 The site adjusts these links automatically so they work on GitHub Pages.
 
 ---
@@ -90,9 +99,11 @@ The site adjusts these links automatically so they work on GitHub Pages.
    page address: `/work/api-quickstart-guide/`.
 3. **Fill in the frontmatter.** The template explains every field. The important ones:
    - `category` must match one of the names in `content/pages/work.md` exactly
-     (`Procedures`, `Resources`, `Forms`, `Presentations`, or `Docs as Code`).
+     (`Procedures`, `Resources`, `Forms`, or `Presentations`). `Docs as Code` is hidden for now;
+     see "Turn Docs as Code back on" below.
    - `cover` and `coverAlt` set the card image and its description for screen readers.
    - `pdf`, `images`, and `link` control what appears in **The sample** section. Delete the ones you don't use.
+     A PDF appears in a viewer on the page, with **Open** and **Download** buttons.
    - `featured: true` also shows the sample on the home page.
    - `draft: true` hides the sample until you're ready.
 4. **Write the case study.** Replace the text under the four headings:
@@ -102,21 +113,42 @@ The site adjusts these links automatically so they work on GitHub Pages.
 The sample appears automatically on the Work Samples page under its category, and its detail page
 gets a "Previous / Next" link to the other samples. Samples are listed newest first, based on `date`.
 
-Tip: the five example samples in `content/work/` each show a different pattern:
+Your seven samples are in `content/work/`. Each one shows its PDF from `public/files/`, and its
+card image is in `content/work/images/`:
 
-| Example file | Shows how to |
-| --- | --- |
-| `equipment-calibration-sop.md` | Embed a PDF |
-| `onboarding-quick-reference.md` | Embed a PDF |
-| `incident-report-form.md` | Embed a fillable PDF form |
-| `change-management-training-deck.md` | Show a gallery of images with captions |
-| `docs-site-migration.md` | Combine images with a link button |
+| File | Category | On the home page |
+| --- | --- | --- |
+| `wildfire-season-declaration-procedure.md` | Procedures | Yes |
+| `wildfire-threat-assessment-and-response-procedure.md` | Procedures | Yes |
+| `wildfire-season-declaration-form.md` | Forms | Yes |
+| `change-request-form.md` | Forms | |
+| `technical-writing-review-checklist.md` | Resources | |
+| `echodyne-field-brief.md` | Resources | |
+| `new-employee-onboarding-windows-setup-guide.md` | Presentations | |
 
-**The five examples are placeholders, not real work.** Each one has `placeholder: true`, which shows a
-"Placeholder sample" label on its card and page. Your real samples should not have that line; if you
-copy an example file instead of `_TEMPLATE.md`, delete the `placeholder: true` line from your copy.
+The home page shows up to three samples marked `featured: true`, newest first. To feature a
+different sample, change `featured: true` to `featured: false` on one sample and the opposite on another.
 
-To remove an example, delete its `.md` file and the files it uses in `content/work/images/` and `public/files/`.
+**Card images.** Each card image shows the first page of the sample's PDF on a light background.
+To make one for a new PDF, take a screenshot of the PDF's first page and place it on a 1200 × 900
+pixel canvas in any image editor, or ask Claude to make one the same way.
+
+To remove a sample, delete its `.md` file and the files it uses in `content/work/images/` and `public/files/`.
+
+### Turn Docs as Code back on
+
+The Docs as Code category is hidden until you have a sample for it. Its code and description are
+still in place. To show it again:
+
+1. Open `content/pages/work.md`.
+2. Under `- name: Docs as Code`, delete the line `hidden: true` (and, if you like, the three `#` note
+   lines above it).
+3. Add a work sample with `category: Docs as Code` (copy `content/work/_TEMPLATE.md`).
+4. Publish. Docs as Code then appears on the Work Samples page, in its category bar, and in the black
+   category band on the home page.
+
+A category only appears once it has at least one sample, so step 3 is what makes it visible. The same
+`hidden: true` line works for any category: it hides the category and every sample in it.
 
 ---
 
@@ -160,23 +192,24 @@ Because the build stops on errors, a mistake never reaches your live site. The l
 - **Change your name or job title:** edit `name` and `role` in `content/settings.md`. They appear in the home page hero, the footer, and browser tabs.
 - **Change the line above your name, the intro, or the buttons:** edit `content/home/intro.md`.
 - **Replace the placeholder stats:** in `content/home/stats.md`, change each `"00"` to your real
-  number (keep the quotes, for example `"8+"`), then delete that stat's `placeholder: true` line
-  so the "Placeholder" tag disappears.
+  number (keep the quotes, for example `"45+"`), then delete that stat's `placeholder: true` line
+  so the "Placeholder" tag disappears. "Years of experience" is already set to `"8+"` from your résumé.
 - **Add, remove, or reorder capabilities, tools, or process steps:** edit the list in the matching
   file in `content/home/`. Copy an existing item (all of its lines, starting with `- name:`) to add one.
 - **Add a tool or a tool group:** in `content/home/tools.md`, copy a tool (its `- name:` and `icon:`
   lines) inside a group's `items:` list, or copy a whole group (from `- name:` through its tools).
 - **Replace your résumé:** upload your new PDF to `public/files/` as `resume.pdf` (replacing the old one),
   then update `updated:` in `content/pages/resume.md`.
-- **Change your headshot:** replace `content/pages/images/headshot.jpg` with your new photo, keeping
-  the same file name. It appears on the Home and About pages. Its left edge fades into the grey set by
-  `--hero-bg` at the top of `src/styles/global.css`, so if your new photo has a different background
-  color, change `--hero-bg` to match it. A photo with a plain, light background and some space beside
-  you works best.
+- **Change your headshot:** replace `content/pages/images/headshot-cutout.png` with your new photo,
+  keeping the same file name. It appears on the Home and About pages. Use a cutout: a PNG with the
+  background removed (transparent), cropped so your hair touches the top edge and your shoulders
+  touch the bottom edge. If the cutout tool leaves a grey or white outline around your hair, ask
+  Claude to trim and soften the edge, as was done for this photo. (Your earlier photo with the grey
+  studio background is still saved as `headshot.jpg`, but the site doesn't use it.)
 - **Change the colors:** edit the lines at the top of `src/styles/global.css`. Each line gives the
   light-mode color first and the dark-mode color second, for example
-  `--ink: light-dark(#0d0d0d, #f5f4f1);` for the near-black text and buttons. `--hero-bg` is the grey
-  behind your photo on the Home and About pages; it matches the photo's studio background.
+  `--ink: light-dark(#0d0d0d, #f5f4f1);` for the near-black text and buttons. `--hero-bg` is the
+  background behind your photo on the Home and About pages (the soft off-white, `--bg-soft`).
 - **Change the top navigation:** edit the `links` list in `src/components/Header.astro`.
 
 ### Renaming the repository
@@ -188,7 +221,7 @@ so the site is at `https://deepo333.github.io/Portfolio/`). To rename it again:
 2. Open **Actions → Build and publish site → Run workflow** to republish at the new address:
    `https://deepo333.github.io/<new-name>/`. Capital letters in the name matter in the address.
 3. Update the old address where it appears: the **Live site** line at the top of this file,
-   `sourceCode` in `content/settings.md`, and the `link` in `content/work/docs-site-migration.md`.
+   and `sourceCode` in `content/settings.md`.
 
 ---
 
@@ -208,10 +241,11 @@ You don't need this to publish, but it lets you see changes before pushing them.
 | File or folder | What it does |
 | --- | --- |
 | `src/pages/` | One template per page type. `src/pages/work/[id].astro` is the work sample detail template. |
-| `src/components/` | Reusable pieces: header, footer, the "Back" link bar, sample cards, the two-column photo section, the black category band, script accents, icons, PDF viewer. |
+| `src/components/` | Reusable pieces: header, footer, the "Back" link bar, sample cards, the two-column photo section with your cutout, the black category band, script accents, icons, PDF viewer. |
 | `src/lib/icons.ts` | The thin-line icons you can pick with `icon:` in Markdown. |
 | `src/styles/global.css` | Colors, fonts (Archivo for your name and big display type, Marcellus for headings, Jost for text, Ms Madi for script accents), spacing, and light/dark mode. |
 | `src/content.config.ts` | The list of fields each Markdown file can have, and which are required. |
-| `src/lib/content.ts` | Loads the content and produces the friendly error messages. |
+| `src/lib/content.ts` | Loads the content, leaves out drafts and hidden categories, and produces the friendly error messages. |
+| `src/plugins/` | Small Markdown helpers: one fixes links for GitHub Pages, the other removes `<!-- notes -->` before publishing. |
 | `.github/workflows/deploy.yml` | The GitHub Actions workflow that builds and publishes the site. |
 | `astro.config.mjs` | Astro settings. The site's address is filled in automatically during publishing. |

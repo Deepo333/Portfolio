@@ -84,19 +84,29 @@ export async function getPage(id: 'work' | 'about' | 'resume' | 'contact'): Prom
   return page;
 }
 
-export async function getCategories() {
+/**
+ * The categories listed in content/pages/work.md, in order. Categories marked
+ * `hidden: true` are left out unless `includeHidden` is set.
+ */
+export async function getCategories({ includeHidden = false } = {}) {
   const page = await getPage('work');
   const categories = page.data.categories ?? [];
   if (categories.length === 0) {
     throw new Error('content/pages/work.md needs a "categories" list.');
   }
-  return categories.map((category) => ({ ...category, slug: slugify(category.name) }));
+  return categories
+    .filter((category) => includeHidden || !category.hidden)
+    .map((category) => ({ ...category, slug: slugify(category.name) }));
 }
 
-/** All published work samples, newest first. Samples marked `draft: true` are left out. */
+/**
+ * All published work samples, newest first. Samples marked `draft: true`, and
+ * samples in a category marked `hidden: true`, are left out.
+ */
 export async function getWorkSamples(): Promise<WorkSample[]> {
-  const categories = await getCategories();
+  const categories = await getCategories({ includeHidden: true });
   const names = categories.map((category) => category.name);
+  const hidden = categories.filter((category) => category.hidden).map((category) => category.name);
   const samples = await getCollection('work', (entry) => !entry.data.draft);
 
   for (const sample of samples) {
@@ -110,7 +120,9 @@ export async function getWorkSamples(): Promise<WorkSample[]> {
     if (sample.data.pdf) assertPublicFile(sample.data.pdf, file);
   }
 
-  return samples.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+  return samples
+    .filter((sample) => !hidden.includes(sample.data.category))
+    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 }
 
 export function categoryHref(category: string): string {

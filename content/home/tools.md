@@ -1,7 +1,11 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # HOME PAGE · TOOLS & TECHNOLOGIES
-# PLACEHOLDER LIST: replace these with the tools you actually use.
+# This list comes from the Tools section of your résumé. Markdown and
+# Git are marked "learning" because docs as code is a skill you're
+# building. Edit the names when that changes. Arena (also on your
+# résumé) is left out so each group keeps four tools in a neat row;
+# add it back if you like.
 #
 # Tools are grouped. Each group has a name and a list of tools; the
 # groups are numbered 01, 02, ... automatically, and each group shows
@@ -17,36 +21,36 @@
 title: Tools & technologies
 
 groups:
-  - name: Writing & authoring
+  - name: Writing & publishing
     items:
       - name: Microsoft Word
         icon: document
-      - name: MadCap Flare
-        icon: code
-      - name: Markdown
-        icon: markdown
-      - name: Adobe Acrobat Pro
+      - name: Excel
+        icon: spreadsheet
+      - name: PowerPoint
+        icon: slides
+      - name: Adobe Acrobat
         icon: pdf
-  - name: Collaboration & control
+  - name: Content & collaboration
     items:
       - name: SharePoint
         icon: cloud
       - name: Confluence
         icon: wiki
-      - name: Git & GitHub
-        icon: git
-      - name: Excel
-        icon: spreadsheet
-  - name: Visuals & presentations
+      - name: Jira
+        icon: control
+      - name: Livelink
+        icon: document
+  - name: AI & docs as code
     items:
-      - name: Microsoft Visio
-        icon: diagram
-      - name: PowerPoint
-        icon: slides
-      - name: Snagit
-        icon: image
-      - name: Figma
-        icon: design
+      - name: Claude
+        icon: chat
+      - name: Claude Code
+        icon: code
+      - name: Markdown (learning)
+        icon: markdown
+      - name: Git (learning)
+        icon: git
 ---
 
-The software I use to research, write, review, and publish.
+The software I use to write, review, track, and publish documentation.

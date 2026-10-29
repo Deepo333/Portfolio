@@ -10,4 +10,4 @@ title: Featured work
 linkLabel: See all work samples
 ---
 
-A few projects that show how I approach a documentation problem, from research to the finished deliverable.
+Procedures and forms from my work supporting Puget Sound Energy's Wildfire Risk Management program, each with a short note on how I approached it.

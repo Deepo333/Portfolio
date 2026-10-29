@@ -7,10 +7,10 @@
 # ─────────────────────────────────────────────────────────────
 
 # The small uppercase line above your name.
-tagline: Procedures · Forms · Docs as Code
+tagline: Procedures · Forms · Document Control
 
 # Shown by search engines and link previews for the home page.
-description: Dairyia Porter is a technical writer specializing in procedures, forms, and docs-as-code documentation.
+description: Dairyia Porter is a technical writer specializing in operational procedures, forms, and document control.
 
 # Button labels. The first opens your Work Samples page; the second
 # downloads the résumé PDF set in content/pages/resume.md.
@@ -18,4 +18,4 @@ primaryButton: View My Work
 secondaryButton: Download Résumé
 ---
 
-I turn complex processes into clear procedures, forms, and documentation that people can follow the first time, and I keep that content accurate with a docs-as-code workflow.
+I work with subject matter experts to turn complex processes into clear procedures, forms, and reference documents, and I keep that content accurate through document control.
