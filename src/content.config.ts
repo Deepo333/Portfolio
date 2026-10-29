@@ -116,8 +116,15 @@ const pages = defineCollection({
       title: z.string(),
       description: z.string().optional(),
       // Work Samples page
+      // `hidden: true` keeps a category (and any samples in it) off the site.
       categories: z
-        .array(z.object({ name: z.string(), description: z.string() }))
+        .array(
+          z.object({
+            name: z.string(),
+            description: z.string(),
+            hidden: z.boolean().default(false),
+          }),
+        )
         .optional(),
       // About page
       lead: z.string().optional(),

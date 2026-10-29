@@ -18,7 +18,9 @@ title: Title of the Sample
 summary: One or two sentences that appear on the sample's card and at the top of its page.
 
 # Must match a category name in content/pages/work.md exactly:
-# Procedures, Resources, Forms, Presentations, or Docs as Code
+# Procedures, Resources, Forms, or Presentations.
+# (Docs as Code is also listed there, but it's hidden for now. See the
+# note in content/pages/work.md to turn it back on.)
 category: Procedures
 
 # When you finished the project (YYYY-MM-DD). Newest samples are listed first.

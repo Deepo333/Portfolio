@@ -14,22 +14,22 @@ title: Core capabilities
 items:
   - name: Procedure Writing
     icon: procedure
-    description: Step-by-step SOPs and work instructions that people can follow correctly the first time.
+    description: Operational procedures and workflows, drafted and refined from subject matter expert direction.
   - name: Forms & Templates
     icon: form
-    description: Plain-language forms and reusable templates that collect complete, accurate information.
+    description: Fillable forms and reusable templates that ask for what a process needs, in plain language.
   - name: Document Control
     icon: control
-    description: Version control, review cycles, and approvals that keep controlled documents current and audit-ready.
-  - name: Docs as Code
-    icon: code
-    description: Markdown, Git, and automated publishing, so documentation ships alongside the work it describes.
+    description: Document numbering, version control, change requests, reviews, and approvals that keep documents current.
   - name: Training Materials
     icon: training
-    description: Job aids, quick-reference guides, and training decks built around real tasks.
+    description: Training materials, user guides, and visual walkthroughs built around real tasks.
   - name: Stakeholder Coordination
     icon: people
-    description: Interviews, reviews, and sign-offs with subject matter experts, managers, and compliance teams.
+    description: Gathering input and running reviews with engineers, subject matter experts, program managers, and executives.
+  - name: Docs as Code
+    icon: code
+    description: A skill I'm building now, writing in Markdown, tracking changes in Git, and publishing automatically.
 ---
 
-The documentation work I do, from the first interview to a controlled, published document.
+The documentation work I do, from subject matter expert input to an approved, controlled document.

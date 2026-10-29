@@ -11,4 +11,6 @@ emailButton: Email me
 linkedinButton: Connect on LinkedIn
 ---
 
+<!-- TODO: Confirm you're open to new roles. If you aren't, change the sentence below. -->
+
 I'm open to full-time roles and contract projects in technical writing and documentation. Email is the fastest way to reach me.

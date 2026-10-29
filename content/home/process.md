@@ -8,16 +8,16 @@
 title: My process
 
 steps:
-  - name: Discover
-    description: Interview subject matter experts, observe the task, and gather what already exists.
+  - name: Gather
+    description: Collect direction from subject matter experts, plus the documents, forms, and notes that already exist.
   - name: Draft
     description: Outline the structure, then write in plain language with one action per step.
   - name: Review
-    description: Route the draft to experts and stakeholders for technical and compliance review.
+    description: Route the draft to subject matter experts and stakeholders for technical review.
   - name: Refine
-    description: Test with real users, resolve feedback, and tighten for clarity and consistency.
+    description: Resolve review comments, then check the draft against the style guide and review checklist.
   - name: Publish
-    description: Release through the right channel under version control, and keep it current.
+    description: Release the approved version under document control, and update it through change requests.
 ---
 
-How a document goes from a process that lives in people's heads to something a team can trust.
+How a document goes from subject matter expert input to an approved, controlled version.
