@@ -4,6 +4,8 @@ title: Equipment Calibration SOP
 summary: A standard operating procedure that cut calibration errors by guiding lab technicians through each check in the order they actually perform it.
 category: Procedures
 date: 2026-06-12
+# This is an example, not real work. Delete this line in your real samples.
+placeholder: true
 cover: ./images/equipment-calibration-sop-cover.png
 coverAlt: Preview of a procedure document with numbered steps and a warning callout.
 featured: true

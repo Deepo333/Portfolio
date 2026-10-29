@@ -5,6 +5,8 @@ title: System Change Training Deck
 summary: A training presentation that prepared 200 employees for a new ticketing system, built around the tasks they'd do on day one.
 category: Presentations
 date: 2025-08-18
+# This is an example, not real work. Delete this line in your real samples.
+placeholder: true
 cover: ./images/change-management-training-deck-cover.png
 coverAlt: Preview of a presentation title slide with a simple chart.
 role: Writer and instructional designer

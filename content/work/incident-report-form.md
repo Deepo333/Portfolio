@@ -4,6 +4,8 @@ title: Incident Report Form Redesign
 summary: A redesigned, fillable incident report form that collects complete information the first time, with plain-language questions and a logical flow.
 category: Forms
 date: 2025-11-20
+# This is an example, not real work. Delete this line in your real samples.
+placeholder: true
 cover: ./images/incident-report-form-cover.png
 coverAlt: Preview of a form with labeled fields, checkboxes, and a signature line.
 featured: true

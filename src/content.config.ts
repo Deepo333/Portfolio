@@ -36,7 +36,8 @@ const settings = defineCollection({
 const homeIntro = defineCollection({
   loader: single('intro.md', './content/home'),
   schema: z.object({
-    headline: z.string(),
+    tagline: z.string(),
+    edition: z.string(),
     description: z.string().optional(),
     primaryButton: z.string(),
     secondaryButton: z.string(),
@@ -113,6 +114,7 @@ const pages = defineCollection({
         .array(z.object({ name: z.string(), description: z.string() }))
         .optional(),
       // About page
+      lead: z.string().optional(),
       headshot: image().optional(),
       headshotAlt: z.string().optional(),
       // Résumé page
@@ -136,6 +138,8 @@ const work = defineCollection({
       coverAlt: z.string(),
       featured: z.boolean().default(false),
       draft: z.boolean().default(false),
+      // Marks an example that isn't real work; shows a "Placeholder sample" label.
+      placeholder: z.boolean().default(false),
       role: z.string().optional(),
       audience: z.string().optional(),
       tools: z.array(z.string()).default([]),
