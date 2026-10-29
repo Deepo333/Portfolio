@@ -1,0 +1,21 @@
+---
+/*
+ * Shows text with any word wrapped in underscores in the handwritten script.
+ * In Markdown, write `About _me_` to get "About" plus a script "me".
+ */
+interface Props {
+  text: string;
+}
+
+const parts = Astro.props.text.split(/(_[^_]+_)/g).filter(Boolean);
+---
+
+{
+  parts.map((part) =>
+    part.length > 2 && part.startsWith('_') && part.endsWith('_') ? (
+      <span class="script">{part.slice(1, -1)}</span>
+    ) : (
+      part
+    ),
+  )
+}

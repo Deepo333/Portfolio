@@ -1,17 +1,21 @@
 ---
 # ABOUT PAGE  →  /about/
-# To change your photo, put a new image in content/pages/images/
-# and update the "headshot" line to match its file name.
-# This photo also appears at the top of the home page.
-# Use a high-quality JPG with your face near the center.
+# Your photo also appears in the hero at the top of the home page.
+# Use a PNG with a transparent background (a "cutout") so it blends into
+# the page. To change it, replace content/pages/images/headshot-cutout.png
+# with your new cutout, keeping the same file name.
 
-title: About me
+# Put underscores around a word to show it in the handwritten script.
+title: About _me_
 description: About Dairyia Porter, technical writer.
-headshot: ./images/headshot.jpg
+
+# Shown in large type next to your photo. The rest of your bio goes
+# below the --- line.
+lead: I'm a technical writer who believes good documentation is invisible. People find what they need, follow it, and get back to work.
+
+headshot: ./images/headshot-cutout.png
 headshotAlt: Dairyia Porter smiling, with long dark wavy hair and a white button-up shirt
 ---
-
-I'm a technical writer who believes good documentation is invisible: people find what they need, follow it, and get back to work.
 
 I specialize in procedures, forms, and reference material for operations, compliance, and product teams. My work starts with the people who will use the document. I interview subject matter experts, observe the task, and test drafts with real users before anything ships.
 

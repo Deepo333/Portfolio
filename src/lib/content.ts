@@ -17,12 +17,17 @@ export function url(href = '/'): string {
   return `${base}/${href.replace(/^\/+/, '')}`;
 }
 
+/** Removes the underscores used to mark script words, e.g. "About _me_" -> "About me". */
+export function plainText(text: string): string {
+  return text.replace(/_([^_]+)_/g, '$1');
+}
+
 /** Turns "Docs as Code" into "docs-as-code" for use in links. */
 export function slugify(text: string): string {
   return text
     .toLowerCase()
     .normalize('NFKD')
-    .replace(/[̀-ͯ]/g, '')
+    .replace(/[\u0300-\u036f]/g, '')
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
 }

@@ -1,89 +1,145 @@
 ---
-/* About page. The words and headshot come from content/pages/about.md. */
+/* About page. The words and photo come from content/pages/about.md. */
 import { render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Accent from '../components/Accent.astro';
+import Cutout from '../components/Cutout.astro';
 import Icon from '../components/Icon.astro';
-import Portrait from '../components/Portrait.astro';
-import { getPage, getSettings, url } from '../lib/content';
+import { getPage, getSettings, plainText, url } from '../lib/content';
 
 const settings = await getSettings();
 const page = await getPage('about');
 const resume = await getPage('resume');
 const { Content } = await render(page);
-const { title, description, headshot, headshotAlt } = page.data;
+const { title, description, lead, headshot, headshotAlt } = page.data;
 ---
 
-<BaseLayout title={title} description={description}>
-  <div class="container about">
-    {
-      headshot && (
-        <div class="portrait-column">
-          <Portrait src={headshot} alt={headshotAlt ?? settings.name} eager />
+<BaseLayout title={plainText(title)} description={description}>
+  <section class="about-cover" aria-labelledby="about-title">
+    <div class="container about-grid">
+      <div class="about-intro">
+        <h1 id="about-title" class="about-title"><Accent text={title} /></h1>
+        {lead && <p class="about-lead">{lead}</p>}
+        <div class="button-row">
+          <a
+            class="button button-primary"
+            href={resume.data.pdf ? url(resume.data.pdf) : url('/resume/')}
+            download={resume.data.pdf ? `${settings.name} - Resume.pdf` : undefined}
+          >
+            <Icon name="download" />
+            Download résumé
+          </a>
+          <a class="button button-secondary" href={url('/contact/')}>Get in touch</a>
         </div>
-      )
-    }
-    <div class="about-text">
-      <h1>{title}</h1>
-      <div class="prose">
-        <Content />
       </div>
-      <div class="button-row">
-        <a
-          class="button button-primary"
-          href={resume.data.pdf ? url(resume.data.pdf) : url('/resume/')}
-          download={resume.data.pdf ? `${settings.name} - Resume.pdf` : undefined}
-        >
-          <Icon name="download" />
-          Download résumé
-        </a>
-        <a class="button button-secondary" href={url('/contact/')}>Get in touch</a>
-      </div>
+      {
+        headshot && (
+          <div class="about-photo">
+            <Cutout
+              src={headshot}
+              alt={headshotAlt ?? settings.name}
+              sizes="(max-width: 860px) 84vw, 40vw"
+              eager
+            />
+          </div>
+        )
+      }
     </div>
-  </div>
+  </section>
+
+  <section class="band container about-body" aria-label="Biography" data-reveal>
+    <p class="label">Biography</p>
+    <div class="prose">
+      <Content />
+    </div>
+  </section>
 </BaseLayout>
 
 <style>
-  .about {
+  .about-cover {
+    background: var(--bg-soft);
+    overflow: hidden;
+  }
+
+  .about-grid {
     display: grid;
-    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-    gap: clamp(2.5rem, 7vw, 6rem);
-    align-items: start;
-    padding-block: clamp(3rem, 8vw, 6rem) var(--section-space);
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: end;
   }
 
-  .portrait-column {
-    position: sticky;
-    top: calc(var(--header-height) + 2.5rem);
-    padding-right: 7%;
+  .about-intro {
+    align-self: center;
+    padding-block: clamp(3.5rem, 8vw, 6rem);
   }
 
-  h1 {
-    margin-bottom: 1.75rem;
-    font-size: clamp(2.5rem, 5.5vw, 3.75rem);
-    font-variation-settings: 'SOFT' 100, 'WONK' 0;
+  .about-title {
+    font-family: var(--font-display);
+    font-size: clamp(3.75rem, 9vw, 8.5rem);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 0.85;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .about-title :global(.script) {
+    display: inline-block;
+    margin-left: 0.04em;
+    color: var(--accent-large);
+    font-size: 0.9em;
+    line-height: 0.5;
+    transform: rotate(-5deg) translateY(0.1em);
+  }
+
+  .about-lead {
+    margin-top: clamp(2rem, 4vw, 3rem);
+    max-width: 30ch;
+    font-family: var(--font-serif);
+    font-size: clamp(1.5rem, 2.8vw, 2.25rem);
     font-weight: 450;
-  }
-
-  .prose :global(p:first-of-type) {
-    color: var(--text-muted);
-    font-size: clamp(1.1875rem, 2vw, 1.3125rem);
-    line-height: 1.6;
+    font-variation-settings: 'opsz' 24;
+    line-height: 1.28;
   }
 
   .button-row {
-    margin-top: 2.75rem;
+    margin-top: 2.5rem;
+  }
+
+  /* The photo sits on the bottom edge of the section, like a magazine cover. */
+  .about-photo {
+    align-self: end;
+    justify-self: center;
+    width: min(100%, 520px);
+    margin-top: 2rem;
+  }
+
+  .about-body {
+    display: grid;
+    grid-template-columns: minmax(0, 0.5fr) minmax(0, 1.5fr);
+    gap: 1.5rem clamp(2rem, 6vw, 6rem);
+  }
+
+  .about-body .label {
+    padding-top: 0.5rem;
+  }
+
+  .prose :global(p:first-child) {
+    font-size: 1.1875rem;
   }
 
   @media (max-width: 860px) {
-    .about {
+    .about-grid,
+    .about-body {
       grid-template-columns: minmax(0, 1fr);
     }
 
-    .portrait-column {
-      position: static;
-      width: min(68%, 300px);
-      margin-left: 4%;
-      padding-right: 0;
+    .about-intro {
+      padding-bottom: 0;
+    }
+
+    .about-photo {
+      width: min(84vw, 440px);
     }
   }
 </style>

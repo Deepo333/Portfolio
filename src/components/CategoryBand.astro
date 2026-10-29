@@ -1,0 +1,93 @@
+---
+/*
+ * The black band listing your work categories. Each name links to that
+ * category on the Work Samples page. Categories come from content/pages/work.md.
+ */
+import { categoryHref } from '../lib/content';
+
+interface Props {
+  categories: { name: string; count?: number }[];
+  label?: string;
+}
+
+const { categories, label = 'Work categories' } = Astro.props;
+---
+
+<nav class="category-band band-inverse" aria-label={label}>
+  <ul class="container">
+    {
+      categories.map((category) => (
+        <li>
+          <a href={categoryHref(category.name)}>
+            {category.name}
+            {category.count !== undefined && <span class="count">({category.count})</span>}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<style>
+  .category-band ul {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem clamp(1.25rem, 4vw, 3rem);
+    margin: 0 auto;
+    padding-block: 1.6rem;
+    list-style: none;
+  }
+
+  .category-band li {
+    display: flex;
+    align-items: center;
+    gap: clamp(1.25rem, 4vw, 3rem);
+  }
+
+  /* A small taupe square between categories. */
+  .category-band li + li::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    background: var(--accent);
+  }
+
+  .category-band a {
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: clamp(0.8125rem, 1.4vw, 0.9375rem);
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .category-band a:hover {
+    opacity: 1;
+    color: var(--accent-text);
+  }
+
+  /* On smaller screens the categories stay in one row and scroll sideways if needed. */
+  @media (max-width: 1024px) {
+    .category-band ul {
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      justify-content: safe center;
+      overflow-x: auto;
+      scrollbar-width: none;
+      white-space: nowrap;
+    }
+
+    .category-band ul::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .count {
+    margin-left: 0.4em;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+</style>

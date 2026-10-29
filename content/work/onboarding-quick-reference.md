@@ -4,6 +4,8 @@ title: New Hire Quick-Reference Guide
 summary: A two-page job aid that answers the questions new employees ask most in their first week, so managers spend less time repeating the same answers.
 category: Resources
 date: 2026-03-04
+# This is an example, not real work. Delete this line in your real samples.
+placeholder: true
 cover: ./images/onboarding-quick-reference-cover.png
 coverAlt: Preview of a two-column quick-reference guide with icons and short sections.
 role: Writer and designer

@@ -8,59 +8,50 @@
 :root {
   color-scheme: light;
 
-  /* Page and surfaces */
-  --bg: light-dark(#faf7f2, #1f1c19); /* warm ivory / warm soft dark */
-  --surface: light-dark(#ffffff, #28241f); /* cards */
-  --section: light-dark(#ede6db, #2b2622); /* warm sand section backgrounds */
+  /* Page and sections */
+  --bg: light-dark(#ffffff, #0d0d0d); /* white */
+  --bg-soft: light-dark(#f5f4f1, #151413); /* soft off-white */
+  --section: light-dark(#e8e4de, #1e1c1a); /* light greige, alternate sections */
 
   /* Text */
-  --text: light-dark(#1c1c1e, #f2ede6); /* charcoal */
-  --text-muted: light-dark(#5e5a55, #c4baae);
-  --text-subtle: light-dark(#6f6a64, #a89e92);
-  --heading: light-dark(#1f2a44, #e6e9f2);
+  --ink: light-dark(#0d0d0d, #f5f4f1); /* near-black text and bold headings */
+  --text-muted: light-dark(#6b6763, #a9a49e); /* warm grey secondary text */
+  --heading: var(--ink);
 
-  /* Accents */
-  --primary: light-dark(#1f2a44, #b9c4e0); /* deep navy: buttons, links */
-  --primary-hover: light-dark(#2d3c5e, #cdd5ea);
-  --on-primary: light-dark(#ffffff, #1c1c1e);
-  --sage: light-dark(#7d8f76, #a3b49b); /* icons and small highlights */
-  --sage-text: light-dark(#4e5f49, #b5c4ae); /* sage that is dark enough for text */
-  --sage-tint: light-dark(#e8ede5, rgb(163 180 155 / 0.14));
-  --blush: light-dark(#d9b8a8, #c9a493); /* used sparingly */
-  --blush-tint: light-dark(#f5ebe5, rgb(217 184 168 / 0.12));
+  /* Accent: warm nude/taupe. Too light for text on white, so it's used for lines
+     and dots; --accent-text is the deeper taupe used for small labels. */
+  --accent: #b39b84;
+  --accent-text: light-dark(#73604d, #c9b5a1);
+  /* Taupe for large script words: as light as it can be while staying readable. */
+  --accent-large: light-dark(#957d67, #b39b84);
+
+  /* Inverse bands (near-black with white text) */
+  --inverse-bg: light-dark(#0d0d0d, #e8e4de);
+  --inverse-ink: light-dark(#ffffff, #0d0d0d);
+  --inverse-muted: light-dark(#b5b0aa, #5f5b57);
+  --inverse-accent: light-dark(#b39b84, #73604d);
 
   /* Lines */
-  --border: light-dark(#e6ded2, #3b352f);
-  --border-strong: light-dark(#d3c9ba, #4d453d);
-
-  --shadow-color: light-dark(rgb(74 56 36 / 0.1), rgb(0 0 0 / 0.45));
-  --shadow-sm: 0 1px 2px light-dark(rgb(74 56 36 / 0.06), rgb(0 0 0 / 0.3));
-  --shadow: 0 1px 2px light-dark(rgb(74 56 36 / 0.05), rgb(0 0 0 / 0.3)),
-    0 14px 36px -18px var(--shadow-color);
-  --shadow-lg: 0 2px 4px light-dark(rgb(74 56 36 / 0.05), rgb(0 0 0 / 0.3)),
-    0 28px 60px -28px var(--shadow-color);
+  --border: light-dark(#e3dfd8, #2e2b28);
+  --border-strong: light-dark(#0d0d0d, #f5f4f1);
 
   /* Type */
-  --font-serif: 'Fraunces Variable', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --font-display: 'Archivo Variable', 'Helvetica Neue', Arial, sans-serif;
+  --font-serif: 'Bodoni Moda Variable', 'Didot', 'Bodoni 72', Georgia, serif;
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
+  --font-script: 'Ms Madi', 'Brush Script MT', cursive;
   --font-mono: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
 
-  /* Shape: larger elements get softer corners */
-  --radius-xs: 8px;
-  --radius-sm: 12px;
-  --radius-md: 18px;
-  --radius-lg: 24px;
-  --radius-xl: 36px;
-
   /* Layout */
-  --page-width: 1160px;
-  --prose-width: 66ch;
-  --gutter: clamp(1rem, 4vw, 2.5rem);
-  --header-height: 72px;
-  --section-space: clamp(4.5rem, 10vw, 7.5rem);
+  --page-width: 1280px;
+  --prose-width: 64ch;
+  --gutter: clamp(1rem, 4vw, 3rem);
+  --header-height: 68px;
+  --section-space: clamp(5rem, 11vw, 9rem);
 
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 :root[data-theme='dark'] {
@@ -87,7 +78,7 @@ body {
   display: flex;
   flex-direction: column;
   background: var(--bg);
-  color: var(--text);
+  color: var(--ink);
   font-family: var(--font-sans);
   font-size: 1.0625rem;
   line-height: 1.7;
@@ -112,29 +103,24 @@ img {
 }
 
 a {
-  color: var(--primary);
-  text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
+  color: var(--ink);
   text-decoration-thickness: 1px;
-  text-underline-offset: 0.22em;
-  transition:
-    color 0.2s var(--ease),
-    text-decoration-color 0.2s var(--ease);
+  text-underline-offset: 0.25em;
+  transition: opacity 0.2s var(--ease);
 }
 
 a:hover {
-  color: var(--primary-hover);
-  text-decoration-color: currentColor;
+  opacity: 0.65;
 }
 
 :focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--ink);
   outline-offset: 3px;
-  border-radius: 4px;
 }
 
 ::selection {
-  background: var(--blush-tint);
-  color: var(--text);
+  background: var(--section);
+  color: var(--ink);
 }
 
 h1,
@@ -144,11 +130,10 @@ h4 {
   margin: 0;
   color: var(--heading);
   font-family: var(--font-serif);
-  font-weight: 500;
+  font-weight: 450;
   font-optical-sizing: auto;
-  font-variation-settings: 'SOFT' 60, 'WONK' 0;
   letter-spacing: -0.01em;
-  line-height: 1.15;
+  line-height: 1.08;
   text-wrap: balance;
 }
 
@@ -174,17 +159,50 @@ p {
   left: 1rem;
   top: -100px;
   z-index: 100;
-  padding: 0.5rem 1rem;
-  background: var(--primary);
-  color: var(--on-primary);
-  border-radius: var(--radius-xs);
+  padding: 0.75rem 1.25rem;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 0.75rem;
   font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
   text-decoration: none;
 }
 
 .skip-link:focus {
   top: 1rem;
-  color: var(--on-primary);
+}
+
+/* ---------- Type helpers ---------- */
+
+/* Small uppercase labels with letter spacing, magazine style. */
+.label {
+  color: var(--accent-text);
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+/* The handwritten script, used only for small playful accents. */
+.script {
+  font-family: var(--font-script);
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* Big, bold display type (the same family as the name on the home page). */
+.display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-stretch: 100%;
+  letter-spacing: -0.015em;
+  line-height: 0.92;
+  text-transform: uppercase;
 }
 
 /* ---------- Motion ---------- */
@@ -197,10 +215,10 @@ p {
    The "motion" class is only added when the visitor hasn't asked for reduced motion. */
 .motion [data-reveal] {
   opacity: 0;
-  transform: translateY(18px);
+  transform: translateY(20px);
   transition:
-    opacity 0.8s var(--ease),
-    transform 0.8s var(--ease);
+    opacity 0.9s var(--ease),
+    transform 0.9s var(--ease);
 }
 
 .motion [data-reveal].is-visible {
@@ -235,30 +253,56 @@ p {
   padding-block: var(--section-space);
 }
 
-.band-sand {
+.band-soft {
+  background: var(--bg-soft);
+}
+
+.band-greige {
+  /* A slightly deeper grey keeps secondary text readable on greige. */
+  --text-muted: light-dark(#5f5b57, #a9a49e);
+  --accent-text: light-dark(#6a5847, #c9b5a1);
   background: var(--section);
 }
 
+.band-inverse {
+  --ink: var(--inverse-ink);
+  --heading: var(--inverse-ink);
+  --text-muted: var(--inverse-muted);
+  --accent-text: var(--inverse-accent);
+  --accent-large: light-dark(#b39b84, #957d67);
+  --border: light-dark(#2e2b28, #cdc7bf);
+  --border-strong: var(--inverse-ink);
+  background: var(--inverse-bg);
+  color: var(--inverse-ink);
+}
+
 .page-header {
-  padding-block: clamp(3.5rem, 9vw, 6.5rem) clamp(2rem, 5vw, 3.5rem);
+  padding-block: clamp(3.5rem, 9vw, 7rem) clamp(2.5rem, 5vw, 4rem);
 }
 
 .page-header h1 {
-  font-size: clamp(2.5rem, 5.5vw, 3.75rem);
-  font-variation-settings: 'SOFT' 100, 'WONK' 0;
-  font-weight: 450;
-  line-height: 1.08;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 9vw, 7.5rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.page-header .label {
+  display: block;
+  margin-bottom: 1.5rem;
 }
 
 .page-header .lead {
-  margin-top: 1.25rem;
-  max-width: 60ch;
+  margin-top: 2rem;
+  max-width: 56ch;
 }
 
 .lead {
   color: var(--text-muted);
-  font-size: clamp(1.125rem, 2vw, 1.25rem);
-  line-height: 1.65;
+  font-size: clamp(1.125rem, 2vw, 1.3125rem);
+  line-height: 1.6;
 }
 
 .section-heading {
@@ -266,53 +310,71 @@ p {
   flex-wrap: wrap;
   align-items: end;
   justify-content: space-between;
-  gap: 1rem 2.5rem;
-  margin-bottom: clamp(2rem, 4vw, 3rem);
+  gap: 1.25rem 3rem;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
 }
 
 .section-heading h2 {
-  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-size: clamp(2.5rem, 5.5vw, 4.5rem);
+}
+
+.section-heading .label {
+  display: block;
+  margin-bottom: 1.25rem;
 }
 
 .section-heading .intro {
-  margin-top: 0.75rem;
-  max-width: 56ch;
+  margin-top: 1.25rem;
+  max-width: 52ch;
   color: var(--text-muted);
 }
 
-.text-link {
+/* A link styled as a small uppercase label with an underline. */
+.label-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--border-strong);
+  color: var(--ink);
+  font-size: 0.75rem;
   font-weight: 600;
+  letter-spacing: 0.18em;
   text-decoration: none;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
-.text-link .icon {
-  width: 18px;
-  height: 18px;
-  transition: transform 0.25s var(--ease);
+.label-link .icon {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.3s var(--ease);
 }
 
-.text-link:hover .icon {
-  transform: translateX(3px);
+.label-link:hover {
+  opacity: 1;
 }
 
-.tag {
+.label-link:hover .icon {
+  transform: translateX(4px);
+}
+
+/* Marks a placeholder sample so nobody mistakes it for real work. */
+.placeholder-tag {
   display: inline-flex;
   align-items: center;
-  min-height: 26px;
-  padding: 0.15rem 0.7rem;
-  border-radius: 999px;
-  background: var(--sage-tint);
-  color: var(--sage-text);
-  font-size: 0.8125rem;
-  font-weight: 550;
-  line-height: 1.3;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--ink);
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  line-height: 1.2;
+  text-transform: uppercase;
 }
 
-/* ---------- Buttons ---------- */
+/* ---------- Buttons: sharp and rectangular ---------- */
 
 .button-row {
   display: flex;
@@ -324,59 +386,67 @@ p {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.55rem;
-  min-height: 50px;
-  padding: 0.75rem 1.5rem;
-  border: 1.5px solid transparent;
-  border-radius: 999px;
+  gap: 0.65rem;
+  min-height: 52px;
+  padding: 0.85rem 1.75rem;
+  border: 1px solid var(--ink);
+  border-radius: 0;
   font: inherit;
-  font-size: 0.9875rem;
+  font-size: 0.75rem;
   font-weight: 600;
+  letter-spacing: 0.18em;
   line-height: 1.2;
   text-decoration: none;
+  text-transform: uppercase;
   cursor: pointer;
   transition:
-    background-color 0.25s var(--ease),
-    border-color 0.25s var(--ease),
-    color 0.25s var(--ease),
-    box-shadow 0.25s var(--ease),
-    transform 0.25s var(--ease);
+    background-color 0.3s var(--ease),
+    color 0.3s var(--ease),
+    border-color 0.3s var(--ease);
 }
 
 .button .icon {
-  width: 19px;
-  height: 19px;
+  width: 17px;
+  height: 17px;
   flex: none;
 }
 
+.button:hover {
+  opacity: 1;
+}
+
 .button-primary {
-  background: var(--primary);
-  color: var(--on-primary);
-  box-shadow: 0 8px 20px -10px light-dark(rgb(31 42 68 / 0.55), rgb(0 0 0 / 0.5));
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.band-inverse .button-primary {
+  color: var(--inverse-bg);
 }
 
 .button-primary:hover {
-  background: var(--primary-hover);
-  color: var(--on-primary);
-  transform: translateY(-1px);
+  background: transparent;
+  color: var(--ink);
 }
 
 .button-secondary {
-  background: var(--surface);
-  border-color: var(--border-strong);
-  color: var(--primary);
+  background: transparent;
+  color: var(--ink);
 }
 
 .button-secondary:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-  transform: translateY(-1px);
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.band-inverse .button-secondary:hover {
+  color: var(--inverse-bg);
 }
 
 .button-small {
   min-height: 40px;
-  padding: 0.45rem 1rem;
-  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.6875rem;
 }
 
 /* ---------- Prose (text written in Markdown) ---------- */
@@ -391,17 +461,17 @@ p {
 
 .prose h2 {
   margin-top: 2.25em;
-  font-size: clamp(1.625rem, 3vw, 1.875rem);
+  font-size: clamp(1.875rem, 3.5vw, 2.5rem);
 }
 
 .prose h3 {
   margin-top: 2em;
-  font-size: 1.3125rem;
+  font-size: 1.5rem;
 }
 
 .prose h2 + *,
 .prose h3 + * {
-  margin-top: 0.75em;
+  margin-top: 0.85em;
 }
 
 .prose > :first-child {
@@ -410,7 +480,7 @@ p {
 
 .prose ul,
 .prose ol {
-  padding-left: 1.3em;
+  padding-left: 1.2em;
 }
 
 .prose li + li {
@@ -418,25 +488,25 @@ p {
 }
 
 .prose li::marker {
-  color: var(--sage);
+  color: var(--accent-text);
 }
 
 .prose strong {
   font-weight: 650;
-  color: var(--text);
 }
 
 .prose blockquote {
   margin-inline: 0;
-  padding: 0.25em 0 0.25em 1.25em;
-  border-left: 3px solid var(--blush);
+  padding: 0.25em 0 0.25em 1.5em;
+  border-left: 1px solid var(--accent);
   color: var(--text-muted);
+  font-family: var(--font-serif);
+  font-size: 1.25em;
 }
 
 .prose code {
   padding: 0.15em 0.4em;
-  border-radius: 6px;
-  background: var(--section);
+  background: var(--bg-soft);
   font-family: var(--font-mono);
   font-size: 0.875em;
 }
@@ -444,7 +514,6 @@ p {
 .prose pre {
   padding: 1rem 1.25rem;
   overflow-x: auto;
-  border-radius: var(--radius-sm);
   font-size: 0.875rem;
   line-height: 1.6;
 }
@@ -453,10 +522,6 @@ p {
   padding: 0;
   background: none;
   font-size: inherit;
-}
-
-.prose img {
-  border-radius: var(--radius-sm);
 }
 
 .prose hr {

@@ -5,6 +5,8 @@ title: Docs-as-Code Migration
 summary: Moved a team's scattered documentation into Markdown and Git, with automatic publishing and peer review built into the workflow.
 category: Docs as Code
 date: 2026-09-02
+# This is an example, not real work. Delete this line in your real samples.
+placeholder: true
 cover: ./images/docs-site-migration-cover.png
 coverAlt: Preview of a code editor showing a Markdown file next to the published web page.
 featured: true
