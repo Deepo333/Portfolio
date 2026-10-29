@@ -2,11 +2,11 @@
 /*
  * Home page. Every word on this page comes from a Markdown file:
  *   content/settings.md              your name, job title, email, and LinkedIn
- *   content/home/intro.md            hero details, button labels, and the introduction
- *   content/home/stats.md            the two stats
+ *   content/home/intro.md            hero tagline, intro, and button labels
+ *   content/home/stats.md            the four stats
  *   content/home/featured.md         featured work heading (cards come from content/work/)
  *   content/home/capabilities.md     core capabilities
- *   content/home/tools.md            tools & technologies
+ *   content/home/tools.md            tools & technologies, in groups
  *   content/home/process.md          my process
  *   content/home/closing.md          the "Let's work together" band
  *   content/pages/about.md           your photo
@@ -16,8 +16,8 @@ import { render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Accent from '../components/Accent.astro';
 import CategoryBand from '../components/CategoryBand.astro';
-import Cutout from '../components/Cutout.astro';
 import Icon from '../components/Icon.astro';
+import PhotoCover from '../components/PhotoCover.astro';
 import WorkCard from '../components/WorkCard.astro';
 import {
   getCategories,
@@ -57,62 +57,51 @@ const [firstName, ...otherNames] = settings.name.split(' ');
 const resumeHref = resume.data.pdf ? url(resume.data.pdf) : url('/resume/');
 const resumeFileName = `${settings.name} - Resume.pdf`;
 const linkedinHandle = settings.linkedin.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
+const number = (index: number) => String(index + 1).padStart(2, '0');
 ---
 
-<BaseLayout description={intro.data.description}>
-  <section class="cover" aria-labelledby="cover-name">
-    <h1 id="cover-name" class="masthead">
-      <span class="mast-line mast-name">
-        <span class="word">{firstName}</span>
-        {otherNames.length > 0 && <span class="word">{otherNames.join(' ')}</span>}
-      </span>
-      <span class="visually-hidden">, </span>
-      <span class="mast-line mast-role">{settings.role}</span>
-    </h1>
-
-    {
-      about.data.headshot && (
-        <div class="cover-photo">
-          <Cutout
-            src={about.data.headshot}
-            alt={about.data.headshotAlt ?? settings.name}
-            sizes="(max-width: 760px) 84vw, 36vw"
-            eager
-          />
-        </div>
-      )
-    }
-
-    <p class="label cover-detail cover-tagline">{intro.data.tagline}</p>
-    <p class="label cover-detail cover-edition">{intro.data.edition}</p>
-
-    <div class="cover-actions button-row">
-      <a class="button button-primary" href={url('/work/')}>{intro.data.primaryButton}</a>
-      <a
-        class="button button-secondary"
-        href={resumeHref}
-        download={resume.data.pdf ? resumeFileName : undefined}
+<BaseLayout description={intro.data.description} backLink={false}>
+  {
+    about.data.headshot && (
+      <PhotoCover
+        src={about.data.headshot}
+        alt={about.data.headshotAlt ?? settings.name}
+        labelledby="hero-name"
       >
-        <Icon name="download" />
-        {intro.data.secondaryButton}
-      </a>
-    </div>
-  </section>
+        <p class="label">{intro.data.tagline}</p>
+        <h1 id="hero-name" class="hero-name">
+          <span class="word">{firstName}</span>
+          {otherNames.length > 0 && <span class="word">{otherNames.join(' ')}</span>}
+        </h1>
+        <p class="hero-role">{settings.role}</p>
+        <div class="hero-intro">
+          <IntroText />
+        </div>
+        <div class="button-row">
+          <a class="button button-primary" href={url('/work/')}>
+            {intro.data.primaryButton}
+          </a>
+          <a
+            class="button button-secondary"
+            href={resumeHref}
+            download={resume.data.pdf ? resumeFileName : undefined}
+          >
+            <Icon name="download" />
+            {intro.data.secondaryButton}
+          </a>
+        </div>
+      </PhotoCover>
+    )
+  }
 
   <CategoryBand categories={categories} label="What I write" />
 
-  <section class="band container statement" aria-label="Introduction" data-reveal>
-    <div class="statement-text">
-      <p class="label">Introduction</p>
-      <div class="statement-body">
-        <IntroText />
-      </div>
-    </div>
+  <section class="container stats-section" aria-label="At a glance">
     <dl class="stats">
       {
         stats.data.stats.map((stat) => (
           <div class="stat">
-            <dt class="label">{stat.label}</dt>
+            <dt>{stat.label}</dt>
             <dd>
               <span class="stat-value">{stat.value}</span>
               {stat.placeholder && <span class="placeholder-tag">Placeholder</span>}
@@ -163,7 +152,7 @@ const linkedinHandle = settings.linkedin.replace(/^https?:\/\/(www\.)?/, '').rep
         {
           capabilities.data.items.map((item) => (
             <li class="capability">
-              <Icon name={item.icon} size={30} class="capability-icon" />
+              <Icon name={item.icon} size={26} class="capability-icon" />
               <h3>{item.name}</h3>
               <p>{item.description}</p>
             </li>
@@ -174,7 +163,7 @@ const linkedinHandle = settings.linkedin.replace(/^https?:\/\/(www\.)?/, '').rep
   </section>
 
   <section class="band" aria-labelledby="tools-heading" data-reveal>
-    <div class="container tools-layout">
+    <div class="container">
       <div class="section-heading">
         <div>
           <h2 id="tools-heading">{tools.data.title}</h2>
@@ -183,16 +172,33 @@ const linkedinHandle = settings.linkedin.replace(/^https?:\/\/(www\.)?/, '').rep
           </div>
         </div>
       </div>
-      <ul class="tools">
+      <div class="tool-groups">
         {
-          tools.data.items.map((tool) => (
-            <li>
-              <Icon name={tool.icon} size={22} />
-              {tool.name}
-            </li>
+          tools.data.groups.map((group, index) => (
+            <section class="tool-group" aria-labelledby={`tools-${index}`}>
+              <div class="tool-group-head">
+                <span class="label tool-number" aria-hidden="true">
+                  {number(index)}
+                </span>
+                <h3 id={`tools-${index}`}>{group.name}</h3>
+                <span class="tool-count">
+                  {group.items.length} {group.items.length === 1 ? 'tool' : 'tools'}
+                </span>
+              </div>
+              <ul class="tool-tiles">
+                {group.items.map((tool) => (
+                  <li>
+                    <span class="tile" aria-hidden="true">
+                      <Icon name={tool.icon} size={24} />
+                    </span>
+                    <span class="tool-name">{tool.name}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
           ))
         }
-      </ul>
+      </div>
     </div>
   </section>
 
@@ -211,7 +217,7 @@ const linkedinHandle = settings.linkedin.replace(/^https?:\/\/(www\.)?/, '').rep
           process.data.steps.map((step, index) => (
             <li>
               <span class="step-number" aria-hidden="true">
-                {String(index + 1).padStart(2, '0')}
+                {number(index)}
               </span>
               <h3>{step.name}</h3>
               <p>{step.description}</p>
@@ -258,65 +264,31 @@ const linkedinHandle = settings.linkedin.replace(/^https?:\/\/(www\.)?/, '').rep
 </BaseLayout>
 
 <style>
-  /* ---------- Cover (hero) ---------- */
+  /* ---------- Hero ---------- */
 
-  .cover {
-    /* The giant type is sized from the page width so both lines span it exactly. */
-    --mast: min(10.05vw, 12.5rem);
-    --mast-top: clamp(2.5rem, 5vw, 4.5rem);
-    --photo-w: min(34vw, 580px);
-    --photo-h: calc(var(--photo-w) * 1.18);
-    --side: calc((100% - var(--photo-w)) / 2 - var(--gutter) - 0.5rem);
-
-    position: relative;
-    /* The top of the photo overlaps the lower half of the title line. */
-    height: calc(var(--mast-top) + var(--mast) * 1.32 + var(--photo-h));
-    min-height: 560px;
-    overflow: hidden;
-    isolation: isolate;
-    background: var(--bg-soft);
-  }
-
-  .masthead {
-    position: absolute;
-    top: var(--mast-top);
-    left: 0;
-    right: 0;
-    z-index: 1;
-    color: var(--ink);
+  .hero-name {
+    margin-top: 1.25rem;
     font-family: var(--font-display);
-    font-size: var(--mast);
+    font-size: clamp(3.5rem, 7.4vw, 8rem);
     font-weight: 900;
-    letter-spacing: 0;
+    letter-spacing: -0.015em;
     line-height: 0.86;
-    text-align: center;
     text-transform: uppercase;
-    white-space: nowrap;
   }
 
-  .mast-line {
+  .hero-name .word {
     display: block;
-    animation: mast-in 1.6s var(--ease-out) both;
+    animation: rise 1.2s var(--ease-out) both;
   }
 
-  .mast-name {
-    font-stretch: 100%;
+  .hero-name .word + .word {
+    animation-delay: 0.12s;
   }
 
-  .mast-role {
-    font-stretch: 83%;
-    animation-delay: 0.18s;
-  }
-
-  .mast-name .word + .word::before {
-    content: ' ';
-  }
-
-  /* The giant name and title rise gently into place behind the photo. */
-  @keyframes mast-in {
+  @keyframes rise {
     from {
       opacity: 0;
-      transform: translateY(0.35em);
+      transform: translateY(0.25em);
     }
 
     to {
@@ -325,131 +297,95 @@ const linkedinHandle = settings.linkedin.replace(/^https?:\/\/(www\.)?/, '').rep
     }
   }
 
-  .cover-photo {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    z-index: 2;
-    width: var(--photo-w);
-    transform: translateX(-50%);
+  .hero-role {
+    margin-top: 1.25rem;
+    font-family: var(--font-heading);
+    font-size: clamp(1.125rem, 2vw, 1.5rem);
+    letter-spacing: 0.12em;
+    line-height: 1.3;
+    text-transform: uppercase;
   }
 
-  .cover-detail {
-    position: absolute;
-    z-index: 3;
-    top: calc(var(--mast-top) + var(--mast) * 1.9);
-    max-width: var(--side);
-    display: flex;
-    align-items: center;
-    gap: 0.9rem;
-    color: var(--ink);
+  .hero-intro {
+    margin-top: 1.25rem;
+    max-width: 46ch;
+    color: var(--text-muted);
+    font-size: clamp(1rem, 1.4vw, 1.125rem);
   }
 
-  /* A short taupe rule beside each detail. */
-  .cover-detail::before {
-    content: '';
-    flex: none;
-    width: 2rem;
-    height: 1px;
-    background: var(--accent);
+  .button-row {
+    margin-top: 1.75rem;
   }
 
-  .cover-tagline {
-    left: var(--gutter);
-  }
+  /* ---------- Stats ---------- */
 
-  .cover-edition {
-    right: var(--gutter);
-    flex-direction: row-reverse;
-  }
-
-  .cover-actions {
-    position: absolute;
-    z-index: 3;
-    left: var(--gutter);
-    bottom: clamp(1.75rem, 4vw, 3rem);
-    flex-direction: column;
-    align-items: stretch;
-    width: max-content;
-    max-width: var(--side);
-  }
-
-  /* ---------- Introduction and stats ---------- */
-
-  .statement {
-    display: grid;
-    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
-    gap: clamp(2.5rem, 7vw, 7rem);
-    align-items: end;
-  }
-
-  .statement-body {
-    margin-top: 1.5rem;
-    font-family: var(--font-serif);
-    font-size: clamp(1.75rem, 3.4vw, 2.75rem);
-    font-weight: 450;
-    /* A smaller optical size gives the serif sturdier hairlines for reading. */
-    font-variation-settings: 'opsz' 24;
-    line-height: 1.28;
-    letter-spacing: -0.005em;
+  .stats-section {
+    padding-block: clamp(2rem, 5vw, 3rem);
   }
 
   .stats {
     display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     margin: 0;
+    border-top: 1px solid var(--border-strong);
+    border-bottom: 1px solid var(--border);
   }
 
   .stat {
     display: flex;
     flex-direction: column-reverse;
-    gap: 0.5rem;
-    padding-block: 1.5rem;
-    border-top: 1px solid var(--border-strong);
+    justify-content: flex-end;
+    gap: 0.4rem;
+    padding: 1.25rem clamp(0.75rem, 2vw, 1.5rem);
+  }
+
+  .stat + .stat {
+    border-left: 1px solid var(--border);
   }
 
   .stat dt {
     color: var(--text-muted);
+    font-size: 0.875rem;
+    line-height: 1.4;
   }
 
   .stat dd {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 1rem;
+    gap: 0.4rem 0.75rem;
     margin: 0;
   }
 
   .stat-value {
     font-family: var(--font-display);
-    font-size: clamp(3.5rem, 7vw, 5.5rem);
+    font-size: clamp(2.25rem, 4.5vw, 3.5rem);
     font-weight: 800;
     line-height: 1;
   }
 
   /* ---------- Featured work ---------- */
 
-  .featured {
-    border-top: 1px solid var(--border);
-  }
-
   .featured-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
-    gap: clamp(2rem, 3vw, 2.75rem);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1.5rem, 3vw, 2.5rem);
   }
 
   /* ---------- Capabilities ---------- */
 
   .capabilities {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
-    gap: 0 clamp(2rem, 4vw, 3.5rem);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(0.75rem, 2vw, 1.25rem);
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
   .capability {
-    padding-block: 2rem 2.5rem;
+    padding: clamp(1rem, 2.5vw, 1.75rem);
+    background: var(--bg);
     border-top: 1px solid var(--border-strong);
   }
 
@@ -459,71 +395,98 @@ const linkedinHandle = settings.linkedin.replace(/^https?:\/\/(www\.)?/, '').rep
   }
 
   .capability h3 {
-    margin-top: 1.5rem;
-    font-size: clamp(1.5rem, 2.2vw, 1.75rem);
+    margin-top: 1rem;
+    font-size: clamp(1.0625rem, 2vw, 1.375rem);
   }
 
   .capability p {
-    margin-top: 0.75rem;
+    margin-top: 0.5rem;
     color: var(--text-muted);
-    font-size: 0.96875rem;
-    line-height: 1.65;
+    font-size: 0.9375rem;
+    line-height: 1.55;
   }
 
   /* ---------- Tools ---------- */
 
-  .tools-layout {
+  .tool-groups {
     display: grid;
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.6fr);
-    gap: clamp(1.5rem, 6vw, 6rem);
-    align-items: start;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1.5rem, 3vw, 2.5rem);
   }
 
-  .tools-layout .section-heading {
-    margin-bottom: 0;
-  }
-
-  .tools {
+  .tool-group-head {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(46%, 220px), 1fr));
-    gap: 0 2rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 0.75rem;
+    padding-top: 1rem;
     border-top: 1px solid var(--border-strong);
   }
 
-  .tools li {
-    display: flex;
-    align-items: center;
-    gap: 0.9rem;
-    min-height: 64px;
-    border-bottom: 1px solid var(--border);
-    font-size: 0.96875rem;
-    font-weight: 500;
-    line-height: 1.3;
+  .tool-group-head h3 {
+    font-size: 1.25rem;
   }
 
-  .tools :global(.icon) {
-    flex: none;
-    color: var(--accent-text);
-    stroke-width: 1.35;
+  .tool-count {
+    color: var(--text-muted);
+    font-size: 0.8125rem;
+    white-space: nowrap;
+  }
+
+  .tool-tiles {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem 0.75rem;
+    margin: 1.25rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .tool-tiles li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    text-align: center;
+  }
+
+  .tile {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    aspect-ratio: 1;
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    color: var(--ink);
+    transition: border-color 0.25s var(--ease);
+  }
+
+  .tool-tiles li:hover .tile {
+    border-color: var(--ink);
+  }
+
+  .tile :global(.icon) {
+    stroke-width: 1.3;
+  }
+
+  .tool-name {
+    font-size: 0.8125rem;
+    line-height: 1.3;
   }
 
   /* ---------- Process ---------- */
 
   .process {
-    --step-gap: clamp(1.25rem, 2.5vw, 2.5rem);
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: var(--step-gap);
+    gap: clamp(0.75rem, 2vw, 1.5rem);
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
   .process li {
-    padding-top: 1.5rem;
+    padding-top: 1rem;
     border-top: 1px solid var(--border-strong);
   }
 
@@ -531,28 +494,28 @@ const linkedinHandle = settings.linkedin.replace(/^https?:\/\/(www\.)?/, '').rep
     display: block;
     color: var(--accent-text);
     font-family: var(--font-display);
-    font-size: clamp(2.5rem, 4vw, 3.5rem);
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
     font-weight: 300;
     line-height: 1;
   }
 
   .process h3 {
-    margin-top: 1.25rem;
-    font-size: 1.625rem;
+    margin-top: 0.75rem;
+    font-size: clamp(1.125rem, 1.8vw, 1.375rem);
   }
 
   .process p {
-    margin-top: 0.6rem;
+    margin-top: 0.4rem;
     color: var(--text-muted);
-    font-size: 0.9375rem;
-    line-height: 1.6;
+    font-size: 0.875rem;
+    line-height: 1.5;
   }
 
   /* ---------- Closing band ---------- */
 
   .closing-title {
     font-family: var(--font-display);
-    font-size: clamp(3rem, 9.5vw, 8.5rem);
+    font-size: clamp(2.75rem, 8.5vw, 7.5rem);
     font-weight: 800;
     letter-spacing: -0.02em;
     line-height: 0.9;
@@ -571,10 +534,10 @@ const linkedinHandle = settings.linkedin.replace(/^https?:\/\/(www\.)?/, '').rep
   .closing-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: clamp(2rem, 5vw, 5rem);
+    gap: clamp(1.5rem, 5vw, 5rem);
     align-items: end;
-    margin-top: clamp(2.5rem, 5vw, 4rem);
-    padding-top: 2.5rem;
+    margin-top: clamp(2rem, 4vw, 3rem);
+    padding-top: 2rem;
     border-top: 1px solid var(--border);
   }
 
@@ -590,7 +553,7 @@ const linkedinHandle = settings.linkedin.replace(/^https?:\/\/(www\.)?/, '').rep
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem 2rem;
-    margin-top: 1.5rem;
+    margin-top: 1.25rem;
     color: var(--text-muted);
     letter-spacing: 0.12em;
     text-transform: none;
@@ -598,15 +561,17 @@ const linkedinHandle = settings.linkedin.replace(/^https?:\/\/(www\.)?/, '').rep
 
   /* ---------- Smaller screens ---------- */
 
-  @media (max-width: 1100px) {
+  @media (max-width: 1024px) {
+    .tool-groups {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
     .process {
-      grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
 
   @media (max-width: 860px) {
-    .statement,
-    .tools-layout,
     .closing-grid {
       grid-template-columns: minmax(0, 1fr);
     }
@@ -616,119 +581,54 @@ const linkedinHandle = settings.linkedin.replace(/^https?:\/\/(www\.)?/, '').rep
     }
   }
 
-  /* Tablets: the details sit in a row above the masthead and the buttons below the photo. */
-  @media (max-width: 1024px) {
-    .cover {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      grid-template-areas:
-        'tagline edition'
-        'masthead masthead'
-        'photo photo'
-        'actions actions';
-      height: auto;
-      min-height: 0;
-      padding-top: 1.75rem;
+  @media (max-width: 760px) {
+    .capabilities {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .cover-detail {
-      position: static;
-      max-width: none;
+    .tool-groups {
+      grid-template-columns: minmax(0, 1fr);
     }
 
-    .cover-tagline {
-      grid-area: tagline;
-      margin-left: var(--gutter);
+    .process {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .cover-edition {
-      grid-area: edition;
-      margin-right: var(--gutter);
+    .stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .masthead {
-      grid-area: masthead;
-      position: relative;
-      top: 0;
-      margin-top: 1.75rem;
+    .stat + .stat {
+      border-left: 0;
     }
 
-    .cover-photo {
-      grid-area: photo;
-      position: relative;
-      left: auto;
-      justify-self: center;
-      width: min(58vw, 480px);
-      margin-top: calc(var(--mast) * -0.36);
-      transform: none;
+    .stat:nth-child(even) {
+      border-left: 1px solid var(--border);
     }
 
-    .cover-actions {
-      grid-area: actions;
-      position: static;
-      flex-direction: row;
-      justify-content: center;
-      width: auto;
-      max-width: none;
-      padding: 1.5rem var(--gutter);
-      background: var(--bg);
+    .stat:nth-child(n + 3) {
+      border-top: 1px solid var(--border);
+    }
+
+    /* Featured cards scroll sideways instead of stacking into a long column. */
+    .featured-grid {
+      grid-template-columns: none;
+      grid-auto-flow: column;
+      grid-auto-columns: 78%;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding-bottom: 0.75rem;
+      scrollbar-width: thin;
+    }
+
+    .featured-grid > :global(*) {
+      scroll-snap-align: start;
     }
   }
 
-  /* Phones: the name stacks on two lines and the title condenses to fit. */
-  @media (max-width: 760px) {
-    .cover {
-      --name-size: 20vw;
-      --role-size: 12.6vw;
-      grid-template-columns: minmax(0, 1fr);
-      grid-template-areas:
-        'tagline'
-        'edition'
-        'masthead'
-        'photo'
-        'actions';
-    }
-
-    .cover-edition {
-      flex-direction: row;
-      margin-top: 0.6rem;
-      margin-left: var(--gutter);
-    }
-
-    .masthead {
-      margin-top: 1.5rem;
-    }
-
-    .mast-name {
-      font-size: var(--name-size);
-      line-height: 0.84;
-    }
-
-    .mast-name .word {
-      display: block;
-    }
-
-    .mast-name .word + .word::before {
-      content: none;
-    }
-
-    .mast-role {
-      margin-top: 0.1em;
-      font-size: var(--role-size);
-      font-stretch: 62%;
-    }
-
-    .cover-photo {
-      width: min(84vw, 480px);
-      margin-top: calc(var(--role-size) * -0.3);
-    }
-
-    .cover-actions {
-      flex-direction: column;
-    }
-
-    .stat-value {
-      font-size: 3.5rem;
+  @media (max-width: 400px) {
+    .capability p {
+      font-size: 0.8125rem;
     }
   }
 </style>

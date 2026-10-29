@@ -1,9 +1,10 @@
 ---
 # ABOUT PAGE  →  /about/
 # Your photo also appears in the hero at the top of the home page.
-# Use a PNG with a transparent background (a "cutout") so it blends into
-# the page. To change it, replace content/pages/images/headshot-cutout.png
-# with your new cutout, keeping the same file name.
+# Its edge fades into a grey that matches the photo's studio background.
+# To change it, replace content/pages/images/headshot.jpg, keeping the
+# same file name. (If the new photo's background is a different grey,
+# change --hero-bg at the top of src/styles/global.css to match.)
 
 # Put underscores around a word to show it in the handwritten script.
 title: About _me_
@@ -13,7 +14,7 @@ description: About Dairyia Porter, technical writer.
 # below the --- line.
 lead: I'm a technical writer who believes good documentation is invisible. People find what they need, follow it, and get back to work.
 
-headshot: ./images/headshot-cutout.png
+headshot: ./images/headshot.jpg
 headshotAlt: Dairyia Porter smiling, with long dark wavy hair and a white button-up shirt
 ---
 

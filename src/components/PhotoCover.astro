@@ -1,0 +1,106 @@
+---
+/*
+ * A two-column cover: your text on the left, your photo on the right.
+ * The section's background matches the grey studio background of the photo
+ * (--hero-bg in src/styles/global.css), and the photo's left edge fades into
+ * it, so the photo and the page read as one image. On phones the photo sits
+ * on top and its bottom edge fades instead.
+ */
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  /** The id of the heading that names this section. */
+  labelledby?: string;
+}
+
+const { src, alt, labelledby } = Astro.props;
+const widths = [640, 960, src.width].filter((w, i, all) => w <= src.width && all.indexOf(w) === i);
+---
+
+<section
+  class="photo-cover"
+  aria-labelledby={labelledby}
+  style={`--photo-ratio: ${src.width} / ${src.height}`}
+>
+  <div class="photo-cover-text">
+    <slot />
+  </div>
+  <div class="photo-cover-photo">
+    <Image
+      src={src}
+      alt={alt}
+      widths={widths}
+      sizes="(max-width: 760px) 100vw, 50vw"
+      quality={90}
+      loading="eager"
+      fetchpriority="high"
+    />
+  </div>
+</section>
+
+<style>
+  .photo-cover {
+    /* The photo's background is a light grey, so this section stays light in dark mode. */
+    color-scheme: light;
+    --photo-w: clamp(420px, 50vw, 960px);
+    /* Darker greys keep text readable on the grey background. */
+    --text-muted: #4a4643;
+    --accent-text: #5a4a3c;
+    --accent-large: #75604c;
+
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) var(--photo-w);
+    min-height: calc(var(--photo-w) / (var(--photo-ratio)));
+    background: var(--hero-bg);
+    color: var(--ink);
+  }
+
+  .photo-cover-text {
+    align-self: center;
+    padding-block: clamp(2rem, 5vw, 4rem);
+    padding-inline: max(var(--gutter), calc((100vw - var(--page-width)) / 2)) clamp(1.5rem, 4vw, 4rem);
+  }
+
+  .photo-cover-photo {
+    position: relative;
+  }
+
+  .photo-cover-photo img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 20% 0;
+    /* Fade the left edge (studio background only) into the matching grey. */
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 14%);
+    mask-image: linear-gradient(to right, transparent, #000 14%);
+  }
+
+  @media (max-width: 760px) {
+    .photo-cover {
+      grid-template-columns: minmax(0, 1fr);
+      min-height: 0;
+    }
+
+    .photo-cover-photo {
+      order: -1;
+      aspect-ratio: var(--photo-ratio);
+    }
+
+    .photo-cover-photo img {
+      object-position: 50% 0;
+      /* On phones the photo spans the screen, so its bottom edge fades instead. */
+      -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent);
+      mask-image: linear-gradient(to bottom, #000 72%, transparent);
+    }
+
+    /* The text starts below the photo so it never covers it. */
+    .photo-cover-text {
+      padding: 1.25rem var(--gutter) clamp(2.5rem, 8vw, 3.5rem);
+    }
+  }
+</style>

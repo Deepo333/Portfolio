@@ -9,6 +9,7 @@ const { name } = Astro.props;
 
 // The links in the top navigation bar, in order.
 const links = [
+  { label: 'Home', href: '/' },
   { label: 'Work samples', href: '/work/' },
   { label: 'About', href: '/about/' },
   { label: 'Résumé', href: '/resume/' },
@@ -16,12 +17,16 @@ const links = [
 ];
 
 const current = Astro.url.pathname.replace(/\/?$/, '/');
-const isActive = (href: string) => current.startsWith(url(href));
+const isActive = (href: string) =>
+  href === '/' ? current === url('/') : current.startsWith(url(href));
 ---
 
 <header class="site-header">
   <div class="container header-inner">
-    <a class="wordmark" href={url('/')}>{name}</a>
+    <a class="wordmark" href={url('/')}>
+      {name}
+      <span class="visually-hidden">, home page</span>
+    </a>
 
     <nav class="site-nav" aria-label="Main">
       <button

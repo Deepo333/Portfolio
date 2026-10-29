@@ -25,6 +25,9 @@
   /* Taupe for large script words: as light as it can be while staying readable. */
   --accent-large: light-dark(#957d67, #b39b84);
 
+  /* The hero matches the grey studio background of your headshot. */
+  --hero-bg: #c7c4c2;
+
   /* Inverse bands (near-black with white text) */
   --inverse-bg: light-dark(#0d0d0d, #e8e4de);
   --inverse-ink: light-dark(#ffffff, #0d0d0d);
@@ -37,8 +40,8 @@
 
   /* Type */
   --font-display: 'Archivo Variable', 'Helvetica Neue', Arial, sans-serif;
-  --font-serif: 'Bodoni Moda Variable', 'Didot', 'Bodoni 72', Georgia, serif;
-  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+  --font-heading: 'Marcellus', 'Optima', 'Candara', 'Segoe UI', sans-serif;
+  --font-sans: 'Jost Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
   --font-script: 'Ms Madi', 'Brush Script MT', cursive;
   --font-mono: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
@@ -48,7 +51,7 @@
   --prose-width: 64ch;
   --gutter: clamp(1rem, 4vw, 3rem);
   --header-height: 68px;
-  --section-space: clamp(5rem, 11vw, 9rem);
+  --section-space: clamp(3.5rem, 7vw, 5.5rem);
 
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -81,8 +84,7 @@ body {
   color: var(--ink);
   font-family: var(--font-sans);
   font-size: 1.0625rem;
-  line-height: 1.7;
-  font-feature-settings: 'cv11';
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -129,11 +131,11 @@ h3,
 h4 {
   margin: 0;
   color: var(--heading);
-  font-family: var(--font-serif);
-  font-weight: 450;
-  font-optical-sizing: auto;
-  letter-spacing: -0.01em;
-  line-height: 1.08;
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-synthesis: none;
+  letter-spacing: 0.005em;
+  line-height: 1.12;
   text-wrap: balance;
 }
 
@@ -277,12 +279,12 @@ p {
 }
 
 .page-header {
-  padding-block: clamp(3.5rem, 9vw, 7rem) clamp(2.5rem, 5vw, 4rem);
+  padding-block: clamp(1.5rem, 4vw, 3rem) clamp(2rem, 4vw, 3rem);
 }
 
 .page-header h1 {
   font-family: var(--font-display);
-  font-size: clamp(3rem, 9vw, 7.5rem);
+  font-size: clamp(2.75rem, 8vw, 6.5rem);
   font-weight: 800;
   letter-spacing: -0.02em;
   line-height: 0.9;
@@ -311,11 +313,11 @@ p {
   align-items: end;
   justify-content: space-between;
   gap: 1.25rem 3rem;
-  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+  margin-bottom: clamp(1.75rem, 4vw, 3rem);
 }
 
 .section-heading h2 {
-  font-size: clamp(2.5rem, 5.5vw, 4.5rem);
+  font-size: clamp(2.25rem, 5vw, 3.75rem);
 }
 
 .section-heading .label {
@@ -324,7 +326,7 @@ p {
 }
 
 .section-heading .intro {
-  margin-top: 1.25rem;
+  margin-top: 0.85rem;
   max-width: 52ch;
   color: var(--text-muted);
 }
@@ -500,7 +502,7 @@ p {
   padding: 0.25em 0 0.25em 1.5em;
   border-left: 1px solid var(--accent);
   color: var(--text-muted);
-  font-family: var(--font-serif);
+  font-family: var(--font-heading);
   font-size: 1.25em;
 }
 

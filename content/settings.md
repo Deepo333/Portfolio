@@ -7,7 +7,7 @@
 # ─────────────────────────────────────────────────────────────
 
 name: Dairyia Porter
-role: Technical Writer
+role: Senior Technical Writer
 
 # One or two sentences that search engines and link previews
 # (LinkedIn, Slack, etc.) show for your site.

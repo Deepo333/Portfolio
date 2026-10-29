@@ -13,6 +13,15 @@ interface Props {
 
 const { settings } = Astro.props;
 const year = new Date().getFullYear();
+
+// Every page on the site, so each one is always reachable from the footer.
+const pages = [
+  { label: 'Home', href: '/' },
+  { label: 'Work samples', href: '/work/' },
+  { label: 'About', href: '/about/' },
+  { label: 'Résumé', href: '/resume/' },
+  { label: 'Contact', href: '/contact/' },
+];
 ---
 
 <footer class="site-footer">
@@ -21,7 +30,18 @@ const year = new Date().getFullYear();
       <a class="footer-name" href={url('/')}>{settings.name}</a>
       <p>{settings.role}</p>
     </div>
-    <ul class="footer-links">
+    <nav class="footer-pages" aria-label="All pages">
+      <ul class="footer-links">
+        {
+          pages.map((page) => (
+            <li>
+              <a href={url(page.href)}>{page.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <ul class="footer-links footer-contact">
       <li><a href={`mailto:${settings.email}`}>Email</a></li>
       <li><a href={settings.linkedin} rel="me noopener" target="_blank">LinkedIn</a></li>
       {
@@ -47,10 +67,25 @@ const year = new Date().getFullYear();
 
   .footer-inner {
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
-    gap: 1.5rem 2rem;
-    padding-block: 3rem 2.5rem;
+    gap: 1.25rem 2rem;
+    padding-block: 2.5rem 2rem;
+  }
+
+  .footer-pages {
+    grid-column: 1 / -1;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .identity {
+    grid-row: 1;
+  }
+
+  .footer-contact {
+    grid-row: 1;
+    justify-content: flex-end;
   }
 
   .footer-name {
@@ -81,6 +116,8 @@ const year = new Date().getFullYear();
   }
 
   .footer-links a {
+    display: inline-block;
+    padding-block: 0.45rem;
     color: var(--ink);
     font-size: 0.75rem;
     font-weight: 600;
@@ -96,14 +133,17 @@ const year = new Date().getFullYear();
 
   .copyright {
     grid-column: 1 / -1;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--border);
     font-size: 0.8125rem;
   }
 
   @media (max-width: 640px) {
     .footer-inner {
       grid-template-columns: 1fr;
+    }
+
+    .footer-contact {
+      grid-row: auto;
+      justify-content: flex-start;
     }
   }
 </style>
