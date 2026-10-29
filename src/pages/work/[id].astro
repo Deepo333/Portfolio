@@ -7,6 +7,7 @@
 import { Image } from 'astro:assets';
 import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import BackBar from '../../components/BackBar.astro';
 import Icon from '../../components/Icon.astro';
 import PdfViewer from '../../components/PdfViewer.astro';
 import {
@@ -46,6 +47,12 @@ const toc = [
   ...(hasSample ? [{ slug: 'the-sample', text: 'The sample' }] : []),
 ];
 
+// "All work samples" and "Home" appear at the top and bottom of every sample page.
+const sampleLinks = [
+  { label: 'All work samples', href: '/work/', icon: 'back' as const },
+  { label: 'Home', href: '/', icon: 'home' as const },
+];
+
 const facts = [
   { label: 'Category', value: category },
   { label: 'My role', value: role },
@@ -55,15 +62,16 @@ const facts = [
 ].filter((fact) => fact.value);
 ---
 
-<BaseLayout title={placeholder ? `${title} (placeholder sample)` : title} description={summary}>
+<BaseLayout
+  title={placeholder ? `${title} (placeholder sample)` : title}
+  description={summary}
+  backLinks={sampleLinks}
+>
   <article>
     <header class="page-header container detail-header">
-      <nav class="breadcrumb" aria-label="Breadcrumb">
-        <ol>
-          <li><a href={url('/work/')}>Work samples</a></li>
-          <li><a href={categoryHref(category)}>{category}</a></li>
-        </ol>
-      </nav>
+      <p class="label category-link">
+        <a href={categoryHref(category)}>{category}</a>
+      </p>
       <h1>{title}</h1>
       <p class="lead">{summary}</p>
       {
@@ -150,6 +158,13 @@ const facts = [
       </div>
     </div>
 
+    <BackBar
+      class="sample-end-links"
+      back={false}
+      links={sampleLinks}
+      label="Sample navigation"
+    />
+
     <nav class="container pager" aria-label="More work samples">
       {
         newer && (
@@ -179,43 +194,32 @@ const facts = [
   /* Sample titles use the serif, like a magazine feature headline. */
   .detail-header h1 {
     max-width: 18ch;
-    font-family: var(--font-serif);
-    font-size: clamp(2.75rem, 6vw, 5rem);
-    font-weight: 450;
-    letter-spacing: -0.015em;
-    line-height: 1.02;
+    font-family: var(--font-heading);
+    font-size: clamp(2.5rem, 5.5vw, 4.5rem);
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.05;
     text-transform: none;
   }
 
-  .breadcrumb ol {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin: 0 0 2rem;
-    padding: 0;
-    list-style: none;
+  .category-link {
+    margin-bottom: 1.25rem;
   }
 
-  .breadcrumb li {
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-  }
-
-  .breadcrumb li + li::before {
-    content: '/';
-    margin-right: 0.75rem;
-    color: var(--text-muted);
-  }
-
-  .breadcrumb a {
-    color: var(--text-muted);
+  .category-link a {
+    color: var(--accent-text);
     text-decoration: none;
   }
 
-  .breadcrumb li:last-child a {
-    color: var(--accent-text);
+  .category-link a:hover {
+    opacity: 1;
+    text-decoration: underline;
+    text-underline-offset: 0.35em;
+  }
+
+  /* The shared link row (a separate component) at the end of the sample. */
+  :global(.sample-end-links) {
+    margin-top: clamp(3rem, 7vw, 4.5rem);
   }
 
   .placeholder-notice {
@@ -354,7 +358,7 @@ const facts = [
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0 2rem;
-    padding-block: clamp(4rem, 9vw, 6rem) var(--section-space);
+    padding-block: 1.5rem var(--section-space);
   }
 
   .pager-link {
@@ -383,7 +387,7 @@ const facts = [
   }
 
   .pager-title {
-    font-family: var(--font-serif);
+    font-family: var(--font-heading);
     font-size: clamp(1.375rem, 2.5vw, 1.75rem);
     line-height: 1.2;
   }

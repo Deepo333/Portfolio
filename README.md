@@ -29,11 +29,11 @@ Each section of the home page has its own file in `content/home/`, in the order 
 
 | Section | File | What you edit there |
 | --- | --- | --- |
-| Hero | `content/home/intro.md` | The small details beside your photo, the two button labels, and the introduction paragraph shown under the hero. The giant name and job title come from `content/settings.md` |
-| Stats | `content/home/stats.md` | The two numbers beside the introduction (see "Replace the placeholder stats" below) |
+| Hero | `content/home/intro.md` | The small line above your name, the short intro, and the two button labels. Your name and job title come from `content/settings.md` |
+| Stats | `content/home/stats.md` | The four numbers under the hero (see "Replace the placeholder stats" below) |
 | Featured work | `content/home/featured.md` | Section heading and intro. The cards are the work samples marked `featured: true` |
 | Core capabilities | `content/home/capabilities.md` | Each capability's name, icon, and description |
-| Tools & technologies | `content/home/tools.md` | Each tool's name and icon |
+| Tools & technologies | `content/home/tools.md` | Groups of tools (numbered 01, 02, ... automatically), each tool's name and icon |
 | My process | `content/home/process.md` | Each step's name and description (numbered automatically) |
 | Let's work together | `content/home/closing.md` | Heading, text, and link labels. Email and LinkedIn come from `content/settings.md` |
 
@@ -67,7 +67,7 @@ Lines in the frontmatter that start with `#` are notes to you. They never appear
 | What | Where to put it | How to refer to it |
 | --- | --- | --- |
 | Images for work samples | `content/work/images/` | `./images/my-picture.png` |
-| Your headshot cutout (used on Home and About) | `content/pages/images/` | `./images/headshot-cutout.png` |
+| Your headshot (used on Home and About) | `content/pages/images/` | `./images/headshot.jpg` |
 | PDFs (samples and résumé) | `public/files/` | `/files/my-document.pdf` |
 
 ### Linking to other pages
@@ -81,8 +81,8 @@ The site adjusts these links automatically so they work on GitHub Pages.
 ## How to add a new work sample
 
 1. **Add your files.**
-   - Put a cover image in `content/work/images/`. Tall images work best (a 4:5 shape, for example
-     1200 × 1500 pixels); wider images are trimmed at the sides to fit the card.
+   - Put a cover image in `content/work/images/`. A 4:3 shape works best (for example 1200 × 900
+     pixels). It appears under the sample's title on its card.
    - If the sample is a PDF, put it in `public/files/`.
    - If the sample is a set of images (like slides), put them in `content/work/images/` too.
 2. **Copy the template.** In `content/work/`, make a copy of `_TEMPLATE.md` and rename it.
@@ -157,22 +157,26 @@ Because the build stops on errors, a mistake never reaches your live site. The l
 ## Common changes
 
 - **Change your name, email, or LinkedIn:** edit `content/settings.md`.
-- **Change the giant name or job title on the home page:** edit `name` and `role` in `content/settings.md`.
-- **Change the details beside your photo, the buttons, or the introduction:** edit `content/home/intro.md`.
+- **Change your name or job title:** edit `name` and `role` in `content/settings.md`. They appear in the home page hero, the footer, and browser tabs.
+- **Change the line above your name, the intro, or the buttons:** edit `content/home/intro.md`.
 - **Replace the placeholder stats:** in `content/home/stats.md`, change each `"00"` to your real
   number (keep the quotes, for example `"8+"`), then delete that stat's `placeholder: true` line
   so the "Placeholder" tag disappears.
 - **Add, remove, or reorder capabilities, tools, or process steps:** edit the list in the matching
   file in `content/home/`. Copy an existing item (all of its lines, starting with `- name:`) to add one.
+- **Add a tool or a tool group:** in `content/home/tools.md`, copy a tool (its `- name:` and `icon:`
+  lines) inside a group's `items:` list, or copy a whole group (from `- name:` through its tools).
 - **Replace your résumé:** upload your new PDF to `public/files/` as `resume.pdf` (replacing the old one),
   then update `updated:` in `content/pages/resume.md`.
-- **Change your headshot:** replace `content/pages/images/headshot-cutout.png` with your new photo,
-  keeping the same file name. It appears on the Home and About pages with no frame, so use a PNG with
-  a transparent background (a "cutout"), cropped flat along the bottom edge. For the sharpest result
-  on high-resolution screens, use one at least 1600 pixels wide.
+- **Change your headshot:** replace `content/pages/images/headshot.jpg` with your new photo, keeping
+  the same file name. It appears on the Home and About pages. Its left edge fades into the grey set by
+  `--hero-bg` at the top of `src/styles/global.css`, so if your new photo has a different background
+  color, change `--hero-bg` to match it. A photo with a plain, light background and some space beside
+  you works best.
 - **Change the colors:** edit the lines at the top of `src/styles/global.css`. Each line gives the
   light-mode color first and the dark-mode color second, for example
-  `--ink: light-dark(#0d0d0d, #f5f4f1);` for the near-black text and buttons.
+  `--ink: light-dark(#0d0d0d, #f5f4f1);` for the near-black text and buttons. `--hero-bg` is the grey
+  behind your photo on the Home and About pages; it matches the photo's studio background.
 - **Change the top navigation:** edit the `links` list in `src/components/Header.astro`.
 
 ### Renaming the repository
@@ -204,9 +208,9 @@ You don't need this to publish, but it lets you see changes before pushing them.
 | File or folder | What it does |
 | --- | --- |
 | `src/pages/` | One template per page type. `src/pages/work/[id].astro` is the work sample detail template. |
-| `src/components/` | Reusable pieces: header, footer, sample cards, your photo cutout, the black category band, script accents, icons, PDF viewer. |
+| `src/components/` | Reusable pieces: header, footer, the "Back" link bar, sample cards, the two-column photo section, the black category band, script accents, icons, PDF viewer. |
 | `src/lib/icons.ts` | The thin-line icons you can pick with `icon:` in Markdown. |
-| `src/styles/global.css` | Colors, fonts (Archivo for the giant display type, Bodoni Moda for headings, Inter for text, Ms Madi for script accents), spacing, and light/dark mode. |
+| `src/styles/global.css` | Colors, fonts (Archivo for your name and big display type, Marcellus for headings, Jost for text, Ms Madi for script accents), spacing, and light/dark mode. |
 | `src/content.config.ts` | The list of fields each Markdown file can have, and which are required. |
 | `src/lib/content.ts` | Loads the content and produces the friendly error messages. |
 | `.github/workflows/deploy.yml` | The GitHub Actions workflow that builds and publishes the site. |

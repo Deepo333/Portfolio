@@ -37,7 +37,6 @@ const homeIntro = defineCollection({
   loader: single('intro.md', './content/home'),
   schema: z.object({
     tagline: z.string(),
-    edition: z.string(),
     description: z.string().optional(),
     primaryButton: z.string(),
     secondaryButton: z.string(),
@@ -79,7 +78,14 @@ const homeTools = defineCollection({
   loader: single('tools.md', './content/home'),
   schema: z.object({
     title: z.string(),
-    items: z.array(z.object({ name: z.string(), icon })).min(1),
+    groups: z
+      .array(
+        z.object({
+          name: z.string(),
+          items: z.array(z.object({ name: z.string(), icon })).min(1),
+        }),
+      )
+      .min(1),
   }),
 });
 

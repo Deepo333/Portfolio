@@ -25,7 +25,7 @@ category: Procedures
 date: 2026-01-15
 
 # Thumbnail image for the card. Put the image in content/work/images/.
-# Tall images work best (a 4:5 shape, for example 1200 × 1500 pixels).
+# A 4:3 shape works best (for example 1200 × 900 pixels).
 cover: ./images/your-image-name.png
 coverAlt: Describe the image for people using screen readers.
 

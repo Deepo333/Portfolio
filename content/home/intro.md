@@ -1,14 +1,13 @@
 ---
 # ─────────────────────────────────────────────────────────────
-# HOME PAGE · HERO (the magazine-cover top of the home page)
-# Your name and job title (the giant letters) come from content/settings.md.
+# HOME PAGE · HERO (the top of the home page)
+# Your name and job title come from content/settings.md.
 # Your photo comes from content/pages/about.md.
-# The text below the --- line appears in the introduction under the hero.
+# The text below the --- line is the short intro under your title.
 # ─────────────────────────────────────────────────────────────
 
-# Small uppercase details beside your photo.
+# The small uppercase line above your name.
 tagline: Procedures · Forms · Docs as Code
-edition: Portfolio 2026
 
 # Shown by search engines and link previews for the home page.
 description: Dairyia Porter is a technical writer specializing in procedures, forms, and docs-as-code documentation.

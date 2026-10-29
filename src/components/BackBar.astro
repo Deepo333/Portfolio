@@ -1,0 +1,102 @@
+---
+/*
+ * The row of links at the top of every page except Home. "Back" returns to the
+ * previous page when you arrived from this site, and goes to Home otherwise.
+ */
+import Icon from './Icon.astro';
+import { url } from '../lib/content';
+import type { IconName } from '../lib/icons';
+
+interface Props {
+  /** Extra links shown after "Back", such as "All work samples" and "Home". */
+  links?: { label: string; href: string; icon?: IconName }[];
+  /** Show the "Back" link. */
+  back?: boolean;
+  label?: string;
+  class?: string;
+}
+
+const { links = [], back = true, label = 'Page navigation', class: className } = Astro.props;
+---
+
+<nav class:list={['back-bar container', className]} aria-label={label}>
+  <ul>
+    {
+      back && (
+        <li>
+          <a href={url('/')} data-back>
+            <Icon name="back" size={16} />
+            Back
+          </a>
+        </li>
+      )
+    }
+    {
+      links.map((link) => (
+        <li>
+          <a href={url(link.href)}>
+            {link.icon && <Icon name={link.icon} size={16} />}
+            {link.label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<script>
+  // Go back in history when the visitor came from another page on this site.
+  // Otherwise the link's own address (Home) is used.
+  document.querySelectorAll<HTMLAnchorElement>('a[data-back]').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      let fromThisSite = false;
+      try {
+        fromThisSite = new URL(document.referrer).origin === location.origin;
+      } catch {}
+      if (fromThisSite && history.length > 1) {
+        event.preventDefault();
+        history.back();
+      }
+    });
+  });
+</script>
+
+<style>
+  .back-bar ul {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1.75rem;
+    margin: 0;
+    padding: 1.25rem 0 0;
+    list-style: none;
+  }
+
+  .back-bar a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    color: var(--ink);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .back-bar a:hover {
+    opacity: 1;
+    text-decoration: underline;
+    text-underline-offset: 0.35em;
+  }
+
+  .back-bar :global(.icon) {
+    flex: none;
+    transition: transform 0.3s var(--ease);
+  }
+
+  .back-bar a[data-back]:hover :global(.icon) {
+    transform: translateX(-3px);
+  }
+</style>

@@ -1,11 +1,12 @@
 ---
-import '@fontsource-variable/inter';
+import '@fontsource-variable/jost';
 import '@fontsource-variable/archivo/wdth.css';
-import '@fontsource-variable/bodoni-moda/opsz.css';
+import '@fontsource/marcellus';
 import '@fontsource/ms-madi';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import BackBar from '../components/BackBar.astro';
 import { getSettings, url } from '../lib/content';
 
 interface Props {
@@ -13,10 +14,14 @@ interface Props {
   title?: string;
   /** Short summary for search engines and link previews. */
   description?: string;
+  /** Show the "Back" link at the top of the page. Every page has it except Home. */
+  backLink?: boolean;
+  /** Extra links next to "Back", such as "All work samples" on sample pages. */
+  backLinks?: { label: string; href: string; icon?: import('../lib/icons').IconName }[];
 }
 
 const settings = await getSettings();
-const { title, description = settings.description } = Astro.props;
+const { title, description = settings.description, backLink = true, backLinks } = Astro.props;
 const pageTitle = title ? `${title} | ${settings.name}` : `${settings.name} | ${settings.role}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
@@ -60,6 +65,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <a class="skip-link" href="#main">Skip to content</a>
     <Header name={settings.name} />
     <main id="main">
+      {backLink && <BackBar links={backLinks} />}
       <slot />
     </main>
     <Footer settings={settings} />
