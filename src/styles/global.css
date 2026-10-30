@@ -31,16 +31,16 @@
 
   /* Soft color tints for the capability boxes and tool tiles: a light
      background and a deeper shade of the same color for the icon. */
-  --tint-sage: light-dark(#e9f0e5, #1f2920);
-  --tint-sage-ink: light-dark(#557558, #a6c4a8);
-  --tint-blue: light-dark(#e5ecf4, #1d2530);
-  --tint-blue-ink: light-dark(#52708e, #a7bfd8);
-  --tint-blush: light-dark(#f7e8e5, #2d2221);
-  --tint-blush-ink: light-dark(#9c645c, #e1b3ab);
-  --tint-terracotta: light-dark(#f6e7dc, #2e231b);
-  --tint-terracotta-ink: light-dark(#a35d3d, #e0ad90);
-  --tint-lavender: light-dark(#eee9f5, #25212d);
-  --tint-lavender-ink: light-dark(#736597, #c4b9df);
+  --tint-sage: light-dark(#e5efe0, #1f2c20);
+  --tint-sage-ink: light-dark(#507553, #a3c7a5);
+  --tint-blue: light-dark(#dfe9f4, #1c2634);
+  --tint-blue-ink: light-dark(#4a6d91, #a2bfdd);
+  --tint-blush: light-dark(#f8e2de, #302221);
+  --tint-blush-ink: light-dark(#9f5d54, #e6afa6);
+  --tint-terracotta: light-dark(#f8e3d3, #32241a);
+  --tint-terracotta-ink: light-dark(#a95732, #e8ab88);
+  --tint-lavender: light-dark(#eae3f5, #262130);
+  --tint-lavender-ink: light-dark(#6f5e99, #c2b5e3);
 
   /* Inverse bands (near-black with white text) */
   --inverse-bg: light-dark(#0d0d0d, #e8e4de);
@@ -57,8 +57,15 @@
   --font-heading: 'Marcellus', 'Optima', 'Candara', 'Segoe UI', sans-serif;
   --font-sans: 'Jost Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
-  --font-script: 'Ms Madi', 'Brush Script MT', cursive;
+  /* A thin, high-contrast serif italic for the occasional accent word. */
+  --font-accent: 'Bodoni Moda Variable', 'Didot', 'Bodoni 72', 'Bodoni MT', serif;
   --font-mono: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
+
+  /* Type scale: every heading level, and all body text, has exactly one size. */
+  --text-body: 1.0625rem; /* 17px: every paragraph and list item */
+  --text-h1: clamp(2.5rem, 6vw, 5.5rem); /* page titles, including your name on Home */
+  --text-h2: clamp(1.875rem, 3.8vw, 3rem); /* section headings */
+  --text-h3: clamp(1.125rem, 1.8vw, 1.375rem); /* card, box, and step headings */
 
   /* Layout */
   --page-width: 1280px;
@@ -97,7 +104,7 @@ body {
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-sans);
-  font-size: 1.0625rem;
+  font-size: var(--text-body);
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -153,6 +160,24 @@ h4 {
   text-wrap: balance;
 }
 
+/* Page titles: the bold display face, the same on every page. */
+h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-h1);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 0.92;
+  text-transform: uppercase;
+}
+
+h2 {
+  font-size: var(--text-h2);
+}
+
+h3 {
+  font-size: var(--text-h3);
+}
+
 p {
   margin: 0;
   text-wrap: pretty;
@@ -202,11 +227,13 @@ p {
   text-transform: uppercase;
 }
 
-/* The handwritten script, used only for small playful accents. */
-.script {
-  font-family: var(--font-script);
+/* An accent word in a thin, high-contrast serif italic (write _word_ in a title). */
+.accent-word {
+  color: var(--accent-large);
+  font-family: var(--font-accent);
+  font-optical-sizing: auto;
+  font-style: italic;
   font-weight: 400;
-  font-style: normal;
   letter-spacing: 0;
   text-transform: none;
 }
@@ -322,15 +349,6 @@ p {
   padding-block: clamp(1.5rem, 4vw, 3rem) clamp(2rem, 4vw, 3rem);
 }
 
-.page-header h1 {
-  font-family: var(--font-display);
-  font-size: clamp(2.75rem, 8vw, 6.5rem);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 0.9;
-  text-transform: uppercase;
-}
-
 .page-header .label {
   display: block;
   margin-bottom: 1.5rem;
@@ -343,8 +361,6 @@ p {
 
 .lead {
   color: var(--text-muted);
-  font-size: clamp(1.125rem, 2vw, 1.3125rem);
-  line-height: 1.6;
 }
 
 .section-heading {
@@ -354,10 +370,6 @@ p {
   justify-content: space-between;
   gap: 1.25rem 3rem;
   margin-bottom: clamp(1.75rem, 4vw, 3rem);
-}
-
-.section-heading h2 {
-  font-size: clamp(2.25rem, 5vw, 3.75rem);
 }
 
 .section-heading .label {
@@ -503,12 +515,10 @@ p {
 
 .prose h2 {
   margin-top: 2.25em;
-  font-size: clamp(1.875rem, 3.5vw, 2.5rem);
 }
 
 .prose h3 {
   margin-top: 2em;
-  font-size: 1.5rem;
 }
 
 .prose h2 + *,

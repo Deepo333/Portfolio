@@ -14,6 +14,12 @@ interface Props {
   showSummary?: boolean;
   /** Use "h2" when the card sits directly under the page title. */
   headingLevel?: 'h2' | 'h3';
+  /**
+   * Where the link at the bottom of the card goes: "sample" (the card's own
+   * page, "View sample") or "category" (its category on the Work Samples
+   * page, "View samples").
+   */
+  moreLink?: 'sample' | 'category';
 }
 
 const {
@@ -21,6 +27,7 @@ const {
   showCategory = true,
   showSummary = true,
   headingLevel: Heading = 'h3',
+  moreLink = 'sample',
 } = Astro.props;
 const { title, summary, category, cover, coverAlt, placeholder } = sample.data;
 ---
@@ -52,10 +59,20 @@ const { title, summary, category, cover, coverAlt, placeholder } = sample.data;
       sizes="(max-width: 640px) 80vw, (max-width: 1024px) 45vw, 380px"
     />
   </div>
-  <span class="more" aria-hidden="true">
-    View sample
-    <Icon name="arrow" size={16} />
-  </span>
+  {
+    moreLink === 'category' ? (
+      <a class="more more-link" href={categoryHref(category)}>
+        View samples
+        <span class="visually-hidden">in {category}</span>
+        <Icon name="arrow" size={16} />
+      </a>
+    ) : (
+      <span class="more" aria-hidden="true">
+        View sample
+        <Icon name="arrow" size={16} />
+      </span>
+    )
+  }
 </article>
 
 <style>
@@ -80,8 +97,9 @@ const { title, summary, category, cover, coverAlt, placeholder } = sample.data;
     margin-bottom: 0.75rem;
   }
 
-  /* Sits above the card-wide title link, so it can be clicked on its own. */
-  .category-link {
+  /* These sit above the card-wide title link, so they can be clicked on their own. */
+  .category-link,
+  .more-link {
     position: relative;
     z-index: 1;
     color: inherit;
@@ -95,7 +113,6 @@ const { title, summary, category, cover, coverAlt, placeholder } = sample.data;
   }
 
   .title {
-    font-size: clamp(1.25rem, 2vw, 1.5rem);
     line-height: 1.2;
   }
 
@@ -122,7 +139,6 @@ const { title, summary, category, cover, coverAlt, placeholder } = sample.data;
   .summary {
     margin-top: 0.5rem;
     color: var(--text-muted);
-    font-size: 0.9375rem;
     line-height: 1.55;
   }
 
@@ -169,7 +185,16 @@ const { title, summary, category, cover, coverAlt, placeholder } = sample.data;
     transition: transform 0.35s var(--ease);
   }
 
-  .work-card:hover .more :global(.icon) {
+  .work-card:hover .more :global(.icon),
+  .more-link:focus-visible :global(.icon) {
     transform: translateX(4px);
+  }
+
+  .more-link {
+    text-decoration: none;
+  }
+
+  .more-link:hover {
+    opacity: 1;
   }
 </style>

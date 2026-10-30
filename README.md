@@ -40,8 +40,12 @@ Each section of the home page has its own file in `content/home/`, in the order 
 Your name comes from `content/settings.md` and your photo from `content/pages/about.md`,
 so you only set them once.
 
-**Script accents:** put underscores around a word in a title to show it in the handwritten
-script, for example `title: About _me_` or `title: Let’s work _together_`. Use it sparingly.
+**Accent words:** put underscores around a word in a title to show it in a thin, elegant serif
+italic (Bodoni Moda), for example `title: About _me_` or `title: Let’s work _together_`. Use it sparingly.
+
+**Type sizes:** every page title, every section heading, every card or step heading, and all body
+text each have exactly one size, set once at the top of `src/styles/global.css` (`--text-h1`,
+`--text-h2`, `--text-h3`, and `--text-body`). Change a size there and it changes everywhere.
 
 **Icons:** capabilities and tools each have an `icon:` line. The comment at the top of
 `capabilities.md` and `tools.md` lists every icon name you can use (for example `procedure`,
@@ -52,8 +56,7 @@ blush, terracotta, and lavender), in order. You don't set them in Markdown; to c
 the `--tint-` lines at the top of `src/styles/global.css`.
 
 **Hiding an item:** add `hidden: true` under a capability or a tool to keep it off the site without
-deleting it. Delete that line to show it again. The Docs as Code capability and the Markdown and Git
-tools are hidden this way for now.
+deleting it. Delete that line to show it again.
 
 ### How a Markdown file is organized
 
@@ -136,9 +139,9 @@ card image is in `content/work/images/`:
 
 **Featured work.** The home page shows the samples listed in `content/home/featured.md`, in that
 order: one procedure, one form, and one resource. To feature a different sample, replace its line
-with another sample's file name (without `.md`). Each card's category label links to that category
-on the Work Samples page. Pick samples from different categories; if two share a category, the
-build stops and tells you which ones.
+with another sample's file name (without `.md`). Each card's title opens the sample, and its category
+label and **View samples** link open that category on the Work Samples page. Pick samples from
+different categories; if two share a category, the build stops and tells you which ones.
 
 **Card images.** Each card image shows the first page of the sample's PDF on a light background.
 To make one for a new PDF, take a screenshot of the PDF's first page and place it on a 1200 × 900
@@ -172,9 +175,6 @@ still in place. To show it again:
 3. Add a work sample with `category: Docs as Code` (copy `content/work/_TEMPLATE.md`).
 4. Publish. Docs as Code then appears on the Work Samples page, in its category bar, and in the black
    category band on the home page.
-5. Optional: to show the Docs as Code box under Core capabilities, delete its `hidden: true` line in
-   `content/home/capabilities.md`. To list Markdown and Git again under Tools, delete their
-   `hidden: true` lines in `content/home/tools.md`.
 
 A category only appears once it has at least one sample, so step 3 is what makes it visible. The same
 `hidden: true` line works for any category: it hides the category and every sample in it.
@@ -218,6 +218,8 @@ Because the build stops on errors, a mistake never reaches your live site. The l
 ## Common changes
 
 - **Change your name, email, or LinkedIn:** edit `content/settings.md`.
+- **Show the footer's "Site source on GitHub" link again:** in `content/settings.md`, delete the `#` at
+  the start of the `sourceCode:` line.
 - **Change your name or job title:** edit `name` and `role` in `content/settings.md`. They appear in the home page hero, the footer, and browser tabs.
 - **Change the line above your name, the intro, or the buttons:** edit `content/home/intro.md`.
 - **Change the stats:** in `content/home/stats.md`, edit each `value` (keep the quotes, for example
@@ -227,8 +229,7 @@ Because the build stops on errors, a mistake never reaches your live site. The l
   file in `content/home/`. Copy an existing item (all of its lines, starting with `- name:`) to add one.
 - **Add a tool or a tool group:** in `content/home/tools.md`, copy a tool (its `- name:` and `icon:`
   lines) inside a group's `items:` list, or copy a whole group (from `- name:` through its tools).
-- **Replace your résumé:** upload your new PDF to `public/files/` as `resume.pdf` (replacing the old one),
-  then update `updated:` in `content/pages/resume.md`.
+- **Replace your résumé:** upload your new PDF to `public/files/` as `resume.pdf`, replacing the old one.
 - **Change your headshot:** replace `content/pages/images/headshot-new.jpg` with your new photo,
   keeping the same file name. It appears on the Home and About pages. Its left edge fades into the
   grey set by `--hero-bg` at the top of `src/styles/global.css`, so if your new photo has a different
@@ -252,7 +253,7 @@ so the site is at `https://deepo333.github.io/Portfolio/`). To rename it again:
 2. Open **Actions → Build and publish site → Run workflow** to republish at the new address:
    `https://deepo333.github.io/<new-name>/`. Capital letters in the name matter in the address.
 3. Update the old address where it appears: the **Live site** line at the top of this file,
-   and `sourceCode` in `content/settings.md`.
+   and `sourceCode` in `content/settings.md` (it's turned off for now; see the note there).
 
 ---
 
@@ -272,9 +273,9 @@ You don't need this to publish, but it lets you see changes before pushing them.
 | File or folder | What it does |
 | --- | --- |
 | `src/pages/` | One template per page type. `src/pages/work/[id].astro` is the work sample detail template. |
-| `src/components/` | Reusable pieces: header, footer, the "Back" link bar, sample cards, the two-column photo section, the black category band, script accents, icons, and the PDF viewer (which uses PDF.js to draw PDFs on phones). |
+| `src/components/` | Reusable pieces: header, footer, the "Back" link bar, sample cards, the two-column photo section, the black category band, accent words, icons, and the PDF viewer (which uses PDF.js to draw PDFs on phones). |
 | `src/lib/icons.ts` | The thin-line icons you can pick with `icon:` in Markdown. |
-| `src/styles/global.css` | Colors, fonts (Archivo for your name and big display type, Marcellus for headings, Jost for text, Ms Madi for script accents), spacing, and light/dark mode. |
+| `src/styles/global.css` | Colors, the type scale, fonts (Archivo for page titles and your name, Marcellus for headings, Jost for text, Bodoni Moda italic for accent words), spacing, and light/dark mode. |
 | `src/content.config.ts` | The list of fields each Markdown file can have, and which are required. |
 | `src/lib/content.ts` | Loads the content, leaves out drafts and hidden categories, and produces the friendly error messages. |
 | `src/plugins/` | Small Markdown helpers: one fixes links for GitHub Pages, the other removes `<!-- notes -->` before publishing. |

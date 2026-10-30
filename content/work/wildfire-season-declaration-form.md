@@ -24,7 +24,7 @@ pdf: /files/wildfire-season-declaration-form.pdf
 
 ## Overview
 
-Form PSE-WRM-F01 records every Wildfire Season status change made under the
+This form records every Wildfire Season status change made under the
 [Wildfire Season Declaration Procedure](/work/wildfire-season-declaration-procedure/). The wildfire
 liaison managers and the meteorologist complete and sign it, and the Senior Vice President of Energy
 Operations, or a delegate, approves it.

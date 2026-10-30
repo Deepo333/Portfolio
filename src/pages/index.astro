@@ -138,9 +138,11 @@ const toolGroups = tools.data.groups
           <div class="section-heading">
             <div>
               <h2 id="featured-heading">{featured.data.title}</h2>
-              <div class="intro">
-                <FeaturedText />
-              </div>
+              {featured.body?.trim() && (
+                <div class="intro">
+                  <FeaturedText />
+                </div>
+              )}
             </div>
             <a class="label-link" href={url('/work/')}>
               {featured.data.linkLabel}
@@ -149,7 +151,7 @@ const toolGroups = tools.data.groups
           </div>
           <div class="featured-grid">
             {featuredSamples.map((sample) => (
-              <WorkCard sample={sample} showSummary={false} />
+              <WorkCard sample={sample} showSummary={false} moreLink="category" />
             ))}
           </div>
         </div>
@@ -249,7 +251,7 @@ const toolGroups = tools.data.groups
 
   <section class="band band-inverse closing" aria-labelledby="closing-heading" data-reveal>
     <div class="container">
-      <h2 id="closing-heading" class="closing-title">
+      <h2 id="closing-heading">
         <Accent text={closing.data.title} />
       </h2>
       <div class="closing-grid">
@@ -287,12 +289,6 @@ const toolGroups = tools.data.groups
 
   .hero-name {
     margin-top: 1.25rem;
-    font-family: var(--font-display);
-    font-size: clamp(3.5rem, 7.4vw, 8rem);
-    font-weight: 900;
-    letter-spacing: -0.015em;
-    line-height: 0.86;
-    text-transform: uppercase;
   }
 
   .hero-name .word {
@@ -329,7 +325,6 @@ const toolGroups = tools.data.groups
     margin-top: 1.25rem;
     max-width: 46ch;
     color: var(--text-muted);
-    font-size: clamp(1rem, 1.4vw, 1.125rem);
   }
 
   .button-row {
@@ -415,13 +410,11 @@ const toolGroups = tools.data.groups
 
   .capability h3 {
     margin-top: 1rem;
-    font-size: clamp(1.0625rem, 2vw, 1.375rem);
   }
 
   .capability p {
     margin-top: 0.5rem;
     color: var(--text-muted);
-    font-size: 0.9375rem;
     line-height: 1.55;
   }
 
@@ -429,7 +422,7 @@ const toolGroups = tools.data.groups
 
   .tool-groups {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: clamp(1.5rem, 3vw, 2.5rem);
   }
 
@@ -442,10 +435,6 @@ const toolGroups = tools.data.groups
     border-top: 1px solid var(--border-strong);
   }
 
-  .tool-group-head h3 {
-    font-size: 1.25rem;
-  }
-
   .tool-count {
     color: var(--text-muted);
     font-size: 0.8125rem;
@@ -454,7 +443,7 @@ const toolGroups = tools.data.groups
 
   .tool-tiles {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 1rem 0.75rem;
     margin: 1.25rem 0 0;
     padding: 0;
@@ -497,7 +486,7 @@ const toolGroups = tools.data.groups
 
   .process {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: clamp(0.75rem, 2vw, 1.5rem);
     margin: 0;
     padding: 0;
@@ -520,35 +509,15 @@ const toolGroups = tools.data.groups
 
   .process h3 {
     margin-top: 0.75rem;
-    font-size: clamp(1.125rem, 1.8vw, 1.375rem);
   }
 
   .process p {
     margin-top: 0.4rem;
     color: var(--text-muted);
-    font-size: 0.875rem;
-    line-height: 1.5;
+    line-height: 1.55;
   }
 
   /* ---------- Closing band ---------- */
-
-  .closing-title {
-    font-family: var(--font-display);
-    font-size: clamp(2.75rem, 8.5vw, 7.5rem);
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    line-height: 0.9;
-    text-transform: uppercase;
-  }
-
-  .closing-title :global(.script) {
-    display: inline-block;
-    margin-left: 0.05em;
-    color: var(--accent-large);
-    font-size: 1.15em;
-    line-height: 0.5;
-    transform: rotate(-4deg) translateY(0.08em);
-  }
 
   .closing-grid {
     display: grid;
@@ -582,7 +551,7 @@ const toolGroups = tools.data.groups
 
   @media (max-width: 1024px) {
     .tool-groups {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: minmax(0, 1fr);
     }
 
     .process {
@@ -605,8 +574,8 @@ const toolGroups = tools.data.groups
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .tool-groups {
-      grid-template-columns: minmax(0, 1fr);
+    .tool-tiles {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 
     .process {
@@ -642,12 +611,6 @@ const toolGroups = tools.data.groups
 
     .featured-grid > :global(*) {
       scroll-snap-align: start;
-    }
-  }
-
-  @media (max-width: 400px) {
-    .capability p {
-      font-size: 0.8125rem;
     }
   }
 </style>

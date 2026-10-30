@@ -9,7 +9,7 @@ category: Procedures
 date: 2026-07-10
 
 cover: ./images/wildfire-threat-assessment-and-response-procedure-cover.png
-coverAlt: First page of the PSE Wildfire Threat Assessment and Response Procedure, showing document number PSE-WRM-003, Revision 01, and the table of contents.
+coverAlt: First page of the PSE Wildfire Threat Assessment and Response Procedure, showing its document details and table of contents.
 
 role: Technical writer, drafting from subject matter expert direction
 audience: PSE staff and contractors who monitor and respond to wildfire threats to PSE assets
@@ -23,7 +23,7 @@ pdf: /files/wildfire-threat-assessment-and-response-procedure.pdf
 
 ## Overview
 
-The PSE Wildfire Threat Assessment and Response Procedure (PSE-WRM-003) sets out how Puget Sound Energy
+The PSE Wildfire Threat Assessment and Response Procedure sets out how Puget Sound Energy
 monitors wildfires during Wildfire Season, judges the threat to its electric, generation,
 telecommunications, and gas infrastructure, and responds. It also sets up a weekly Wildfire Situation
 Briefing for leadership. I drafted it for the Wildfire Risk Management (WRM) program, working from
