@@ -160,15 +160,13 @@ The site adjusts these links automatically so they work on GitHub Pages.
 The sample appears automatically on the Work Samples page under its category, and its detail page
 gets a "Previous / Next" link to the other samples. Samples are listed newest first, based on `date`.
 
-Your nine samples are in `content/work/`. Each one shows its PDF from `public/files/`, and its
+Your seven samples are in `content/work/`. Each one shows its PDF from `public/files/`, and its
 card image is in `content/work/images/`:
 
 | File | Category | On the home page |
 | --- | --- | --- |
-| `critical-fire-weather-operations-procedure.md` | Procedures | Yes |
 | `wildfire-season-declaration-procedure.md` | Procedures | |
-| `wildfire-threat-assessment-and-response-procedure.md` | Procedures | |
-| `fire-weather-oar-workbook.md` | Resources | |
+| `wildfire-threat-assessment-and-response-procedure.md` | Procedures | Yes |
 | `wildfire-season-declaration-form.md` | Forms | Yes |
 | `change-request-form.md` | Forms | |
 | `technical-writing-review-checklist.md` | Resources | Yes |
