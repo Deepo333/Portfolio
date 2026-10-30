@@ -3,7 +3,7 @@
  * The black band under the home page hero: the kinds of documents you write,
  * scrolling from right to left in an endless loop. It's decorative, so it has
  * no links and never pauses. Each item takes a set time to cross the screen:
- * about 6.7 seconds on a phone, easing up to about 16.7 seconds on a wide screen.
+ * about 6.7 seconds on a phone, easing up to about 25 seconds on a wide screen.
  * With "Reduce motion" turned on, the items show as a still row instead.
  * The words come from content/home/banner.md.
  */
@@ -36,10 +36,10 @@ const copies = [0, 1, 2];
 
 <script>
   // How long an item takes to cross the band: 6.7 s on a phone (390 px wide) and
-  // 16.7 s on a wide screen (1440 px and up), changing smoothly in between, so the
+  // 25 s on a wide screen (1440 px and up), changing smoothly in between, so the
   // banner feels equally steady on every screen size.
   const PHONE = { width: 390, seconds: 6.67 };
-  const WIDE = { width: 1440, seconds: 16.66 };
+  const WIDE = { width: 1440, seconds: 25 };
   const secondsToCross = (width: number) => {
     const t = Math.min(1, Math.max(0, (width - PHONE.width) / (WIDE.width - PHONE.width)));
     return PHONE.seconds + t * (WIDE.seconds - PHONE.seconds);

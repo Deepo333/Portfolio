@@ -29,20 +29,21 @@
      (content/pages/images/headshot-new.jpg) where the photo fades into it. */
   --hero-bg: #cac8c3;
 
-  /* Pastel tints for the capability boxes: a confident background color and a
-     deeper shade of the same color for the icon. */
-  --tint-sage: light-dark(#c4e2b8, #26412b);
-  --tint-sage-ink: light-dark(#3f6b43, #b2dcb5);
-  --tint-blue: light-dark(#bcd7f2, #1f3552);
-  --tint-blue-ink: light-dark(#2f5f8f, #b4d2f2);
-  --tint-blush: light-dark(#f6c4c0, #4a2a2a);
-  --tint-blush-ink: light-dark(#8f3f37, #f2bdb5);
-  --tint-terracotta: light-dark(#f7c9a6, #4a2f1d);
-  --tint-terracotta-ink: light-dark(#8f4a22, #f2c09e);
-  --tint-lavender: light-dark(#d6c8f3, #352a52);
-  --tint-lavender-ink: light-dark(#5a4590, #cfc2f2);
-  --tint-sand: light-dark(#ecdcc0, #3d3322);
-  --tint-sand-ink: light-dark(#7a5a2e, #e6cfa0);
+  /* Deep, muted palette shared by the capability cards and the tool tiles: navy,
+     olive, earthy brown, and warm mustard. --tint is the card fill (text on it is
+     white), --tint-ink the icon color, and --tint-line the outline around tool logos. */
+  --tint-navy: #1f3a5f;
+  --tint-navy-ink: #c9d8f0;
+  --tint-navy-line: light-dark(#1f3a5f, #7f9fcf);
+  --tint-olive: #59622e;
+  --tint-olive-ink: #dfe5ae;
+  --tint-olive-line: light-dark(#59622e, #a9b062);
+  --tint-brown: #6b4630;
+  --tint-brown-ink: #e8cdb4;
+  --tint-brown-line: light-dark(#6b4630, #c09a78);
+  --tint-mustard: #8f6612;
+  --tint-mustard-ink: #f5dc9a;
+  --tint-mustard-line: light-dark(#8f6612, #d6ab45);
 
   /* Inverse bands (near-black with white text) */
   --inverse-bg: light-dark(#0d0d0d, #e8e4de);
@@ -237,12 +238,12 @@ p {
   text-transform: uppercase;
 }
 
-/* An accent word in a thin, high-contrast serif italic (write _word_ in a title). */
+/* An accent word in a heading (write _word_ in a title): same Abril Fatface as the
+   rest of the heading, in the accent color. */
 .accent-word {
   color: var(--accent-large);
-  font-family: var(--font-accent);
-  font-optical-sizing: auto;
-  font-style: italic;
+  font-family: var(--font-title);
+  font-style: normal;
   font-weight: 400;
   letter-spacing: 0;
   text-transform: none;
@@ -364,35 +365,29 @@ h2.section-title {
   padding-block: var(--section-space);
 }
 
-/* Picks one of the --tint-* colors above, e.g. data-tint="sage". */
-[data-tint='sage'] {
-  --tint: var(--tint-sage);
-  --tint-ink: var(--tint-sage-ink);
+/* Picks one of the --tint-* colors above, e.g. data-tint="navy". */
+[data-tint='navy'] {
+  --tint: var(--tint-navy);
+  --tint-ink: var(--tint-navy-ink);
+  --tint-line: var(--tint-navy-line);
 }
 
-[data-tint='blue'] {
-  --tint: var(--tint-blue);
-  --tint-ink: var(--tint-blue-ink);
+[data-tint='olive'] {
+  --tint: var(--tint-olive);
+  --tint-ink: var(--tint-olive-ink);
+  --tint-line: var(--tint-olive-line);
 }
 
-[data-tint='blush'] {
-  --tint: var(--tint-blush);
-  --tint-ink: var(--tint-blush-ink);
+[data-tint='brown'] {
+  --tint: var(--tint-brown);
+  --tint-ink: var(--tint-brown-ink);
+  --tint-line: var(--tint-brown-line);
 }
 
-[data-tint='terracotta'] {
-  --tint: var(--tint-terracotta);
-  --tint-ink: var(--tint-terracotta-ink);
-}
-
-[data-tint='lavender'] {
-  --tint: var(--tint-lavender);
-  --tint-ink: var(--tint-lavender-ink);
-}
-
-[data-tint='sand'] {
-  --tint: var(--tint-sand);
-  --tint-ink: var(--tint-sand-ink);
+[data-tint='mustard'] {
+  --tint: var(--tint-mustard);
+  --tint-ink: var(--tint-mustard-ink);
+  --tint-line: var(--tint-mustard-line);
 }
 
 .band-soft {

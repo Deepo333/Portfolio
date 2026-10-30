@@ -4,7 +4,7 @@ import { render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Letters from '../components/Letters.astro';
 import Icon from '../components/Icon.astro';
-import PhotoCover from '../components/PhotoCover.astro';
+import { Image } from 'astro:assets';
 import { getPage, getSettings, plainText, url } from '../lib/content';
 
 const settings = await getSettings();
@@ -12,41 +12,54 @@ const page = await getPage('about');
 const resume = await getPage('resume');
 const { Content } = await render(page);
 const { title, description, lead, headshot, headshotAlt } = page.data;
+const widths = headshot
+  ? [640, 960, headshot.width].filter((w, i, all) => w <= headshot.width && all.indexOf(w) === i)
+  : [];
 ---
 
 <BaseLayout title={plainText(title)} description={description}>
   {
     headshot ? (
-      <div class="about-cover">
-        <div class="container about-heading">
+      <section
+        class="about-hero"
+        aria-labelledby="about-title"
+        style={`--photo-ratio: ${headshot.width} / ${headshot.height}`}
+      >
+        <div class="about-heading">
           <h1 id="about-title" class="about-title page-title" data-reveal="letters">
             <Letters text={plainText(title)} />
           </h1>
         </div>
-      </div>
-      <PhotoCover
-        src={headshot}
-        alt={headshotAlt ?? settings.name}
-        labelledby="about-title"
-        fadeTop
-      >
-        {lead && <p class="about-lead">{lead}</p>}
-        <div class="button-row">
-          <a
-            class="button button-primary"
-            href={resume.data.pdf ? url(resume.data.pdf) : url('/resume/')}
-            download={resume.data.pdf ? `${settings.name} - Resume.pdf` : undefined}
-            target={resume.data.pdf ? '_blank' : undefined}
-            rel={resume.data.pdf ? 'noopener' : undefined}
-          >
-            <Icon name="download" />
-            Download résumé
-          </a>
-          <a class="button button-secondary" href={url('/contact/')}>
-            Get in touch
-          </a>
+        <div class="about-text">
+          {lead && <p class="about-lead">{lead}</p>}
+          <div class="button-row">
+            <a
+              class="button button-primary"
+              href={resume.data.pdf ? url(resume.data.pdf) : url('/resume/')}
+              download={resume.data.pdf ? `${settings.name} - Resume.pdf` : undefined}
+              target={resume.data.pdf ? '_blank' : undefined}
+              rel={resume.data.pdf ? 'noopener' : undefined}
+            >
+              <Icon name="download" />
+              Download résumé
+            </a>
+            <a class="button button-secondary" href={url('/contact/')}>
+              Get in touch
+            </a>
+          </div>
         </div>
-      </PhotoCover>
+        <div class="about-photo">
+          <Image
+            src={headshot}
+            alt={headshotAlt ?? settings.name}
+            widths={widths}
+            sizes="(max-width: 760px) 100vw, 50vw"
+            quality={90}
+            loading="eager"
+            fetchpriority="high"
+          />
+        </div>
+      </section>
     ) : (
       <header class="page-header container">
         <h1 class="about-title page-title" data-reveal="letters">
@@ -66,26 +79,96 @@ const { title, description, lead, headshot, headshotAlt } = page.data;
 </BaseLayout>
 
 <style>
-  /* The heading spans the top of the page like a magazine cover, on the same
-     grey as the photo section below it. */
-  .about-cover {
+  /* Heading and text on the left, photo on the right, on the same grey as the photo.
+     On phones the order is heading, photo, then the text. */
+  .about-hero {
+    /* The photo's background is a light grey, so this section stays light in dark mode. */
     color-scheme: light;
+    --photo-w: clamp(420px, 50vw, 960px);
+    --text-muted: #4a4643;
+    --accent-text: #5a4a3c;
+    --edge: max(var(--gutter), calc((100vw - var(--page-width)) / 2));
+
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) var(--photo-w);
+    grid-template-rows: 1fr auto;
+    grid-template-areas:
+      'heading photo'
+      'text photo';
+    min-height: calc(var(--photo-w) / (var(--photo-ratio)));
     background: var(--hero-bg);
     color: var(--ink);
   }
 
+  /* "About" stacked over "me", sized from the column width so it fits on every screen. */
   .about-heading {
+    grid-area: heading;
+    align-self: center;
     container-type: inline-size;
-    padding-top: clamp(0.75rem, 2.5vw, 2rem);
+    padding: clamp(1rem, 3vw, 2.5rem) clamp(1.5rem, 4vw, 4rem) 0 var(--edge);
   }
 
-  /* Abril Fatface is about 4.35 em wide for "About me", so this size fills the
-     width of the page, and shrinks with it on phones. */
   .about-title {
-    font-size: 22.6cqi;
-    line-height: 0.95;
+    font-size: 36cqi;
+    line-height: 0.85;
     letter-spacing: 0;
-    white-space: nowrap;
+  }
+
+  .about-title :global(.letters-word) {
+    display: block;
+  }
+
+  .about-text {
+    grid-area: text;
+    padding: 1.25rem clamp(1.5rem, 4vw, 4rem) clamp(1.5rem, 4vw, 3rem) var(--edge);
+  }
+
+  .about-photo {
+    grid-area: photo;
+    position: relative;
+  }
+
+  .about-photo :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 30% 0;
+    /* Fade the left edge (studio background only) into the matching grey. */
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 16%);
+    mask-image: linear-gradient(to right, transparent, #000 16%);
+  }
+
+  @media (max-width: 760px) {
+    .about-hero {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto;
+      grid-template-areas:
+        'heading'
+        'photo'
+        'text';
+      min-height: 0;
+    }
+
+    .about-heading {
+      padding: 1rem var(--gutter) 0.75rem;
+    }
+
+    .about-text {
+      padding: 1rem var(--gutter) clamp(2.5rem, 8vw, 3.5rem);
+    }
+
+    .about-photo {
+      aspect-ratio: var(--photo-ratio);
+    }
+
+    .about-photo :global(img) {
+      object-position: 50% 0;
+      /* The photo spans the screen, so its bottom edge fades into the text below. */
+      -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent);
+      mask-image: linear-gradient(to bottom, #000 70%, transparent);
+    }
   }
 
   .about-lead {
