@@ -1,7 +1,7 @@
 ---
 # Sample 5 of 7. Notes starting with # and <!-- TODO --> never appear on the site.
 
-title: Technical Writing Review Checklist
+title: Technical writing review checklist
 summary: A 13-page fillable checklist for reviewing new and revised documents before approval, from required sections and structure through accessibility and document control.
 category: Resources
 

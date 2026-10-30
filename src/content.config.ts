@@ -38,8 +38,15 @@ const homeIntro = defineCollection({
   schema: z.object({
     tagline: z.string(),
     description: z.string().optional(),
-    primaryButton: z.string(),
+    primaryButton: z.string().optional(),
     secondaryButton: z.string(),
+  }),
+});
+
+const homeBanner = defineCollection({
+  loader: single('banner.md', './content/home'),
+  schema: z.object({
+    items: z.array(z.string()).min(1),
   }),
 });
 
@@ -187,6 +194,7 @@ const work = defineCollection({
 export const collections = {
   settings,
   homeIntro,
+  homeBanner,
   homeStats,
   homeFeatured,
   homeCapabilities,

@@ -14,12 +14,12 @@
 # ═════════════════════════════════════════════════════════════
 
 # REQUIRED ─────────────────────────────────────────────────────
-title: Title of the Sample
+title: Title of the sample
 summary: One or two sentences that appear on the sample's card and at the top of its page.
 
 # Must match a category name in content/pages/work.md exactly:
 # Procedures, Resources, Forms, or Presentations.
-# (Docs as Code is also listed there, but it's hidden for now. See the
+# (Docs as code is also listed there, but it's hidden for now. See the
 # note in content/pages/work.md to turn it back on.)
 category: Procedures
 

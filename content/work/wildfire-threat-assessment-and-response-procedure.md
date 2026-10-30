@@ -1,7 +1,7 @@
 ---
 # Sample 2 of 7. Notes starting with # and <!-- TODO --> never appear on the site.
 
-title: Wildfire Threat Assessment and Response Procedure
+title: Wildfire threat assessment and response procedure
 summary: A 19-page procedure for monitoring wildfires near PSE assets, classifying each threat by its potential impact, and scaling the response to match.
 category: Procedures
 

@@ -1,7 +1,7 @@
 ---
 # Sample 1 of 7. Notes starting with # and <!-- TODO --> never appear on the site.
 
-title: Wildfire Season Declaration Procedure
+title: Wildfire season declaration procedure
 summary: A 12-page controlled procedure that sets the criteria, approvals, and follow-up actions for activating, modifying, and rescinding Puget Sound Energy's Wildfire Season status.
 category: Procedures
 

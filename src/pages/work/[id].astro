@@ -47,10 +47,10 @@ const toc = [
   ...(hasSample ? [{ slug: 'the-sample', text: 'The sample' }] : []),
 ];
 
-// "Back to Work Samples" and "Home" appear at the top and bottom of every sample page.
+// "Back to work samples" and "Home" appear at the top and bottom of every sample page.
 // On phones the top pair stays pinned under the menu while scrolling.
 const sampleLinks = [
-  { label: 'Back to Work Samples', href: '/work/', icon: 'back' as const },
+  { label: 'Back to work samples', href: '/work/', icon: 'back' as const },
   { label: 'Home', href: '/', icon: 'home' as const },
 ];
 
@@ -123,8 +123,8 @@ const facts = [
 
         {
           hasSample && (
-            <section class="sample" aria-labelledby="the-sample" data-reveal>
-              <h2 id="the-sample">The sample</h2>
+            <section class="sample" aria-labelledby="the-sample">
+              <h2 id="the-sample" data-reveal>The sample</h2>
 
               {pdf && <PdfViewer src={pdf} title={title} />}
 

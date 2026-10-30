@@ -29,7 +29,8 @@ Each section of the home page has its own file in `content/home/`, in the order 
 
 | Section | File | What you edit there |
 | --- | --- | --- |
-| Hero | `content/home/intro.md` | The small line above your name, the short intro, and the two button labels. Your name and job title come from `content/settings.md` |
+| Hero | `content/home/intro.md` | The small line above your name, the short intro, and the Download résumé button label. Your name and job title come from `content/settings.md` |
+| Document-type banner | `content/home/banner.md` | The words in the black band that scrolls under the hero |
 | Stats | `content/home/stats.md` | The four numbers under the hero |
 | Featured work | `content/home/featured.md` | Section heading, intro, and the list of three samples to show (one per category) |
 | Core capabilities | `content/home/capabilities.md` | Each capability's name, icon, and one-sentence description |
@@ -75,6 +76,23 @@ Lines in the frontmatter that start with `#` are notes to you. They never appear
 Below the frontmatter, anything between `<!--` and `-->` is also a note to you, and it's removed
 before the site is published (it doesn't even appear in the page's source code).
 
+### Motion
+
+The site moves gently, and only where it helps:
+
+- **Home hero:** the line above your name, your name, your title, the intro, and the button fade in
+  and rise slightly, one after another, once when the page loads (about 1.2 seconds in all).
+- **Scroll reveals:** section headings, cards, stats, and process steps fade in and rise a few
+  pixels the first time they scroll into view.
+- **Banner:** the black band under the hero scrolls from right to left in an endless loop.
+- **Hover:** with a mouse or trackpad, cards and buttons lift slightly. Touch screens get no hover
+  effects.
+
+If a visitor has turned on **Reduce motion** on their device, none of this moves: everything shows
+immediately, and the banner is a still row. Only opacity and position change, so nothing on the page
+shifts while it loads. To stagger or delay an item yourself, the code uses `data-reveal` and
+`--reveal-delay` (see `src/styles/global.css`).
+
 ### Finding what still needs your input
 
 Every place that needs a fact from you is marked **TODO**. To find them all, search the
@@ -110,8 +128,8 @@ The site adjusts these links automatically so they work on GitHub Pages.
    page address: `/work/api-quickstart-guide/`.
 3. **Fill in the frontmatter.** The template explains every field. The important ones:
    - `category` must match one of the names in `content/pages/work.md` exactly
-     (`Procedures`, `Resources`, `Forms`, or `Presentations`). `Docs as Code` is hidden for now;
-     see "Turn Docs as Code back on" below.
+     (`Procedures`, `Resources`, `Forms`, or `Presentations`). `Docs as code` is hidden for now;
+     see "Turn Docs as code back on" below.
    - `cover` and `coverAlt` set the card image and its description for screen readers.
    - `pdf`, `images`, and `link` control what appears in **The sample** section. Delete the ones you don't use.
      A PDF appears in a viewer on the page, with **Full screen** and **Download** buttons (see
@@ -159,22 +177,21 @@ To remove a sample, delete its `.md` file and the files it uses in `content/work
   the Back gesture also closes the overlay instead of leaving the site.
 - **Download** saves the PDF. If a browser won't download it (some apps' built-in browsers don't),
   the PDF opens in a new tab, so your site stays open in the original tab.
-- On phones, **Back to Work Samples** and **Home** stay pinned under the top menu while scrolling a
+- On phones, **Back to work samples** and **Home** stay pinned under the top menu while scrolling a
   sample page.
 
 This all happens automatically for any PDF you add. Your résumé page works the same way.
 
-### Turn Docs as Code back on
+### Turn Docs as code back on
 
-The Docs as Code category is hidden until you have a sample for it. Its code and description are
+The Docs as code category is hidden until you have a sample for it. Its code and description are
 still in place. To show it again:
 
 1. Open `content/pages/work.md`.
-2. Under `- name: Docs as Code`, delete the line `hidden: true` (and, if you like, the three `#` note
+2. Under `- name: Docs as code`, delete the line `hidden: true` (and, if you like, the three `#` note
    lines above it).
-3. Add a work sample with `category: Docs as Code` (copy `content/work/_TEMPLATE.md`).
-4. Publish. Docs as Code then appears on the Work Samples page, in its category bar, and in the black
-   category band on the home page.
+3. Add a work sample with `category: Docs as code` (copy `content/work/_TEMPLATE.md`).
+4. Publish. Docs as code then appears on the Work Samples page and in its category bar.
 
 A category only appears once it has at least one sample, so step 3 is what makes it visible. The same
 `hidden: true` line works for any category: it hides the category and every sample in it.
@@ -221,7 +238,10 @@ Because the build stops on errors, a mistake never reaches your live site. The l
 - **Show the footer's "Site source on GitHub" link again:** in `content/settings.md`, delete the `#` at
   the start of the `sourceCode:` line.
 - **Change your name or job title:** edit `name` and `role` in `content/settings.md`. They appear in the home page hero, the footer, and browser tabs.
-- **Change the line above your name, the intro, or the buttons:** edit `content/home/intro.md`.
+- **Change the line above your name, the intro, or the button:** edit `content/home/intro.md`. To add a
+  second button that opens your Work Samples page, follow the note at the bottom of that file's settings.
+- **Change the scrolling banner:** edit the `items` list in `content/home/banner.md`. Each item stays on
+  screen for about 5 seconds as it crosses, on any screen size.
 - **Change the stats:** in `content/home/stats.md`, edit each `value` (keep the quotes, for example
   `"150+"`) and `label`. To mark a number you haven't confirmed yet, add `placeholder: true` under it,
   and a "Placeholder" tag appears next to it.
@@ -273,7 +293,7 @@ You don't need this to publish, but it lets you see changes before pushing them.
 | File or folder | What it does |
 | --- | --- |
 | `src/pages/` | One template per page type. `src/pages/work/[id].astro` is the work sample detail template. |
-| `src/components/` | Reusable pieces: header, footer, the "Back" link bar, sample cards, the two-column photo section, the black category band, accent words, icons, and the PDF viewer (which uses PDF.js to draw PDFs on phones). |
+| `src/components/` | Reusable pieces: header, footer, the "Back" link bar, sample cards, the two-column photo section, the scrolling banner (`Marquee.astro`), the black category bar on the Work Samples page, accent words, icons, and the PDF viewer (which uses PDF.js to draw PDFs on phones). |
 | `src/lib/icons.ts` | The thin-line icons you can pick with `icon:` in Markdown. |
 | `src/styles/global.css` | Colors, the type scale, fonts (Archivo for page titles and your name, Marcellus for headings, Jost for text, Bodoni Moda italic for accent words), spacing, and light/dark mode. |
 | `src/content.config.ts` | The list of fields each Markdown file can have, and which are required. |

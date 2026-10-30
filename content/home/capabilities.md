@@ -16,40 +16,40 @@
 title: Core capabilities
 
 items:
-  - name: Procedure Writing
+  - name: Procedure writing
     icon: procedure
     description: Operational procedures and workflows, drafted from subject matter expert direction.
-  - name: Forms & Templates
+  - name: Forms & templates
     icon: form
     description: Fillable forms and reusable templates that ask for what a process needs.
-  - name: Document Control
+  - name: Document control
     icon: control
     description: Numbering, version control, change requests, and approvals that keep documents current.
-  - name: Knowledge Management
+  - name: Knowledge management
     icon: archive
     description: Building guides, processes, and organized libraries so teams can find and use what they need.
-  - name: Quality Assurance & Editing
+  - name: Quality assurance & editing
     icon: edit
     description: Reviewing documents against style guides and QA checklists for accuracy and consistency.
-  - name: Training & Onboarding
+  - name: Training & onboarding
     icon: onboarding
     description: Training materials, user guides, and onboarding decks that get people productive faster.
-  - name: Enablement Content
+  - name: Enablement content
     icon: megaphone
     description: Field briefs, one-pagers, and onboarding decks that help teams explain and sell technical products.
-  - name: Stakeholder Coordination
+  - name: Stakeholder coordination
     icon: people
     description: Gathering input and running reviews with engineers, subject matter experts, and leaders.
-  - name: Structured Authoring
+  - name: Structured authoring
     icon: layers
     description: DITA/XML topics built for reuse and single-sourcing.
-  - name: AI Tools & Automation
+  - name: AI tools & automation
     icon: sparkle
     description: Streamlining repetitive tasks without compromising accuracy, quality, or confidentiality.
-  - name: Docs as Code
+  - name: Docs as code
     icon: code
     description: Markdown docs in Git, reviewed through pull requests and published automatically.
-  - name: API Documentation
+  - name: API documentation
     icon: api
     description: Reference docs, quickstarts, and guides that help developers use an API.
 ---
