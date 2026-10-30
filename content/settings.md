@@ -24,7 +24,7 @@ linkedin: https://www.linkedin.com/in/dairyia-porter-371b81127
 location: Kirkland, WA
 # The footer's "Site source on GitHub" link is turned off. To show it
 # again, delete the # at the start of the next line.
-# sourceCode: https://github.com/Deepo333/Portfolio
+# sourceCode: https://github.com/dc-porter/Portfolio
 ---
 
 This file only holds settings. Nothing below the `---` line appears on the site.
