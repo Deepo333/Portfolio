@@ -63,6 +63,8 @@ const homeFeatured = defineCollection({
   schema: z.object({
     title: z.string(),
     linkLabel: z.string(),
+    // File names (without .md) of the samples to show, in order.
+    samples: z.array(z.string()).min(1).max(3),
   }),
 });
 
@@ -70,7 +72,17 @@ const homeCapabilities = defineCollection({
   loader: single('capabilities.md', './content/home'),
   schema: z.object({
     title: z.string(),
-    items: z.array(z.object({ name: z.string(), icon, description: z.string() })).min(1),
+    // `hidden: true` keeps an item off the site without deleting it.
+    items: z
+      .array(
+        z.object({
+          name: z.string(),
+          icon,
+          description: z.string(),
+          hidden: z.boolean().default(false),
+        }),
+      )
+      .min(1),
   }),
 });
 
@@ -82,7 +94,10 @@ const homeTools = defineCollection({
       .array(
         z.object({
           name: z.string(),
-          items: z.array(z.object({ name: z.string(), icon })).min(1),
+          // `hidden: true` keeps a tool off the site without deleting it.
+          items: z
+            .array(z.object({ name: z.string(), icon, hidden: z.boolean().default(false) }))
+            .min(1),
         }),
       )
       .min(1),
@@ -149,7 +164,6 @@ const work = defineCollection({
       date: z.coerce.date(),
       cover: image(),
       coverAlt: z.string(),
-      featured: z.boolean().default(false),
       draft: z.boolean().default(false),
       // Marks an example that isn't real work; shows a "Placeholder sample" label.
       placeholder: z.boolean().default(false),

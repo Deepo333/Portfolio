@@ -11,16 +11,13 @@ role: Senior Technical Writer
 
 # One or two sentences that search engines and link previews
 # (LinkedIn, Slack, etc.) show for your site.
-description: Dairyia Porter is a technical writer specializing in operational procedures, forms, and document control.
+description: Dairyia Porter is a senior technical writer specializing in technical documentation, training, and knowledge management.
 
-# TODO: Replace with the email address you want visitors to use.
-# Until you do, every "Email" button on the site opens an email to
-# this placeholder address.
-email: you@example.com
+# Every "Email" button and link on the site opens a new email to this address.
+email: dee.porter97@gmail.com
 
-# TODO: Replace with the full address of your LinkedIn profile.
-# Until you do, every "LinkedIn" link goes to this placeholder.
-linkedin: https://www.linkedin.com/in/your-profile
+# Every "LinkedIn" link on the site opens this profile in a new tab.
+linkedin: https://www.linkedin.com/in/dairyia-porter-371b81127
 
 # Optional. Delete a line to hide it from the site.
 # TODO: Confirm your location. This is the city on your résumé.

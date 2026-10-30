@@ -1,11 +1,14 @@
 ---
 import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
-import { url, type WorkSample } from '../lib/content';
+import { categoryHref, url, type WorkSample } from '../lib/content';
 
 interface Props {
   sample: WorkSample;
-  /** Hide the category label when the card already sits under a category heading. */
+  /**
+   * Show the category label, linked to that category on the Work Samples page.
+   * Hide it when the card already sits under a category heading.
+   */
   showCategory?: boolean;
   /** Show the one-sentence summary under the title. */
   showSummary?: boolean;
@@ -26,7 +29,13 @@ const { title, summary, category, cover, coverAlt, placeholder } = sample.data;
   {
     (showCategory || placeholder) && (
       <div class="meta">
-        {showCategory && <p class="label">{category}</p>}
+        {showCategory && (
+          <p class="label">
+            <a class="category-link" href={categoryHref(category)}>
+              {category}
+            </a>
+          </p>
+        )}
         {placeholder && <p class="placeholder-tag">Placeholder sample</p>}
       </div>
     )
@@ -69,6 +78,20 @@ const { title, summary, category, cover, coverAlt, placeholder } = sample.data;
     align-items: center;
     gap: 0.5rem 0.75rem;
     margin-bottom: 0.75rem;
+  }
+
+  /* Sits above the card-wide title link, so it can be clicked on its own. */
+  .category-link {
+    position: relative;
+    z-index: 1;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .category-link:hover {
+    opacity: 1;
+    text-decoration: underline;
+    text-underline-offset: 0.3em;
   }
 
   .title {

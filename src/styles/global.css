@@ -25,8 +25,22 @@
   /* Taupe for large script words: as light as it can be while staying readable. */
   --accent-large: light-dark(#957d67, #b39b84);
 
-  /* Behind your cutout photo at the top of the Home and About pages. */
-  --hero-bg: var(--bg-soft);
+  /* The hero matches the grey studio background of your headshot
+     (content/pages/images/headshot-new.jpg) where the photo fades into it. */
+  --hero-bg: #cac8c3;
+
+  /* Soft color tints for the capability boxes and tool tiles: a light
+     background and a deeper shade of the same color for the icon. */
+  --tint-sage: light-dark(#e9f0e5, #1f2920);
+  --tint-sage-ink: light-dark(#557558, #a6c4a8);
+  --tint-blue: light-dark(#e5ecf4, #1d2530);
+  --tint-blue-ink: light-dark(#52708e, #a7bfd8);
+  --tint-blush: light-dark(#f7e8e5, #2d2221);
+  --tint-blush-ink: light-dark(#9c645c, #e1b3ab);
+  --tint-terracotta: light-dark(#f6e7dc, #2e231b);
+  --tint-terracotta-ink: light-dark(#a35d3d, #e0ad90);
+  --tint-lavender: light-dark(#eee9f5, #25212d);
+  --tint-lavender-ink: light-dark(#736597, #c4b9df);
 
   /* Inverse bands (near-black with white text) */
   --inverse-bg: light-dark(#0d0d0d, #e8e4de);
@@ -253,6 +267,32 @@ p {
 
 .band {
   padding-block: var(--section-space);
+}
+
+/* Picks one of the --tint-* colors above, e.g. data-tint="sage". */
+[data-tint='sage'] {
+  --tint: var(--tint-sage);
+  --tint-ink: var(--tint-sage-ink);
+}
+
+[data-tint='blue'] {
+  --tint: var(--tint-blue);
+  --tint-ink: var(--tint-blue-ink);
+}
+
+[data-tint='blush'] {
+  --tint: var(--tint-blush);
+  --tint-ink: var(--tint-blush-ink);
+}
+
+[data-tint='terracotta'] {
+  --tint: var(--tint-terracotta);
+  --tint-ink: var(--tint-terracotta-ink);
+}
+
+[data-tint='lavender'] {
+  --tint: var(--tint-lavender);
+  --tint-ink: var(--tint-lavender-ink);
 }
 
 .band-soft {

@@ -32,8 +32,8 @@ cover: ./images/your-image-name.png
 coverAlt: Describe the image for people using screen readers.
 
 # OPTIONAL ─────────────────────────────────────────────────────
-# Show this sample in the "Featured work" section of the home page.
-featured: false
+# To show this sample in "Featured work" on the home page, add its file
+# name to the list in content/home/featured.md.
 
 # Set to true to hide the sample from the site while you work on it.
 draft: false
@@ -65,16 +65,9 @@ link:
 
 ## Overview
 
-What is this document, who is it for, and what does it help them do? Two or three sentences.
-
-## The problem
-
-What wasn't working before? Who was affected, and how? Use numbers if you have them.
+What is this document, who is it for, and what does it help them do? Two to four sentences.
 
 ## My approach
 
-How did you research, plan, write, review, and test the document? Bullet points work well here.
-
-## The result
-
-What changed after the document was published? Include feedback, metrics, or adoption.
+How did you structure and write it, and what decisions made it work for its readers? Two to four
+sentences, using only facts you can point to in the document.

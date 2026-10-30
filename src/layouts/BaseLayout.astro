@@ -16,12 +16,23 @@ interface Props {
   description?: string;
   /** Show the "Back" link at the top of the page. Every page has it except Home. */
   backLink?: boolean;
-  /** Extra links next to "Back", such as "All work samples" on sample pages. */
+  /** Extra links next to "Back", such as "Back to Work Samples" on sample pages. */
   backLinks?: { label: string; href: string; icon?: import('../lib/icons').IconName }[];
+  /** Leave out the history "Back" link and show only the extra links. */
+  backLinksOnly?: boolean;
+  /** On phones, pin the links under the top menu while scrolling. */
+  stickyBackBar?: boolean;
 }
 
 const settings = await getSettings();
-const { title, description = settings.description, backLink = true, backLinks } = Astro.props;
+const {
+  title,
+  description = settings.description,
+  backLink = true,
+  backLinks,
+  backLinksOnly = false,
+  stickyBackBar = false,
+} = Astro.props;
 const pageTitle = title ? `${title} | ${settings.name}` : `${settings.name} | ${settings.role}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
@@ -65,7 +76,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <a class="skip-link" href="#main">Skip to content</a>
     <Header name={settings.name} />
     <main id="main">
-      {backLink && <BackBar links={backLinks} />}
+      {backLink && <BackBar links={backLinks} back={!backLinksOnly} sticky={stickyBackBar} />}
       <slot />
     </main>
     <Footer settings={settings} />

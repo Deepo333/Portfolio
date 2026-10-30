@@ -30,9 +30,9 @@ Each section of the home page has its own file in `content/home/`, in the order 
 | Section | File | What you edit there |
 | --- | --- | --- |
 | Hero | `content/home/intro.md` | The small line above your name, the short intro, and the two button labels. Your name and job title come from `content/settings.md` |
-| Stats | `content/home/stats.md` | The four numbers under the hero (see "Replace the placeholder stats" below) |
-| Featured work | `content/home/featured.md` | Section heading and intro. The cards are the work samples marked `featured: true` |
-| Core capabilities | `content/home/capabilities.md` | Each capability's name, icon, and description |
+| Stats | `content/home/stats.md` | The four numbers under the hero |
+| Featured work | `content/home/featured.md` | Section heading, intro, and the list of three samples to show (one per category) |
+| Core capabilities | `content/home/capabilities.md` | Each capability's name, icon, and one-sentence description |
 | Tools & technologies | `content/home/tools.md` | Groups of tools (numbered 01, 02, ... automatically), each tool's name and icon |
 | My process | `content/home/process.md` | Each step's name and description (numbered automatically) |
 | Let's work together | `content/home/closing.md` | Heading, text, and link labels. Email and LinkedIn come from `content/settings.md` |
@@ -45,7 +45,15 @@ script, for example `title: About _me_` or `title: Let’s work _together_`. Use
 
 **Icons:** capabilities and tools each have an `icon:` line. The comment at the top of
 `capabilities.md` and `tools.md` lists every icon name you can use (for example `procedure`,
-`form`, `code`, `document`, `pdf`, `git`, `slides`).
+`form`, `archive`, `edit`, `document`, `pdf`, `slides`).
+
+**Colors:** the capability boxes and tool tiles take turns using five soft colors (sage, dusty blue,
+blush, terracotta, and lavender), in order. You don't set them in Markdown; to change a shade, edit
+the `--tint-` lines at the top of `src/styles/global.css`.
+
+**Hiding an item:** add `hidden: true` under a capability or a tool to keep it off the site without
+deleting it. Delete that line to show it again. The Docs as Code capability and the Markdown and Git
+tools are hidden this way for now.
 
 ### How a Markdown file is organized
 
@@ -76,7 +84,7 @@ dealt with it.
 | What | Where to put it | How to refer to it |
 | --- | --- | --- |
 | Images for work samples | `content/work/images/` | `./images/my-picture.png` |
-| Your headshot (used on Home and About) | `content/pages/images/` | `./images/headshot-cutout.png` |
+| Your headshot (used on Home and About) | `content/pages/images/` | `./images/headshot-new.jpg` |
 | PDFs (samples and résumé) | `public/files/` | `/files/my-document.pdf` (use lowercase words joined by hyphens, with no spaces) |
 
 ### Linking to other pages
@@ -103,11 +111,11 @@ The site adjusts these links automatically so they work on GitHub Pages.
      see "Turn Docs as Code back on" below.
    - `cover` and `coverAlt` set the card image and its description for screen readers.
    - `pdf`, `images`, and `link` control what appears in **The sample** section. Delete the ones you don't use.
-     A PDF appears in a viewer on the page, with **Open** and **Download** buttons.
-   - `featured: true` also shows the sample on the home page.
+     A PDF appears in a viewer on the page, with **Full screen** and **Download** buttons (see
+     "How PDFs appear" below).
    - `draft: true` hides the sample until you're ready.
-4. **Write the case study.** Replace the text under the four headings:
-   **Overview**, **The problem**, **My approach**, and **The result**.
+4. **Write the case study.** Replace the text under the two headings, **Overview** and
+   **My approach**. Two to four sentences each is plenty.
 5. **Publish it** (see the next section).
 
 The sample appears automatically on the Work Samples page under its category, and its detail page
@@ -118,22 +126,40 @@ card image is in `content/work/images/`:
 
 | File | Category | On the home page |
 | --- | --- | --- |
-| `wildfire-season-declaration-procedure.md` | Procedures | Yes |
+| `wildfire-season-declaration-procedure.md` | Procedures | |
 | `wildfire-threat-assessment-and-response-procedure.md` | Procedures | Yes |
 | `wildfire-season-declaration-form.md` | Forms | Yes |
 | `change-request-form.md` | Forms | |
-| `technical-writing-review-checklist.md` | Resources | |
+| `technical-writing-review-checklist.md` | Resources | Yes |
 | `echodyne-field-brief.md` | Resources | |
 | `new-employee-onboarding-windows-setup-guide.md` | Presentations | |
 
-The home page shows up to three samples marked `featured: true`, newest first. To feature a
-different sample, change `featured: true` to `featured: false` on one sample and the opposite on another.
+**Featured work.** The home page shows the samples listed in `content/home/featured.md`, in that
+order: one procedure, one form, and one resource. To feature a different sample, replace its line
+with another sample's file name (without `.md`). Each card's category label links to that category
+on the Work Samples page. Pick samples from different categories; if two share a category, the
+build stops and tells you which ones.
 
 **Card images.** Each card image shows the first page of the sample's PDF on a light background.
 To make one for a new PDF, take a screenshot of the PDF's first page and place it on a 1200 × 900
 pixel canvas in any image editor, or ask Claude to make one the same way.
 
 To remove a sample, delete its `.md` file and the files it uses in `content/work/images/` and `public/files/`.
+
+### How PDFs appear
+
+- **On computers,** the browser's own PDF viewer is built into the sample page, so visitors can
+  scroll, zoom, and search the PDF without leaving it.
+- **On phones and tablets,** browsers can't show a PDF inside a page, so each page of the PDF is
+  drawn into the sample page instead. Visitors scroll through it in a box on the page.
+- **Full screen** opens the PDF in an overlay with a large **Close** button at the top. On phones,
+  the Back gesture also closes the overlay instead of leaving the site.
+- **Download** saves the PDF. If a browser won't download it (some apps' built-in browsers don't),
+  the PDF opens in a new tab, so your site stays open in the original tab.
+- On phones, **Back to Work Samples** and **Home** stay pinned under the top menu while scrolling a
+  sample page.
+
+This all happens automatically for any PDF you add. Your résumé page works the same way.
 
 ### Turn Docs as Code back on
 
@@ -146,6 +172,9 @@ still in place. To show it again:
 3. Add a work sample with `category: Docs as Code` (copy `content/work/_TEMPLATE.md`).
 4. Publish. Docs as Code then appears on the Work Samples page, in its category bar, and in the black
    category band on the home page.
+5. Optional: to show the Docs as Code box under Core capabilities, delete its `hidden: true` line in
+   `content/home/capabilities.md`. To list Markdown and Git again under Tools, delete their
+   `hidden: true` lines in `content/home/tools.md`.
 
 A category only appears once it has at least one sample, so step 3 is what makes it visible. The same
 `hidden: true` line works for any category: it hides the category and every sample in it.
@@ -191,25 +220,27 @@ Because the build stops on errors, a mistake never reaches your live site. The l
 - **Change your name, email, or LinkedIn:** edit `content/settings.md`.
 - **Change your name or job title:** edit `name` and `role` in `content/settings.md`. They appear in the home page hero, the footer, and browser tabs.
 - **Change the line above your name, the intro, or the buttons:** edit `content/home/intro.md`.
-- **Replace the placeholder stats:** in `content/home/stats.md`, change each `"00"` to your real
-  number (keep the quotes, for example `"45+"`), then delete that stat's `placeholder: true` line
-  so the "Placeholder" tag disappears. "Years of experience" is already set to `"8+"` from your résumé.
+- **Change the stats:** in `content/home/stats.md`, edit each `value` (keep the quotes, for example
+  `"150+"`) and `label`. To mark a number you haven't confirmed yet, add `placeholder: true` under it,
+  and a "Placeholder" tag appears next to it.
 - **Add, remove, or reorder capabilities, tools, or process steps:** edit the list in the matching
   file in `content/home/`. Copy an existing item (all of its lines, starting with `- name:`) to add one.
 - **Add a tool or a tool group:** in `content/home/tools.md`, copy a tool (its `- name:` and `icon:`
   lines) inside a group's `items:` list, or copy a whole group (from `- name:` through its tools).
 - **Replace your résumé:** upload your new PDF to `public/files/` as `resume.pdf` (replacing the old one),
   then update `updated:` in `content/pages/resume.md`.
-- **Change your headshot:** replace `content/pages/images/headshot-cutout.png` with your new photo,
-  keeping the same file name. It appears on the Home and About pages. Use a cutout: a PNG with the
-  background removed (transparent), cropped so your hair touches the top edge and your shoulders
-  touch the bottom edge. If the cutout tool leaves a grey or white outline around your hair, ask
-  Claude to trim and soften the edge, as was done for this photo. (Your earlier photo with the grey
-  studio background is still saved as `headshot.jpg`, but the site doesn't use it.)
+- **Change your headshot:** replace `content/pages/images/headshot-new.jpg` with your new photo,
+  keeping the same file name. It appears on the Home and About pages. Its left edge fades into the
+  grey set by `--hero-bg` at the top of `src/styles/global.css`, so if your new photo has a different
+  background color, change `--hero-bg` to match it. A photo with a plain, light background and some
+  space beside you works best. (Your earlier photos, `headshot.jpg` and the cutout
+  `headshot-cutout.png`, are still in the same folder but aren't used. To switch back to one, change
+  `headshot:` in `content/pages/about.md`.)
 - **Change the colors:** edit the lines at the top of `src/styles/global.css`. Each line gives the
   light-mode color first and the dark-mode color second, for example
-  `--ink: light-dark(#0d0d0d, #f5f4f1);` for the near-black text and buttons. `--hero-bg` is the
-  background behind your photo on the Home and About pages (the soft off-white, `--bg-soft`).
+  `--ink: light-dark(#0d0d0d, #f5f4f1);` for the near-black text and buttons. `--hero-bg` is the grey
+  behind your photo on the Home and About pages; it matches the photo's studio background. The
+  `--tint-` lines set the soft colors of the capability boxes and tool tiles.
 - **Change the top navigation:** edit the `links` list in `src/components/Header.astro`.
 
 ### Renaming the repository
@@ -241,7 +272,7 @@ You don't need this to publish, but it lets you see changes before pushing them.
 | File or folder | What it does |
 | --- | --- |
 | `src/pages/` | One template per page type. `src/pages/work/[id].astro` is the work sample detail template. |
-| `src/components/` | Reusable pieces: header, footer, the "Back" link bar, sample cards, the two-column photo section with your cutout, the black category band, script accents, icons, PDF viewer. |
+| `src/components/` | Reusable pieces: header, footer, the "Back" link bar, sample cards, the two-column photo section, the black category band, script accents, icons, and the PDF viewer (which uses PDF.js to draw PDFs on phones). |
 | `src/lib/icons.ts` | The thin-line icons you can pick with `icon:` in Markdown. |
 | `src/styles/global.css` | Colors, fonts (Archivo for your name and big display type, Marcellus for headings, Jost for text, Ms Madi for script accents), spacing, and light/dark mode. |
 | `src/content.config.ts` | The list of fields each Markdown file can have, and which are required. |

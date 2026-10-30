@@ -1,20 +1,21 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # HOME PAGE · TOOLS & TECHNOLOGIES
-# This list comes from the Tools section of your résumé. Markdown and
-# Git are marked "learning" because docs as code is a skill you're
-# building. Edit the names when that changes. Arena (also on your
-# résumé) is left out so each group keeps four tools in a neat row;
-# add it back if you like.
+# This list comes from the Tools section of your résumé. Arena (also
+# on your résumé) is left out so each group keeps four tools in a neat
+# row; add it back if you like.
 #
 # Tools are grouped. Each group has a name and a list of tools; the
 # groups are numbered 01, 02, ... automatically, and each group shows
-# how many tools it has. Each tool has a name and an icon.
+# how many tools it has. Each tool has a name and an icon, and the
+# icon tiles take turns using five soft colors, in order.
+# Add "hidden: true" to a tool to keep it off the site without
+# deleting it; delete that line to show it again.
 #
 # Icon names you can use:
 #   document, pdf, markdown, git, wiki, cloud, diagram, slides,
 #   spreadsheet, design, image, chat, code, form, procedure,
-#   control, training, people
+#   control, training, onboarding, megaphone, archive, edit, people
 # The text below the --- line is the section's intro.
 # ─────────────────────────────────────────────────────────────
 
@@ -41,16 +42,19 @@ groups:
         icon: control
       - name: Livelink
         icon: document
-  - name: AI & docs as code
+  - name: AI tools
     items:
       - name: Claude
         icon: chat
       - name: Claude Code
         icon: code
-      - name: Markdown (learning)
+      # Hidden for now. Delete a "hidden: true" line to show that tool again.
+      - name: Markdown
         icon: markdown
-      - name: Git (learning)
+        hidden: true
+      - name: Git & GitHub
         icon: git
+        hidden: true
 ---
 
 The software I use to write, review, track, and publish documentation.

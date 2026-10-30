@@ -4,7 +4,7 @@
  *   content/settings.md              your name, job title, email, and LinkedIn
  *   content/home/intro.md            hero tagline, intro, and button labels
  *   content/home/stats.md            the four stats
- *   content/home/featured.md         featured work heading (cards come from content/work/)
+ *   content/home/featured.md         featured work heading and which samples to show
  *   content/home/capabilities.md     core capabilities
  *   content/home/tools.md            tools & technologies, in groups
  *   content/home/process.md          my process
@@ -21,6 +21,7 @@ import PhotoCover from '../components/PhotoCover.astro';
 import WorkCard from '../components/WorkCard.astro';
 import {
   getCategories,
+  getFeaturedSamples,
   getHomeSection,
   getPage,
   getSettings,
@@ -48,7 +49,7 @@ const { Content: ProcessText } = await render(process);
 const { Content: ClosingText } = await render(closing);
 
 const samples = await getWorkSamples();
-const featuredSamples = samples.filter((s) => s.data.featured).slice(0, 3);
+const featuredSamples = await getFeaturedSamples(featured.data.samples);
 const categories = (await getCategories()).filter((c) =>
   samples.some((s) => s.data.category === c.name),
 );
@@ -58,6 +59,22 @@ const resumeHref = resume.data.pdf ? url(resume.data.pdf) : url('/resume/');
 const resumeFileName = `${settings.name} - Resume.pdf`;
 const linkedinHandle = settings.linkedin.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
 const number = (index: number) => String(index + 1).padStart(2, '0');
+
+// Capability boxes and tool tiles take turns using these soft colors
+// (defined as --tint-* in src/styles/global.css).
+const tints = ['sage', 'blue', 'blush', 'terracotta', 'lavender'];
+const capabilityItems = capabilities.data.items
+  .filter((item) => !item.hidden)
+  .map((item, index) => ({ ...item, tint: tints[index % tints.length] }));
+let tileCount = 0;
+const toolGroups = tools.data.groups
+  .map((group) => ({
+    name: group.name,
+    items: group.items
+      .filter((tool) => !tool.hidden)
+      .map((tool) => ({ ...tool, tint: tints[tileCount++ % tints.length] })),
+  }))
+  .filter((group) => group.items.length > 0);
 ---
 
 <BaseLayout description={intro.data.description} backLink={false}>
@@ -85,6 +102,8 @@ const number = (index: number) => String(index + 1).padStart(2, '0');
             class="button button-secondary"
             href={resumeHref}
             download={resume.data.pdf ? resumeFileName : undefined}
+            target={resume.data.pdf ? '_blank' : undefined}
+            rel={resume.data.pdf ? 'noopener' : undefined}
           >
             <Icon name="download" />
             {intro.data.secondaryButton}
@@ -150,8 +169,8 @@ const number = (index: number) => String(index + 1).padStart(2, '0');
       </div>
       <ul class="capabilities">
         {
-          capabilities.data.items.map((item) => (
-            <li class="capability">
+          capabilityItems.map((item) => (
+            <li class="capability" data-tint={item.tint}>
               <Icon name={item.icon} size={26} class="capability-icon" />
               <h3>{item.name}</h3>
               <p>{item.description}</p>
@@ -174,7 +193,7 @@ const number = (index: number) => String(index + 1).padStart(2, '0');
       </div>
       <div class="tool-groups">
         {
-          tools.data.groups.map((group, index) => (
+          toolGroups.map((group, index) => (
             <section class="tool-group" aria-labelledby={`tools-${index}`}>
               <div class="tool-group-head">
                 <span class="label tool-number" aria-hidden="true">
@@ -188,7 +207,7 @@ const number = (index: number) => String(index + 1).padStart(2, '0');
               <ul class="tool-tiles">
                 {group.items.map((tool) => (
                   <li>
-                    <span class="tile" aria-hidden="true">
+                    <span class="tile" data-tint={tool.tint} aria-hidden="true">
                       <Icon name={tool.icon} size={24} />
                     </span>
                     <span class="tool-name">{tool.name}</span>
@@ -385,13 +404,13 @@ const number = (index: number) => String(index + 1).padStart(2, '0');
 
   .capability {
     padding: clamp(1rem, 2.5vw, 1.75rem);
-    background: var(--bg);
+    background: var(--tint);
     border-top: 1px solid var(--border-strong);
   }
 
   .capability :global(.capability-icon) {
-    color: var(--ink);
-    stroke-width: 1.25;
+    color: var(--tint-ink);
+    stroke-width: 1.4;
   }
 
   .capability h3 {
@@ -455,14 +474,14 @@ const number = (index: number) => String(index + 1).padStart(2, '0');
     place-items: center;
     width: 100%;
     aspect-ratio: 1;
-    background: var(--bg-soft);
-    border: 1px solid var(--border);
-    color: var(--ink);
+    background: var(--tint);
+    border: 1px solid transparent;
+    color: var(--tint-ink);
     transition: border-color 0.25s var(--ease);
   }
 
   .tool-tiles li:hover .tile {
-    border-color: var(--ink);
+    border-color: var(--tint-ink);
   }
 
   .tile :global(.icon) {
