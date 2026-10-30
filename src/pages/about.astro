@@ -17,10 +17,19 @@ const { title, description, lead, headshot, headshotAlt } = page.data;
 <BaseLayout title={plainText(title)} description={description}>
   {
     headshot ? (
-      <PhotoCover src={headshot} alt={headshotAlt ?? settings.name} labelledby="about-title">
-        <h1 id="about-title" class="about-title page-title" data-reveal="letters">
-          <Letters text={plainText(title)} />
-        </h1>
+      <div class="about-cover">
+        <div class="container about-heading">
+          <h1 id="about-title" class="about-title page-title" data-reveal="letters">
+            <Letters text={plainText(title)} />
+          </h1>
+        </div>
+      </div>
+      <PhotoCover
+        src={headshot}
+        alt={headshotAlt ?? settings.name}
+        labelledby="about-title"
+        fadeTop
+      >
         {lead && <p class="about-lead">{lead}</p>}
         <div class="button-row">
           <a
@@ -57,7 +66,25 @@ const { title, description, lead, headshot, headshotAlt } = page.data;
 </BaseLayout>
 
 <style>
+  /* The heading spans the top of the page like a magazine cover, on the same
+     grey as the photo section below it. */
+  .about-cover {
+    color-scheme: light;
+    background: var(--hero-bg);
+    color: var(--ink);
+  }
+
+  .about-heading {
+    container-type: inline-size;
+    padding-top: clamp(0.75rem, 2.5vw, 2rem);
+  }
+
+  /* Abril Fatface is about 4.35 em wide for "About me", so this size fills the
+     width of the page, and shrinks with it on phones. */
   .about-title {
+    font-size: 22.6cqi;
+    line-height: 0.95;
+    letter-spacing: 0;
     white-space: nowrap;
   }
 

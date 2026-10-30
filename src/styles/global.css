@@ -41,6 +41,8 @@
   --tint-terracotta-ink: light-dark(#8f4a22, #f2c09e);
   --tint-lavender: light-dark(#d6c8f3, #352a52);
   --tint-lavender-ink: light-dark(#5a4590, #cfc2f2);
+  --tint-sand: light-dark(#ecdcc0, #3d3322);
+  --tint-sand-ink: light-dark(#7a5a2e, #e6cfa0);
 
   /* Inverse bands (near-black with white text) */
   --inverse-bg: light-dark(#0d0d0d, #e8e4de);
@@ -386,6 +388,11 @@ h2.section-title {
 [data-tint='lavender'] {
   --tint: var(--tint-lavender);
   --tint-ink: var(--tint-lavender-ink);
+}
+
+[data-tint='sand'] {
+  --tint: var(--tint-sand);
+  --tint-ink: var(--tint-sand-ink);
 }
 
 .band-soft {
