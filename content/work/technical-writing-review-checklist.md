@@ -10,7 +10,7 @@ category: Resources
 date: 2026-10-29
 
 cover: ./images/technical-writing-review-checklist-cover.png
-coverAlt: First page of the Technical Writing Review Checklist, document QA-CL-001, Version 1.0, showing its purpose statement and table of contents.
+coverAlt: First page of the Technical Writing Review Checklist, Version 1.0, showing its purpose statement and table of contents.
 
 role: Author
 audience: Reviewers checking new and revised documents before approval
@@ -23,7 +23,7 @@ pdf: /files/technical-writing-review-checklist.pdf
 
 ## Overview
 
-The Technical Writing Review Checklist (QA-CL-001) is a quality assurance tool for checking a document
+The Technical Writing Review Checklist is a quality assurance tool for checking a document
 before it's approved. Reviewers use it on every new document and on any revision that materially
 changes content, marking each item Pass, Fail, or N/A.
 

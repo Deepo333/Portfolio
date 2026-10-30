@@ -22,7 +22,9 @@ linkedin: https://www.linkedin.com/in/dairyia-porter-371b81127
 # Optional. Delete a line to hide it from the site.
 # TODO: Confirm your location. This is the city on your résumé.
 location: Kirkland, WA
-sourceCode: https://github.com/Deepo333/Portfolio
+# The footer's "Site source on GitHub" link is turned off. To show it
+# again, delete the # at the start of the next line.
+# sourceCode: https://github.com/Deepo333/Portfolio
 ---
 
 This file only holds settings. Nothing below the `---` line appears on the site.

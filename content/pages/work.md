@@ -26,4 +26,4 @@ categories:
     hidden: true
 ---
 
-A selection of documentation projects. Each sample explains the problem, how I approached it, and the result, followed by the deliverable itself.
+A selection of documentation projects, each with a short overview and how I approached it.

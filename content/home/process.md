@@ -9,15 +9,17 @@ title: My process
 
 steps:
   - name: Gather
-    description: Collect direction from subject matter experts, plus the documents, forms, and notes that already exist.
+    description: Collect information from subject matter experts, existing documentation, and the people who use it.
   - name: Draft
-    description: Outline the structure, then write in plain language with one action per step.
+    description: Structure the content for its audience, then write in clear, plain language.
   - name: Review
     description: Route the draft to subject matter experts and stakeholders for technical review.
-  - name: Refine
-    description: Resolve review comments, then check the draft against the style guide and review checklist.
+  - name: Refine & approve
+    description: Resolve comments, edit for quality and consistency, and secure final approval.
   - name: Publish
-    description: Release the approved version under document control, and update it through change requests.
+    description: Publish the approved version to its designated repository or platform.
+  - name: Maintain
+    description: Track changes, schedule reviews, and keep content current.
 ---
 
-How a document goes from subject matter expert input to an approved, controlled version.
+How I take a document from first input to a published, maintained version.

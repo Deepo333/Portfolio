@@ -14,7 +14,7 @@ description: About Dairyia Porter, technical writer.
 
 # Shown in large type next to your photo. The rest of your bio goes
 # below the --- line.
-lead: I turn expert knowledge into clear documents people can follow, approve, and trust.
+lead: I bring clarity to complex technical information.
 
 headshot: ./images/headshot-new.jpg
 headshotAlt: Dairyia Porter smiling, with long dark wavy hair and a white button-up shirt, against a light grey background
@@ -26,12 +26,14 @@ Before Puget Sound Energy, I wrote and edited specifications, standards, procedu
 
 ## What I bring
 
-- **Plain language.** Short, direct sentences, checked against a style guide.
-- **Audience focus.** I write for the person doing the work, whether that's an operator, an engineer, or an executive.
-- **Process thinking.** Documents organized around how the work actually happens, with clear roles and decision points.
-- **Visual communication.** Flowcharts, tables, and layouts that make complex processes easy to follow.
-- **Document control.** Templates, version control, and change requests that keep the current, approved version easy to find.
+- **Plain language.** Clear, direct writing people understand the first time.
+- **Audience focus.** Content shaped for the reader, whether that's an operator, an engineer, or an executive.
+- **Process clarity.** Steps, roles, decision points, and visuals like flowcharts and tables that make complex work easy to follow.
+- **Document control.** Templates, versioning, and change requests that keep the approved version current and easy to find.
+- **Knowledge management.** Guides, processes, and organized libraries so teams can find answers on their own.
 - **Collaboration.** I gather input from engineers, subject matter experts, and leaders, and handle the writing so experts can focus on the content.
+- **AI tools & automation.** Streamlining repetitive tasks without compromising accuracy, quality, or confidentiality.
+- **Tools & formats.** Docs-as-code, API documentation, DITA/XML, MadCap Flare, Oxygen XML Editor, Confluence, SharePoint, and Jira.
 
 <!-- TODO: Add an "Outside of work" section if you'd like, with a sentence or two about hobbies,
 volunteering, or what you're learning now. Type it below this note, starting with this heading line:

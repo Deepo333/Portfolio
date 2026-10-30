@@ -7,7 +7,7 @@
 # ─────────────────────────────────────────────────────────────
 
 # The small uppercase line above your name.
-tagline: Technical documentation · Training · Knowledge management
+tagline: Knowledge management · Review workflows · AI tools & automation
 
 # Shown by search engines and link previews for the home page.
 description: Dairyia Porter is a senior technical writer specializing in technical documentation, training, and knowledge management.
@@ -18,4 +18,4 @@ primaryButton: View My Work
 secondaryButton: Download Résumé
 ---
 
-I turn complex technical information into clear, accurate documentation that people can follow and trust.
+I turn complex technical information into clear, user-friendly documentation backed by a single source of truth.

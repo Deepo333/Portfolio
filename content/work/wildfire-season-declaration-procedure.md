@@ -9,7 +9,7 @@ category: Procedures
 date: 2026-06-10
 
 cover: ./images/wildfire-season-declaration-procedure-cover.png
-coverAlt: First page of the PSE Wildfire Season Declaration Procedure, showing document number PSE-WRM-002, Revision 01, and the table of contents.
+coverAlt: First page of the PSE Wildfire Season Declaration Procedure, showing its document details and table of contents.
 
 role: Technical writer, drafting from subject matter expert direction
 audience: PSE staff who monitor conditions, recommend and approve Wildfire Season status changes, and carry out the mitigations
@@ -23,7 +23,7 @@ pdf: /files/wildfire-season-declaration-procedure.pdf
 
 ## Overview
 
-The PSE Wildfire Season Declaration Procedure (PSE-WRM-002) defines how Puget Sound Energy decides
+The PSE Wildfire Season Declaration Procedure defines how Puget Sound Energy decides
 when its Wildfire Season is active. It covers how conditions are monitored, who recommends and
 approves a change in status, and what each group does once the status changes. I drafted it for the
 Wildfire Risk Management (WRM) program, working from subject matter expert direction.

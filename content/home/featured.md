@@ -4,7 +4,8 @@
 # The three cards, in order from left to right. Use each sample's file
 # name from content/work/, without ".md". Pick samples from different
 # categories; the build stops with a message if two share a category.
-# The text below the --- line is the section's intro.
+# Each card's "View samples" link opens that category on the Work Samples page.
+# To add a short intro under the heading, type it below the --- line.
 # ─────────────────────────────────────────────────────────────
 
 title: Featured work
@@ -15,5 +16,3 @@ samples:
   - wildfire-season-declaration-form                    # Forms
   - technical-writing-review-checklist                  # Resources
 ---
-
-One procedure, one form, and one resource, each with a short note on how I approached it.
