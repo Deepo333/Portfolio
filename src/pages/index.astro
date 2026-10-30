@@ -5,7 +5,7 @@
  *   content/home/intro.md            hero tagline, intro, and button label
  *   content/home/banner.md           the document types in the scrolling black band
  *   content/home/stats.md            the four stats
- *   content/home/featured.md         featured work heading and which samples to show
+ *   content/home/featured.md         featured work heading and its three category cards
  *   content/home/capabilities.md     core capabilities
  *   content/home/tools.md            tools & technologies, in groups
  *   content/home/process.md          my process
@@ -15,11 +15,13 @@
 import { render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Accent from '../components/Accent.astro';
+import Letters from '../components/Letters.astro';
 import Marquee from '../components/Marquee.astro';
 import Icon from '../components/Icon.astro';
 import PhotoCover from '../components/PhotoCover.astro';
-import WorkCard from '../components/WorkCard.astro';
+import FeaturedCard from '../components/FeaturedCard.astro';
 import { getFeaturedSamples, getHomeSection, getPage, getSettings, url } from '../lib/content';
+import { getLogos } from '../lib/logos';
 
 const settings = await getSettings();
 const [intro, banner, stats, featured, capabilities, tools, process, closing] = await Promise.all([
@@ -41,27 +43,34 @@ const { Content: ToolsText } = await render(tools);
 const { Content: ProcessText } = await render(process);
 const { Content: ClosingText } = await render(closing);
 
-const featuredSamples = await getFeaturedSamples(featured.data.samples);
+const featuredSamples = await getFeaturedSamples(featured.data.cards.map((card) => card.sample));
 
-const [firstName, ...otherNames] = settings.name.split(' ');
+// Your name, split into letters for the typewriter effect. A one-letter pause
+// at the line break keeps the rhythm natural.
+let typeIndex = 0;
+const nameWords = settings.name.split(' ').map((word, w) => {
+  if (w > 0) typeIndex++;
+  return [...word].map((letter) => ({ letter, i: typeIndex++ }));
+});
+const lastTyped = typeIndex - 1;
 const resumeHref = resume.data.pdf ? url(resume.data.pdf) : url('/resume/');
 const resumeFileName = `${settings.name} - Resume.pdf`;
 const linkedinHandle = settings.linkedin.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
 const number = (index: number) => String(index + 1).padStart(2, '0');
 
-// Capability boxes and tool tiles take turns using these soft colors
+// Capability boxes take turns using these pastel colors
 // (defined as --tint-* in src/styles/global.css).
 const tints = ['sage', 'blue', 'blush', 'terracotta', 'lavender'];
 const capabilityItems = capabilities.data.items
   .filter((item) => !item.hidden)
   .map((item, index) => ({ ...item, tint: tints[index % tints.length] }));
-let tileCount = 0;
+// Tool tiles show each tool's real logo (from Simple Icons), or its name if no logo exists.
 const toolGroups = tools.data.groups
   .map((group) => ({
     name: group.name,
     items: group.items
       .filter((tool) => !tool.hidden)
-      .map((tool) => ({ ...tool, tint: tints[tileCount++ % tints.length] })),
+      .map((tool) => ({ name: tool.name, logos: getLogos(tool.logo, tool.name) })),
   }))
   .filter((group) => group.items.length > 0);
 ---
@@ -74,16 +83,35 @@ const toolGroups = tools.data.groups
         alt={about.data.headshotAlt ?? settings.name}
         labelledby="hero-name"
       >
-        <p class="label hero-enter" style="--enter-order: 0">{intro.data.tagline}</p>
-        <h1 id="hero-name" class="hero-name hero-enter" style="--enter-order: 1">
-          <span class="word">{firstName}</span>
-          {otherNames.length > 0 && <span class="word">{otherNames.join(' ')}</span>}
-        </h1>
-        <p class="hero-role hero-enter" style="--enter-order: 2">{settings.role}</p>
-        <div class="hero-intro hero-enter" style="--enter-order: 3">
-          <IntroText />
+        <div class="hero-anim" data-replay style={`--type-count: ${lastTyped + 1}`}>
+          <p class="label hero-tagline">{intro.data.tagline}</p>
+          <h1 id="hero-name" class="hero-name">
+            <span class="visually-hidden">{settings.name}</span>
+            <span aria-hidden="true">
+              {nameWords.map((word, w) => (
+                <span class="word">
+                  {word.map(({ letter, i }) => (
+                    <span
+                      class:list={[
+                        'ch',
+                        { 'ch-last': i === lastTyped },
+                        { 'ch-pause': w < nameWords.length - 1 && i === word[word.length - 1].i },
+                      ]}
+                      style={`--i: ${i}`}
+                    >
+                      {letter}
+                    </span>
+                  ))}
+                </span>
+              ))}
+            </span>
+          </h1>
+          <p class="hero-role">{settings.role}</p>
+          <div class="hero-intro">
+            <IntroText />
+          </div>
         </div>
-        <div class="button-row hero-enter" style="--enter-order: 4">
+        <div class="button-row">
           {intro.data.primaryButton && (
             <a class="button button-secondary" href={url('/work/')}>
               {intro.data.primaryButton}
@@ -110,7 +138,7 @@ const toolGroups = tools.data.groups
     <dl class="stats">
       {
         stats.data.stats.map((stat, index) => (
-          <div class="stat" data-reveal style={`--reveal-delay: ${index * 0.06}s`}>
+          <div class="stat" data-reveal="fade" style={`--reveal-delay: ${index * 0.12}s`}>
             <dt>{stat.label}</dt>
             <dd>
               <span class="stat-value">{stat.value}</span>
@@ -128,7 +156,7 @@ const toolGroups = tools.data.groups
         <div class="container">
           <div class="section-heading" data-reveal>
             <div>
-              <h2 id="featured-heading">{featured.data.title}</h2>
+              <h2 id="featured-heading" class="section-title">{featured.data.title}</h2>
               {featured.body?.trim() && (
                 <div class="intro">
                   <FeaturedText />
@@ -142,11 +170,10 @@ const toolGroups = tools.data.groups
           </div>
           <div class="featured-grid">
             {featuredSamples.map((sample, index) => (
-              <WorkCard
+              <FeaturedCard
                 sample={sample}
-                showSummary={false}
-                moreLink="category"
-                revealDelay={index * 0.08}
+                description={featured.data.cards[index].description}
+                revealDelay={index * 0.12}
               />
             ))}
           </div>
@@ -157,9 +184,9 @@ const toolGroups = tools.data.groups
 
   <section class="band band-greige" aria-labelledby="capabilities-heading">
     <div class="container">
-      <div class="section-heading" data-reveal>
+      <div class="section-heading" data-reveal="fade">
         <div>
-          <h2 id="capabilities-heading">{capabilities.data.title}</h2>
+          <h2 id="capabilities-heading" class="section-title">{capabilities.data.title}</h2>
           <div class="intro">
             <CapabilitiesText />
           </div>
@@ -186,9 +213,9 @@ const toolGroups = tools.data.groups
 
   <section class="band" aria-labelledby="tools-heading">
     <div class="container">
-      <div class="section-heading" data-reveal>
+      <div class="section-heading" data-reveal="fade">
         <div>
-          <h2 id="tools-heading">{tools.data.title}</h2>
+          <h2 id="tools-heading" class="section-title">{tools.data.title}</h2>
           <div class="intro">
             <ToolsText />
           </div>
@@ -215,10 +242,21 @@ const toolGroups = tools.data.groups
               <ul class="tool-tiles">
                 {group.items.map((tool) => (
                   <li>
-                    <span class="tile" data-tint={tool.tint} aria-hidden="true">
-                      <Icon name={tool.icon} size={24} />
+                    <span
+                      class:list={['tile', { 'text-tile': tool.logos.length === 0 }]}
+                      aria-hidden="true"
+                    >
+                      {tool.logos.length > 0
+                        ? tool.logos.map((logo) => (
+                            <svg class="logo" viewBox="0 0 24 24" fill={`#${logo.hex}`}>
+                              <path d={logo.path} />
+                            </svg>
+                          ))
+                        : tool.name}
                     </span>
-                    <span class="tool-name">{tool.name}</span>
+                    <span class:list={[tool.logos.length > 0 ? 'tool-name' : 'visually-hidden']}>
+                      {tool.name}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -231,9 +269,11 @@ const toolGroups = tools.data.groups
 
   <section class="band band-soft" aria-labelledby="process-heading">
     <div class="container">
-      <div class="section-heading" data-reveal>
+      <div class="section-heading">
         <div>
-          <h2 id="process-heading">{process.data.title}</h2>
+          <h2 id="process-heading" class="section-title" data-reveal="letters">
+            <Letters text={process.data.title} />
+          </h2>
           <div class="intro">
             <ProcessText />
           </div>
@@ -257,7 +297,7 @@ const toolGroups = tools.data.groups
 
   <section class="band band-inverse closing" aria-labelledby="closing-heading">
     <div class="container">
-      <h2 id="closing-heading" data-reveal>
+      <h2 id="closing-heading" class="section-title" data-reveal>
         <Accent text={closing.data.title} />
       </h2>
       <div class="closing-grid" data-reveal>
@@ -301,19 +341,141 @@ const toolGroups = tools.data.groups
     display: block;
   }
 
-  /* Hero entrance, once on load: the tagline, name, title, intro, and button
-     each fade in and rise slightly, 0.12 s apart (about 1.2 s in all). */
+  /* ---------- Hero animation ----------
+     Plays on load, and again whenever the hero scrolls back into view
+     (src/layouts/BaseLayout.astro adds and removes .is-reset).
+       1. The line above your name drops in from the top.
+       2. Your name types out letter by letter, with a blinking cursor that
+          blinks a few times at the end, then fades away.
+       3. Your title slides in from the left once the name is typed.
+       4. The intro rises up from below.
+     The Download résumé button doesn't move. */
+  .hero-anim {
+    --type-start: 0.35s;
+    --type-step: 0.11s;
+    --type-end: calc(var(--type-start) + var(--type-count) * var(--type-step));
+  }
+
+  .ch {
+    position: relative;
+  }
+
+  /* The text cursor: a thin bar just after the letter being typed. */
+  .ch::after {
+    content: '';
+    position: absolute;
+    top: 0.1em;
+    bottom: 0.06em;
+    left: 100%;
+    width: 0.06em;
+    margin-left: 0.05em;
+    background: currentColor;
+    opacity: 0;
+  }
+
   @media (prefers-reduced-motion: no-preference) {
-    .hero-enter {
-      animation: hero-enter 0.7s var(--ease-out) both;
-      animation-delay: calc(var(--enter-order, 0) * 0.12s);
+    .hero-anim:not(.is-reset) .hero-tagline {
+      animation: drop-in 1s var(--ease-soft) both;
+    }
+
+    .hero-anim:not(.is-reset) .ch {
+      animation: type-in 0.06s linear both;
+      animation-delay: calc(var(--type-start) + var(--i) * var(--type-step));
+    }
+
+    .hero-anim:not(.is-reset) .ch::after {
+      animation: caret-pass var(--type-step) linear;
+      animation-delay: calc(var(--type-start) + var(--i) * var(--type-step));
+    }
+
+    /* At the line break, the cursor waits one extra beat before moving on. */
+    .hero-anim:not(.is-reset) .ch-pause::after {
+      animation-duration: calc(var(--type-step) * 2);
+    }
+
+    .hero-anim:not(.is-reset) .ch-last::after {
+      animation: caret-end 2.4s linear forwards;
+      animation-delay: calc(var(--type-start) + var(--i) * var(--type-step));
+    }
+
+    .hero-anim:not(.is-reset) .hero-role {
+      animation: slide-in-left 1s var(--ease-soft) both;
+      animation-delay: var(--type-end);
+    }
+
+    .hero-anim:not(.is-reset) .hero-intro {
+      animation: rise-in 1s var(--ease-soft) both;
+      animation-delay: calc(var(--type-end) + 0.3s);
     }
   }
 
-  @keyframes hero-enter {
+  @keyframes drop-in {
     from {
       opacity: 0;
-      transform: translateY(14px);
+      transform: translateY(-24px);
+    }
+  }
+
+  @keyframes type-in {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes caret-pass {
+    0%,
+    100% {
+      opacity: 1;
+    }
+  }
+
+  /* Three blinks, then a gentle fade. */
+  @keyframes caret-end {
+    0%,
+    16% {
+      opacity: 1;
+    }
+
+    17%,
+    32% {
+      opacity: 0;
+    }
+
+    33%,
+    49% {
+      opacity: 1;
+    }
+
+    50%,
+    65% {
+      opacity: 0;
+    }
+
+    66%,
+    80% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes slide-in-left {
+    from {
+      opacity: 0;
+      transform: translateX(-40px);
+    }
+  }
+
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
     }
   }
 
@@ -403,6 +565,8 @@ const toolGroups = tools.data.groups
   }
 
   .capability {
+    /* Darker text keeps the descriptions easy to read on the richer tints. */
+    --text-muted: light-dark(#3f3b37, #d9d4ce);
     padding: clamp(1rem, 2.5vw, 1.75rem);
     background: var(--tint);
     border-top: 1px solid var(--border-strong);
@@ -473,25 +637,46 @@ const toolGroups = tools.data.groups
     text-align: center;
   }
 
+  /* White tiles in light and dark mode, so every logo shows in its own colors. */
   .tile {
-    display: grid;
-    place-items: center;
+    color-scheme: light;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12%;
     width: 100%;
     aspect-ratio: 1;
-    background: var(--tint);
-    border: 1px solid transparent;
-    color: var(--tint-ink);
+    padding: 0.5rem;
+    background: #ffffff;
+    border: 1px solid #e3dfd8;
+    color: #2b2826;
     transition:
       border-color 0.25s var(--ease),
       transform 0.3s var(--ease-out);
   }
 
   .tool-tiles li:hover .tile {
-    border-color: var(--tint-ink);
+    border-color: #8a847d;
   }
 
-  .tile :global(.icon) {
-    stroke-width: 1.3;
+  .logo {
+    width: 40%;
+    height: auto;
+    flex: none;
+  }
+
+  /* Two logos share one tile (for example Git and GitHub). */
+  .logo:not(:only-child) {
+    width: 32%;
+  }
+
+  /* Tools without a logo show their name instead. */
+  .text-tile {
+    font-size: clamp(0.75rem, 1vw, 0.875rem);
+    font-weight: 600;
+    line-height: 1.25;
+    text-align: center;
+    overflow-wrap: anywhere;
   }
 
   .tool-name {

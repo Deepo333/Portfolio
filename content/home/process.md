@@ -19,7 +19,7 @@ steps:
   - name: Publish
     description: Publish the approved version to its designated repository or platform.
   - name: Maintain
-    description: Track changes, schedule reviews, and keep content current.
+    description: Manage versions and change requests, and run scheduled reviews to keep content accurate.
 ---
 
 How I take a document from first input to a published, maintained version.

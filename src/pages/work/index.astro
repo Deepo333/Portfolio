@@ -6,6 +6,7 @@
 import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import CategoryBand from '../../components/CategoryBand.astro';
+import Letters from '../../components/Letters.astro';
 import WorkCard from '../../components/WorkCard.astro';
 import { getCategories, getPage, getWorkSamples } from '../../lib/content';
 
@@ -22,7 +23,7 @@ const groups = (await getCategories())
 
 <BaseLayout title={page.data.title} description={page.data.description}>
   <header class="page-header container">
-    <h1>{page.data.title}</h1>
+    <h1 class="page-title" data-reveal="letters"><Letters text={page.data.title} /></h1>
     <div class="lead prose">
       <Content />
     </div>

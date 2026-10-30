@@ -70,8 +70,8 @@ const homeFeatured = defineCollection({
   schema: z.object({
     title: z.string(),
     linkLabel: z.string(),
-    // File names (without .md) of the samples to show, in order.
-    samples: z.array(z.string()).min(1).max(3),
+    // The cards, in order: a sample's file name (without .md) and one line of text.
+    cards: z.array(z.object({ sample: z.string(), description: z.string() })).min(1).max(3),
   }),
 });
 
@@ -101,9 +101,17 @@ const homeTools = defineCollection({
       .array(
         z.object({
           name: z.string(),
+          // `logo` is a Simple Icons name, or a list of them (for example [git, github]).
+          // Without a logo, the tool shows as a text tile.
           // `hidden: true` keeps a tool off the site without deleting it.
           items: z
-            .array(z.object({ name: z.string(), icon, hidden: z.boolean().default(false) }))
+            .array(
+              z.object({
+                name: z.string(),
+                logo: z.union([z.string(), z.array(z.string()).min(1)]).optional(),
+                hidden: z.boolean().default(false),
+              }),
+            )
             .min(1),
         }),
       )

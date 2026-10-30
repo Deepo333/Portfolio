@@ -5,16 +5,17 @@
 #
 # Tools are grouped. Each group has a name and a list of tools; the
 # groups are numbered 01, 02, ... automatically, and each group shows
-# how many tools it has. Each tool has a name and an icon, and the
-# icon tiles take turns using five soft colors, in order.
+# how many tools it has.
+#
+# LOGOS: each tool can show its real logo from Simple Icons
+# (https://simpleicons.org). Add `logo:` with the name shown in the
+# logo's address there, for example `logo: jira`. For two logos in one
+# tile, list both: `logo: [git, github]`. Tools without a logo line
+# show their name in a plain text tile. (Microsoft, Adobe, Livelink,
+# MadCap Flare, and Oxygen XML Editor logos aren't available there.)
+#
 # Add "hidden: true" to a tool to keep it off the site without
 # deleting it; delete that line to show it again.
-#
-# Icon names you can use:
-#   document, pdf, markdown, git, wiki, cloud, diagram, slides,
-#   spreadsheet, design, image, chat, code, form, procedure,
-#   control, training, onboarding, megaphone, archive, edit, layers,
-#   sparkle, api, xml, people
 # The text below the --- line is the section's intro.
 # ─────────────────────────────────────────────────────────────
 
@@ -24,41 +25,33 @@ groups:
   - name: Writing & publishing
     items:
       - name: Microsoft Word
-        icon: document
       - name: Excel
-        icon: spreadsheet
       - name: PowerPoint
-        icon: slides
       - name: Adobe Acrobat
-        icon: pdf
   - name: Content & collaboration
     items:
       - name: SharePoint
-        icon: cloud
       - name: Confluence
-        icon: wiki
+        logo: confluence
       - name: Jira
-        icon: control
+        logo: jira
       - name: Livelink
-        icon: document
   - name: Docs as code & structured authoring
     items:
       - name: MadCap Flare
-        icon: layers
       - name: Oxygen XML Editor
-        icon: xml
       - name: Markdown
-        icon: markdown
+        logo: markdown
       - name: Git & GitHub
-        icon: git
+        logo: [git, github]
       - name: Postman
-        icon: api
+        logo: postman
   - name: AI tools
     items:
       - name: Claude
-        icon: chat
+        logo: claude
       - name: Claude Code
-        icon: code
+        logo: claudecode
 ---
 
 The software I use to write, review, track, and publish documentation.

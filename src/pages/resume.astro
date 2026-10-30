@@ -3,6 +3,7 @@
 import { render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
+import Letters from '../components/Letters.astro';
 import PdfViewer from '../components/PdfViewer.astro';
 import { getPage, getSettings, url } from '../lib/content';
 
@@ -15,7 +16,7 @@ const downloadName = `${settings.name} - Resume.pdf`;
 
 <BaseLayout title={title} description={description}>
   <header class="page-header container">
-    <h1>{title}</h1>
+    <h1 class="page-title" data-reveal="letters"><Letters text={title} /></h1>
     <div class="lead prose">
       <Content />
     </div>

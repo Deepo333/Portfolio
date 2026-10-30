@@ -29,18 +29,18 @@
      (content/pages/images/headshot-new.jpg) where the photo fades into it. */
   --hero-bg: #cac8c3;
 
-  /* Soft color tints for the capability boxes and tool tiles: a light
-     background and a deeper shade of the same color for the icon. */
-  --tint-sage: light-dark(#e5efe0, #1f2c20);
-  --tint-sage-ink: light-dark(#507553, #a3c7a5);
-  --tint-blue: light-dark(#dfe9f4, #1c2634);
-  --tint-blue-ink: light-dark(#4a6d91, #a2bfdd);
-  --tint-blush: light-dark(#f8e2de, #302221);
-  --tint-blush-ink: light-dark(#9f5d54, #e6afa6);
-  --tint-terracotta: light-dark(#f8e3d3, #32241a);
-  --tint-terracotta-ink: light-dark(#a95732, #e8ab88);
-  --tint-lavender: light-dark(#eae3f5, #262130);
-  --tint-lavender-ink: light-dark(#6f5e99, #c2b5e3);
+  /* Pastel tints for the capability boxes: a confident background color and a
+     deeper shade of the same color for the icon. */
+  --tint-sage: light-dark(#c4e2b8, #26412b);
+  --tint-sage-ink: light-dark(#3f6b43, #b2dcb5);
+  --tint-blue: light-dark(#bcd7f2, #1f3552);
+  --tint-blue-ink: light-dark(#2f5f8f, #b4d2f2);
+  --tint-blush: light-dark(#f6c4c0, #4a2a2a);
+  --tint-blush-ink: light-dark(#8f3f37, #f2bdb5);
+  --tint-terracotta: light-dark(#f7c9a6, #4a2f1d);
+  --tint-terracotta-ink: light-dark(#8f4a22, #f2c09e);
+  --tint-lavender: light-dark(#d6c8f3, #352a52);
+  --tint-lavender-ink: light-dark(#5a4590, #cfc2f2);
 
   /* Inverse bands (near-black with white text) */
   --inverse-bg: light-dark(#0d0d0d, #e8e4de);
@@ -57,6 +57,8 @@
   --font-heading: 'Marcellus', 'Optima', 'Candara', 'Segoe UI', sans-serif;
   --font-sans: 'Jost Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
+  /* Abril Fatface: big page titles and the large home section headings only. */
+  --font-title: 'Abril Fatface', 'Didot', 'Bodoni 72', Georgia, serif;
   /* A thin, high-contrast serif italic for the occasional accent word. */
   --font-accent: 'Bodoni Moda Variable', 'Didot', 'Bodoni 72', 'Bodoni MT', serif;
   --font-mono: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
@@ -76,6 +78,8 @@
 
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  /* A softer ease-out for entrance animations: gradual, never bouncy. */
+  --ease-soft: cubic-bezier(0.33, 1, 0.68, 1);
 }
 
 :root[data-theme='dark'] {
@@ -160,7 +164,8 @@ h4 {
   text-wrap: balance;
 }
 
-/* Page titles: the bold display face, the same on every page. */
+/* Page titles: the bold display face, the same on every page. A very long word
+   (like "recommendation" on a phone) is hyphenated rather than running off screen. */
 h1 {
   font-family: var(--font-display);
   font-size: var(--text-h1);
@@ -168,6 +173,9 @@ h1 {
   letter-spacing: -0.02em;
   line-height: 0.92;
   text-transform: uppercase;
+  overflow-wrap: break-word;
+  -webkit-hyphens: auto;
+  hyphens: auto;
 }
 
 h2 {
@@ -238,6 +246,17 @@ p {
   text-transform: none;
 }
 
+/* Abril Fatface titles: big page titles (Work samples, About me, Résumé, Contact)
+   and the large section headings on the home page. Never for smaller headings. */
+h1.page-title,
+h2.section-title {
+  font-family: var(--font-title);
+  font-weight: 400;
+  letter-spacing: 0.005em;
+  line-height: 1.02;
+  text-transform: none;
+}
+
 /* Big, bold display type (the same family as the name on the home page). */
 .display {
   font-family: var(--font-display);
@@ -254,22 +273,58 @@ p {
   navigation: auto;
 }
 
-/* Headings, cards, stats, and steps marked data-reveal fade in and rise a few pixels
-   as they scroll into view, once each. --reveal-delay staggers items in a row.
-   The "motion" class is only added when the visitor hasn't asked for reduced motion.
-   Only opacity and position change, so nothing on the page shifts. */
+/* Scroll reveals. Anything marked data-reveal animates each time it scrolls into
+   view, and resets once it has scrolled fully out of view, so it plays again.
+   --reveal-delay staggers items in a row. The "motion" class is only added when
+   the visitor hasn't asked for reduced motion. Only opacity and position change,
+   so nothing on the page shifts.
+
+   data-reveal                 fades in and rises (cards, steps, most headings)
+   data-reveal="fade"          fades in gently, without moving
+   data-reveal="letters"       slides in from the left while its letters fade in
+                               one by one (use the Letters component inside) */
 .motion [data-reveal] {
   opacity: 0;
-  translate: 0 12px;
+  translate: 0 28px;
   transition-property: opacity, translate, transform;
-  transition-duration: 0.55s, 0.55s, 0.3s;
-  transition-timing-function: var(--ease-out);
+  transition-duration: 0.9s, 0.9s, 0.3s;
+  transition-timing-function: var(--ease-soft), var(--ease-soft), var(--ease-out);
   transition-delay: var(--reveal-delay, 0s), var(--reveal-delay, 0s), 0s;
 }
 
 .motion [data-reveal].is-visible {
   opacity: 1;
   translate: none;
+}
+
+.motion [data-reveal='fade'] {
+  translate: none;
+  transition-duration: 1.2s, 0s, 0.3s;
+}
+
+.motion [data-reveal='letters'] {
+  opacity: 1;
+  translate: -48px 0;
+  transition-duration: 0s, 1.1s, 0.3s;
+}
+
+.motion [data-reveal='letters'] .letter {
+  opacity: 0;
+}
+
+.motion [data-reveal='letters'].is-visible .letter {
+  animation: letter-in 0.6s var(--ease-soft) both;
+  animation-delay: calc(var(--i) * 45ms);
+}
+
+@keyframes letter-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 /* Hover lift, only with a mouse or trackpad (never on touch screens) and only
