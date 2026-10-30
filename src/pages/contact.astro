@@ -5,7 +5,7 @@
  */
 import { render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Accent from '../components/Accent.astro';
+import Letters from '../components/Letters.astro';
 import Icon from '../components/Icon.astro';
 import { getPage, getSettings, plainText } from '../lib/content';
 
@@ -28,7 +28,7 @@ const linkedinHandle = settings.linkedin
         </p>
       )
     }
-    <h1><Accent text={title} /></h1>
+    <h1 class="page-title" data-reveal="letters"><Letters text={plainText(title)} /></h1>
     <div class="lead prose">
       <Content />
     </div>

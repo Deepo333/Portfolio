@@ -13,7 +13,7 @@ stats:
   - value: "50+"
     label: Forms designed or redesigned
   - value: "20+"
-    label: Teams supported
+    label: Cross-functional teams supported
   - value: "8+"
     label: Years of experience
 ---
