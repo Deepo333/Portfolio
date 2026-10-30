@@ -16,7 +16,7 @@ title: Featured work
 linkLabel: See all work samples
 
 cards:
-  - sample: wildfire-threat-assessment-and-response-procedure
+  - sample: critical-fire-weather-operations-procedure
     description: Step-by-step guidance for complex, high-stakes operations.
   - sample: wildfire-season-declaration-form
     description: Structured forms that capture the right information the first time.

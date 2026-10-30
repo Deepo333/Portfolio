@@ -1,5 +1,6 @@
 ---
 # Notes starting with # and <!-- TODO --> never appear on the site.
+# TODO: Draft text based on the PDF. Review the Overview and My approach, and confirm your role.
 
 title: Critical fire weather operations procedure
 summary: A 47-page procedure that sets out how Puget Sound Energy reduces the risk of its equipment starting a wildfire, from routine monitoring through a Public Safety Power Shutoff.

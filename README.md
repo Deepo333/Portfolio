@@ -165,10 +165,10 @@ card image is in `content/work/images/`:
 
 | File | Category | On the home page |
 | --- | --- | --- |
-| `critical-fire-weather-operations-procedure.md` | Procedures | |
+| `critical-fire-weather-operations-procedure.md` | Procedures | Yes |
 | `wildfire-season-declaration-procedure.md` | Procedures | |
-| `wildfire-threat-assessment-and-response-procedure.md` | Procedures | Yes |
-| `fire-weather-oar-workbook.md` | Forms | |
+| `wildfire-threat-assessment-and-response-procedure.md` | Procedures | |
+| `fire-weather-oar-workbook.md` | Resources | |
 | `wildfire-season-declaration-form.md` | Forms | Yes |
 | `change-request-form.md` | Forms | |
 | `technical-writing-review-checklist.md` | Resources | Yes |

@@ -1,10 +1,11 @@
 ---
 # Notes starting with # and <!-- TODO --> never appear on the site.
+# TODO: Draft text based on the PDF. Review the Overview and My approach, and confirm your role.
 
 # The invisible "\u00AD" lets this long word break with a hyphen on narrow phones.
 title: "Fire weather operational action recommen\u00ADdation workbook"
 summary: A four-page fillable workbook that brings the fire weather summary, recommended actions, staffing, per-asset risk, and the Level 2 escalation checklist into one record for each event.
-category: Forms
+category: Resources
 
 # TODO: The workbook is marked "Rev. 06/2026", so this is set to June 1, 2026.
 # Change it to the date you finished it.
