@@ -32,7 +32,7 @@ Each section of the home page has its own file in `content/home/`, in the order 
 | Hero | `content/home/intro.md` | The small line above your name, the short intro, and the Download résumé button label. Your name and job title come from `content/settings.md` |
 | Document-type banner | `content/home/banner.md` | The words in the black band that scrolls under the hero |
 | Stats | `content/home/stats.md` | The four numbers under the hero |
-| Featured work | `content/home/featured.md` | Section heading, intro, and the list of three samples to show (one per category) |
+| Featured work | `content/home/featured.md` | Section heading, intro, and the three category cards: a sample for each (its category becomes the heading) and one line of text |
 | Core capabilities | `content/home/capabilities.md` | Each capability's name, icon, and one-sentence description |
 | Tools & technologies | `content/home/tools.md` | Groups of tools (numbered 01, 02, ... automatically), each tool's name and icon |
 | My process | `content/home/process.md` | Each step's name and description (numbered automatically) |
@@ -41,20 +41,29 @@ Each section of the home page has its own file in `content/home/`, in the order 
 Your name comes from `content/settings.md` and your photo from `content/pages/about.md`,
 so you only set them once.
 
+**Fonts:** the big page titles (Work samples, About me, Résumé, Contact) and the large section
+headings on the home page use **Abril Fatface**. Your name on the home page and the sample page titles
+use Archivo, smaller headings use Marcellus, and all other text uses Jost.
+
 **Accent words:** put underscores around a word in a title to show it in a thin, elegant serif
-italic (Bodoni Moda), for example `title: About _me_` or `title: Let’s work _together_`. Use it sparingly.
+italic (Bodoni Moda), for example `title: Let’s work _together_`. Use it sparingly.
 
 **Type sizes:** every page title, every section heading, every card or step heading, and all body
 text each have exactly one size, set once at the top of `src/styles/global.css` (`--text-h1`,
 `--text-h2`, `--text-h3`, and `--text-body`). Change a size there and it changes everywhere.
 
-**Icons:** capabilities and tools each have an `icon:` line. The comment at the top of
-`capabilities.md` and `tools.md` lists every icon name you can use (for example `procedure`,
-`form`, `archive`, `edit`, `document`, `pdf`, `slides`).
+**Icons:** each capability has an `icon:` line. The comment at the top of `capabilities.md` lists
+every icon name you can use (for example `procedure`, `form`, `archive`, `edit`, `api`).
 
-**Colors:** the capability boxes and tool tiles take turns using five soft colors (sage, dusty blue,
-blush, terracotta, and lavender), in order. You don't set them in Markdown; to change a shade, edit
-the `--tint-` lines at the top of `src/styles/global.css`.
+**Tool logos:** each tool in `tools.md` can show its real logo from
+[Simple Icons](https://simpleicons.org). Add `logo:` with the name from that logo's address there,
+for example `logo: jira`, or a list for two logos in one tile (`logo: [git, github]`). Tools
+without a logo show their name in a plain text tile. Microsoft, Adobe, Livelink, MadCap Flare, and
+Oxygen XML Editor logos aren't available there, so those tools use text tiles.
+
+**Colors:** the capability boxes take turns using five pastel colors (sage, dusty blue, blush,
+terracotta, and lavender), in order. You don't set them in Markdown; to change a shade, edit the
+`--tint-` lines at the top of `src/styles/global.css`. Tool tiles are white so the logos stand out.
 
 **Hiding an item:** add `hidden: true` under a capability or a tool to keep it off the site without
 deleting it. Delete that line to show it again.
@@ -80,18 +89,27 @@ before the site is published (it doesn't even appear in the page's source code).
 
 The site moves gently, and only where it helps:
 
-- **Home hero:** the line above your name, your name, your title, the intro, and the button fade in
-  and rise slightly, one after another, once when the page loads (about 1.2 seconds in all).
-- **Scroll reveals:** section headings, cards, stats, and process steps fade in and rise a few
-  pixels the first time they scroll into view.
-- **Banner:** the black band under the hero scrolls from right to left in an endless loop.
-- **Hover:** with a mouse or trackpad, cards and buttons lift slightly. Touch screens get no hover
-  effects.
+Animations play each time something scrolls into view, so they replay when you scroll back to
+them or return to a page.
+
+- **Home hero:** the line above your name drops in from the top; your name types out letter by
+  letter with a blinking cursor, which blinks a few times and fades away; your title slides in from
+  the left; and the intro rises up from below. The Download résumé button doesn't move.
+- **Page titles** (Work samples, About me, Résumé, Contact) and the **My process** heading slide in
+  from the left while their letters fade in one by one.
+- **Core capabilities** and **Tools & technologies** headings, and the **stats**, fade in gently.
+- **Other headings, cards, and process steps** fade in and rise into place.
+- **Banner:** the black band under the hero scrolls from right to left in an endless loop that
+  never pauses. An item takes about 6.7 seconds to cross a phone screen and about 8.3 seconds to
+  cross a wide screen.
+- **Hover:** with a mouse or trackpad, cards, tiles, and buttons lift slightly. Touch screens get no
+  hover effects.
 
 If a visitor has turned on **Reduce motion** on their device, none of this moves: everything shows
 immediately, and the banner is a still row. Only opacity and position change, so nothing on the page
-shifts while it loads. To stagger or delay an item yourself, the code uses `data-reveal` and
-`--reveal-delay` (see `src/styles/global.css`).
+shifts while it loads. In the code, `data-reveal` marks what animates (`data-reveal="fade"` and
+`data-reveal="letters"` are the gentler styles) and `--reveal-delay` staggers items in a row (see
+`src/styles/global.css`).
 
 ### Finding what still needs your input
 
@@ -155,11 +173,12 @@ card image is in `content/work/images/`:
 | `echodyne-field-brief.md` | Resources | |
 | `new-employee-onboarding-windows-setup-guide.md` | Presentations | |
 
-**Featured work.** The home page shows the samples listed in `content/home/featured.md`, in that
-order: one procedure, one form, and one resource. To feature a different sample, replace its line
-with another sample's file name (without `.md`). Each card's title opens the sample, and its category
-label and **View samples** link open that category on the Work Samples page. Pick samples from
-different categories; if two share a category, the build stops and tells you which ones.
+**Featured work.** The home page shows three category cards, set in `content/home/featured.md`:
+one for Procedures, one for Forms, and one for Resources. Each card shows the category name, one line
+of text (`description`), and the cover of the sample you list (`sample`, its file name without
+`.md`), and the whole card opens that category on the Work Samples page. To show a different cover,
+change the `sample` line. Pick samples from different categories; if two share a category, the build
+stops and tells you which ones.
 
 **Card images.** Each card image shows the first page of the sample's PDF on a light background.
 To make one for a new PDF, take a screenshot of the PDF's first page and place it on a 1200 × 900
@@ -240,8 +259,9 @@ Because the build stops on errors, a mistake never reaches your live site. The l
 - **Change your name or job title:** edit `name` and `role` in `content/settings.md`. They appear in the home page hero, the footer, and browser tabs.
 - **Change the line above your name, the intro, or the button:** edit `content/home/intro.md`. To add a
   second button that opens your Work Samples page, follow the note at the bottom of that file's settings.
-- **Change the scrolling banner:** edit the `items` list in `content/home/banner.md`. Each item stays on
-  screen for about 5 seconds as it crosses, on any screen size.
+- **Change the scrolling banner:** edit the `items` list in `content/home/banner.md`. To change its
+  speed, edit `PHONE` and `WIDE` near the top of the script in `src/components/Marquee.astro`
+  (the seconds an item takes to cross the screen).
 - **Change the stats:** in `content/home/stats.md`, edit each `value` (keep the quotes, for example
   `"150+"`) and `label`. To mark a number you haven't confirmed yet, add `placeholder: true` under it,
   and a "Placeholder" tag appears next to it.
@@ -295,7 +315,8 @@ You don't need this to publish, but it lets you see changes before pushing them.
 | `src/pages/` | One template per page type. `src/pages/work/[id].astro` is the work sample detail template. |
 | `src/components/` | Reusable pieces: header, footer, the "Back" link bar, sample cards, the two-column photo section, the scrolling banner (`Marquee.astro`), the black category bar on the Work Samples page, accent words, icons, and the PDF viewer (which uses PDF.js to draw PDFs on phones). |
 | `src/lib/icons.ts` | The thin-line icons you can pick with `icon:` in Markdown. |
-| `src/styles/global.css` | Colors, the type scale, fonts (Archivo for page titles and your name, Marcellus for headings, Jost for text, Bodoni Moda italic for accent words), spacing, and light/dark mode. |
+| `src/styles/global.css` | Colors, the type scale, fonts (Abril Fatface for big page titles and home section headings, Archivo for your name and sample titles, Marcellus for smaller headings, Jost for text, Bodoni Moda italic for accent words), animations, spacing, and light/dark mode. |
+| `src/lib/logos.ts` | Looks up tool logos from Simple Icons by name. |
 | `src/content.config.ts` | The list of fields each Markdown file can have, and which are required. |
 | `src/lib/content.ts` | Loads the content, leaves out drafts and hidden categories, and produces the friendly error messages. |
 | `src/plugins/` | Small Markdown helpers: one fixes links for GitHub Pages, the other removes `<!-- notes -->` before publishing. |

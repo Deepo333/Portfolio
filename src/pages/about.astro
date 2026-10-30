@@ -2,7 +2,7 @@
 /* About page. The words and photo come from content/pages/about.md. */
 import { render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Accent from '../components/Accent.astro';
+import Letters from '../components/Letters.astro';
 import Icon from '../components/Icon.astro';
 import PhotoCover from '../components/PhotoCover.astro';
 import { getPage, getSettings, plainText, url } from '../lib/content';
@@ -18,8 +18,8 @@ const { title, description, lead, headshot, headshotAlt } = page.data;
   {
     headshot ? (
       <PhotoCover src={headshot} alt={headshotAlt ?? settings.name} labelledby="about-title">
-        <h1 id="about-title" class="about-title">
-          <Accent text={title} />
+        <h1 id="about-title" class="about-title page-title" data-reveal="letters">
+          <Letters text={plainText(title)} />
         </h1>
         {lead && <p class="about-lead">{lead}</p>}
         <div class="button-row">
@@ -40,16 +40,16 @@ const { title, description, lead, headshot, headshotAlt } = page.data;
       </PhotoCover>
     ) : (
       <header class="page-header container">
-        <h1 class="about-title">
-          <Accent text={title} />
+        <h1 class="about-title page-title" data-reveal="letters">
+          <Letters text={plainText(title)} />
         </h1>
         {lead && <p class="lead">{lead}</p>}
       </header>
     )
   }
 
-  <section class="band container about-body" aria-label="Biography">
-    <p class="label">Biography</p>
+  <section class="band container about-body" aria-label="Professional summary">
+    <p class="label">Professional summary</p>
     <div class="prose">
       <Content />
     </div>

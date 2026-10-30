@@ -1,0 +1,37 @@
+---
+/*
+ * Splits a title into letters so each one can fade in on its own (used with
+ * data-reveal="letters"). Screen readers hear the title once, as normal text.
+ */
+interface Props {
+  text: string;
+}
+
+const { text } = Astro.props;
+let index = 0;
+const words = text.split(' ').map((word) => [...word].map((letter) => ({ letter, i: index++ })));
+---
+
+<span class="visually-hidden">{text}</span><span class="letters" aria-hidden="true"
+  >{
+    words.map((word, w) => (
+      <>
+        <span class="letters-word">
+          {word.map(({ letter, i }) => (
+            <span class="letter" style={`--i: ${i}`}>
+              {letter}
+            </span>
+          ))}
+        </span>
+        {w < words.length - 1 && ' '}
+      </>
+    ))
+  }</span
+>
+
+<style>
+  /* Keep each word on one line; lines break only between words. */
+  .letters-word {
+    white-space: nowrap;
+  }
+</style>
