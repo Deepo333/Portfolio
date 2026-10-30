@@ -2,7 +2,8 @@
 /*
  * Home page. Every word on this page comes from a Markdown file:
  *   content/settings.md              your name, job title, email, and LinkedIn
- *   content/home/intro.md            hero tagline, intro, and button labels
+ *   content/home/intro.md            hero tagline, intro, and button label
+ *   content/home/banner.md           the document types in the scrolling black band
  *   content/home/stats.md            the four stats
  *   content/home/featured.md         featured work heading and which samples to show
  *   content/home/capabilities.md     core capabilities
@@ -10,28 +11,20 @@
  *   content/home/process.md          my process
  *   content/home/closing.md          the "Let's work together" band
  *   content/pages/about.md           your photo
- *   content/pages/work.md            the categories in the black band
  */
 import { render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Accent from '../components/Accent.astro';
-import CategoryBand from '../components/CategoryBand.astro';
+import Marquee from '../components/Marquee.astro';
 import Icon from '../components/Icon.astro';
 import PhotoCover from '../components/PhotoCover.astro';
 import WorkCard from '../components/WorkCard.astro';
-import {
-  getCategories,
-  getFeaturedSamples,
-  getHomeSection,
-  getPage,
-  getSettings,
-  getWorkSamples,
-  url,
-} from '../lib/content';
+import { getFeaturedSamples, getHomeSection, getPage, getSettings, url } from '../lib/content';
 
 const settings = await getSettings();
-const [intro, stats, featured, capabilities, tools, process, closing] = await Promise.all([
+const [intro, banner, stats, featured, capabilities, tools, process, closing] = await Promise.all([
   getHomeSection('homeIntro'),
+  getHomeSection('homeBanner'),
   getHomeSection('homeStats'),
   getHomeSection('homeFeatured'),
   getHomeSection('homeCapabilities'),
@@ -48,11 +41,7 @@ const { Content: ToolsText } = await render(tools);
 const { Content: ProcessText } = await render(process);
 const { Content: ClosingText } = await render(closing);
 
-const samples = await getWorkSamples();
 const featuredSamples = await getFeaturedSamples(featured.data.samples);
-const categories = (await getCategories()).filter((c) =>
-  samples.some((s) => s.data.category === c.name),
-);
 
 const [firstName, ...otherNames] = settings.name.split(' ');
 const resumeHref = resume.data.pdf ? url(resume.data.pdf) : url('/resume/');
@@ -85,21 +74,23 @@ const toolGroups = tools.data.groups
         alt={about.data.headshotAlt ?? settings.name}
         labelledby="hero-name"
       >
-        <p class="label">{intro.data.tagline}</p>
-        <h1 id="hero-name" class="hero-name">
+        <p class="label hero-enter" style="--enter-order: 0">{intro.data.tagline}</p>
+        <h1 id="hero-name" class="hero-name hero-enter" style="--enter-order: 1">
           <span class="word">{firstName}</span>
           {otherNames.length > 0 && <span class="word">{otherNames.join(' ')}</span>}
         </h1>
-        <p class="hero-role">{settings.role}</p>
-        <div class="hero-intro">
+        <p class="hero-role hero-enter" style="--enter-order: 2">{settings.role}</p>
+        <div class="hero-intro hero-enter" style="--enter-order: 3">
           <IntroText />
         </div>
-        <div class="button-row">
-          <a class="button button-primary" href={url('/work/')}>
-            {intro.data.primaryButton}
-          </a>
+        <div class="button-row hero-enter" style="--enter-order: 4">
+          {intro.data.primaryButton && (
+            <a class="button button-secondary" href={url('/work/')}>
+              {intro.data.primaryButton}
+            </a>
+          )}
           <a
-            class="button button-secondary"
+            class="button button-primary"
             href={resumeHref}
             download={resume.data.pdf ? resumeFileName : undefined}
             target={resume.data.pdf ? '_blank' : undefined}
@@ -113,13 +104,13 @@ const toolGroups = tools.data.groups
     )
   }
 
-  <CategoryBand categories={categories} label="What I write" />
+  <Marquee items={banner.data.items} />
 
   <section class="container stats-section" aria-label="At a glance">
     <dl class="stats">
       {
-        stats.data.stats.map((stat) => (
-          <div class="stat">
+        stats.data.stats.map((stat, index) => (
+          <div class="stat" data-reveal style={`--reveal-delay: ${index * 0.06}s`}>
             <dt>{stat.label}</dt>
             <dd>
               <span class="stat-value">{stat.value}</span>
@@ -133,9 +124,9 @@ const toolGroups = tools.data.groups
 
   {
     featuredSamples.length > 0 && (
-      <section class="band featured" aria-labelledby="featured-heading" data-reveal>
+      <section class="band featured" aria-labelledby="featured-heading">
         <div class="container">
-          <div class="section-heading">
+          <div class="section-heading" data-reveal>
             <div>
               <h2 id="featured-heading">{featured.data.title}</h2>
               {featured.body?.trim() && (
@@ -150,8 +141,13 @@ const toolGroups = tools.data.groups
             </a>
           </div>
           <div class="featured-grid">
-            {featuredSamples.map((sample) => (
-              <WorkCard sample={sample} showSummary={false} moreLink="category" />
+            {featuredSamples.map((sample, index) => (
+              <WorkCard
+                sample={sample}
+                showSummary={false}
+                moreLink="category"
+                revealDelay={index * 0.08}
+              />
             ))}
           </div>
         </div>
@@ -159,9 +155,9 @@ const toolGroups = tools.data.groups
     )
   }
 
-  <section class="band band-greige" aria-labelledby="capabilities-heading" data-reveal>
+  <section class="band band-greige" aria-labelledby="capabilities-heading">
     <div class="container">
-      <div class="section-heading">
+      <div class="section-heading" data-reveal>
         <div>
           <h2 id="capabilities-heading">{capabilities.data.title}</h2>
           <div class="intro">
@@ -171,8 +167,13 @@ const toolGroups = tools.data.groups
       </div>
       <ul class="capabilities">
         {
-          capabilityItems.map((item) => (
-            <li class="capability" data-tint={item.tint}>
+          capabilityItems.map((item, index) => (
+            <li
+              class="capability"
+              data-tint={item.tint}
+              data-reveal
+              style={`--reveal-delay: ${(index % 3) * 0.08}s`}
+            >
               <Icon name={item.icon} size={26} class="capability-icon" />
               <h3>{item.name}</h3>
               <p>{item.description}</p>
@@ -183,9 +184,9 @@ const toolGroups = tools.data.groups
     </div>
   </section>
 
-  <section class="band" aria-labelledby="tools-heading" data-reveal>
+  <section class="band" aria-labelledby="tools-heading">
     <div class="container">
-      <div class="section-heading">
+      <div class="section-heading" data-reveal>
         <div>
           <h2 id="tools-heading">{tools.data.title}</h2>
           <div class="intro">
@@ -196,7 +197,12 @@ const toolGroups = tools.data.groups
       <div class="tool-groups">
         {
           toolGroups.map((group, index) => (
-            <section class="tool-group" aria-labelledby={`tools-${index}`}>
+            <section
+              class="tool-group"
+              aria-labelledby={`tools-${index}`}
+              data-reveal
+              style={`--reveal-delay: ${(index % 2) * 0.08}s`}
+            >
               <div class="tool-group-head">
                 <span class="label tool-number" aria-hidden="true">
                   {number(index)}
@@ -223,9 +229,9 @@ const toolGroups = tools.data.groups
     </div>
   </section>
 
-  <section class="band band-soft" aria-labelledby="process-heading" data-reveal>
+  <section class="band band-soft" aria-labelledby="process-heading">
     <div class="container">
-      <div class="section-heading">
+      <div class="section-heading" data-reveal>
         <div>
           <h2 id="process-heading">{process.data.title}</h2>
           <div class="intro">
@@ -236,7 +242,7 @@ const toolGroups = tools.data.groups
       <ol class="process">
         {
           process.data.steps.map((step, index) => (
-            <li>
+            <li data-reveal style={`--reveal-delay: ${index * 0.06}s`}>
               <span class="step-number" aria-hidden="true">
                 {number(index)}
               </span>
@@ -249,12 +255,12 @@ const toolGroups = tools.data.groups
     </div>
   </section>
 
-  <section class="band band-inverse closing" aria-labelledby="closing-heading" data-reveal>
+  <section class="band band-inverse closing" aria-labelledby="closing-heading">
     <div class="container">
-      <h2 id="closing-heading">
+      <h2 id="closing-heading" data-reveal>
         <Accent text={closing.data.title} />
       </h2>
-      <div class="closing-grid">
+      <div class="closing-grid" data-reveal>
         <div class="lead">
           <ClosingText />
         </div>
@@ -293,22 +299,21 @@ const toolGroups = tools.data.groups
 
   .hero-name .word {
     display: block;
-    animation: rise 1.2s var(--ease-out) both;
   }
 
-  .hero-name .word + .word {
-    animation-delay: 0.12s;
+  /* Hero entrance, once on load: the tagline, name, title, intro, and button
+     each fade in and rise slightly, 0.12 s apart (about 1.2 s in all). */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-enter {
+      animation: hero-enter 0.7s var(--ease-out) both;
+      animation-delay: calc(var(--enter-order, 0) * 0.12s);
+    }
   }
 
-  @keyframes rise {
+  @keyframes hero-enter {
     from {
       opacity: 0;
-      transform: translateY(0.25em);
-    }
-
-    to {
-      opacity: 1;
-      transform: none;
+      transform: translateY(14px);
     }
   }
 
@@ -403,6 +408,16 @@ const toolGroups = tools.data.groups
     border-top: 1px solid var(--border-strong);
   }
 
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .capability:hover {
+      transform: translateY(-4px);
+    }
+
+    .tool-tiles li:hover .tile {
+      transform: translateY(-3px);
+    }
+  }
+
   .capability :global(.capability-icon) {
     color: var(--tint-ink);
     stroke-width: 1.4;
@@ -466,7 +481,9 @@ const toolGroups = tools.data.groups
     background: var(--tint);
     border: 1px solid transparent;
     color: var(--tint-ink);
-    transition: border-color 0.25s var(--ease);
+    transition:
+      border-color 0.25s var(--ease),
+      transform 0.3s var(--ease-out);
   }
 
   .tool-tiles li:hover .tile {

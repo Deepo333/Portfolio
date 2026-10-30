@@ -1,7 +1,7 @@
 ---
 # Sample 6 of 7. Notes starting with # and <!-- TODO --> never appear on the site.
 
-title: EchoShield Counter-UAS Field Brief
+title: EchoShield counter-UAS field brief
 summary: A three-page sales enablement brief, written from public Echodyne materials, that helps sellers explain a counter-drone radar in their customers' terms.
 category: Resources
 

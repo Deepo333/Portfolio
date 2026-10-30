@@ -1,7 +1,7 @@
 ---
 # Sample 7 of 7. Notes starting with # and <!-- TODO --> never appear on the site.
 
-title: "New Employee Onboarding: Windows Setup Guide"
+title: "New employee onboarding: Windows setup guide"
 summary: A 23-slide visual guide that walks new Bluetooth SIG employees through setting up their Windows laptop, from the first setup screen to installing apps from the Company Portal.
 category: Presentations
 

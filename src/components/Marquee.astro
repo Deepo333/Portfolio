@@ -1,0 +1,159 @@
+---
+/*
+ * The black band under the home page hero: the kinds of documents you write,
+ * scrolling from right to left in an endless loop. It's decorative, so it has
+ * no links and never pauses. Each item stays on screen for about
+ * SECONDS_ON_SCREEN seconds as it crosses, whatever the screen width.
+ * With "Reduce motion" turned on, the items show as a still row instead.
+ * The words come from content/home/banner.md.
+ */
+interface Props {
+  items: string[];
+}
+
+const { items } = Astro.props;
+// Three copies sit side by side. Sliding left by exactly one copy and starting
+// over looks seamless, even on very wide screens.
+const copies = [0, 1, 2];
+---
+
+<div class="marquee band-inverse">
+  <p class="visually-hidden">Document types I write: {items.join(', ')}.</p>
+  <div class="marquee-viewport" aria-hidden="true" data-marquee>
+    <div class="marquee-track">
+      {
+        copies.map(() => (
+          <ul class="marquee-group">
+            {items.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        ))
+      }
+    </div>
+  </div>
+</div>
+
+<script>
+  const SECONDS_ON_SCREEN = 5;
+
+  // Sets the speed so an item takes about SECONDS_ON_SCREEN seconds to cross the
+  // band, on phones and computers alike. The loop keeps its place when the speed
+  // changes (for example after fonts load or the window is resized), so it never jumps.
+  document.querySelectorAll<HTMLElement>('[data-marquee]').forEach((viewport) => {
+    const track = viewport.querySelector<HTMLElement>('.marquee-track')!;
+    const group = viewport.querySelector<HTMLElement>('.marquee-group')!;
+
+    const update = () => {
+      const width = viewport.clientWidth;
+      const groupWidth = group.getBoundingClientRect().width;
+      if (!width || !groupWidth) return;
+      const duration = (groupWidth / width) * SECONDS_ON_SCREEN * 1000;
+      const animation = track.getAnimations?.()[0];
+      if (!animation) return; // "Reduce motion" is on: nothing moves.
+      const current = Number(animation.effect?.getComputedTiming().duration) || duration;
+      const progress = ((Number(animation.currentTime) || 0) % current) / current;
+      animation.effect?.updateTiming({ duration });
+      animation.currentTime = progress * duration;
+    };
+
+    update();
+    document.fonts?.ready.then(update);
+    new ResizeObserver(update).observe(viewport);
+  });
+</script>
+
+<style>
+  .marquee {
+    --marquee-gap: clamp(1.5rem, 4vw, 3rem);
+    overflow: hidden;
+  }
+
+  .marquee-viewport {
+    overflow: hidden;
+    padding-block: 1.6rem;
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 30s linear infinite;
+    will-change: transform;
+  }
+
+  .marquee-group {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--marquee-gap);
+    margin: 0;
+    padding: 0 var(--marquee-gap) 0 0;
+    list-style: none;
+  }
+
+  .marquee-group li {
+    display: flex;
+    align-items: center;
+    gap: var(--marquee-gap);
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: clamp(0.8125rem, 1.4vw, 0.9375rem);
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    line-height: 1.4;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* A small taupe square after every item, so the loop has no seam. */
+  .marquee-group li::after {
+    content: '';
+    width: 5px;
+    height: 5px;
+    background: var(--accent);
+  }
+
+  @keyframes marquee {
+    to {
+      transform: translate3d(calc(-100% / 3), 0, 0);
+    }
+  }
+
+  /* "Reduce motion": one still, centered row with tighter spacing, which wraps
+     onto a second or third line on small screens. */
+  @media (prefers-reduced-motion: reduce) {
+    .marquee {
+      --marquee-gap: clamp(0.6rem, 1.1vw, 1rem);
+    }
+
+    .marquee-viewport {
+      padding-block: 1.25rem;
+    }
+
+    .marquee-track {
+      width: auto;
+      animation: none;
+    }
+
+    .marquee-group {
+      flex: 1;
+      flex-wrap: wrap;
+      justify-content: center;
+      row-gap: 0.4rem;
+      padding-inline: var(--gutter);
+    }
+
+    .marquee-group + .marquee-group {
+      display: none;
+    }
+
+    .marquee-group li {
+      font-size: clamp(0.75rem, 1.2vw, 0.875rem);
+      letter-spacing: 0.12em;
+    }
+
+    .marquee-group li:last-child::after {
+      display: none;
+    }
+  }
+</style>

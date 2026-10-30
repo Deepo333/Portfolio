@@ -12,10 +12,12 @@ tagline: Knowledge management · Review workflows · AI tools & automation
 # Shown by search engines and link previews for the home page.
 description: Dairyia Porter is a senior technical writer specializing in technical documentation, training, and knowledge management.
 
-# Button labels. The first opens your Work Samples page; the second
-# downloads the résumé PDF set in content/pages/resume.md.
-primaryButton: View My Work
-secondaryButton: Download Résumé
+# The button under your intro. It downloads the résumé PDF set in
+# content/pages/resume.md.
+secondaryButton: Download résumé
+# To add a second button that opens your Work Samples page, add a line
+# like this one (without the #):
+# primaryButton: View my work
 ---
 
 I turn complex technical information into clear, user-friendly documentation backed by a single source of truth.

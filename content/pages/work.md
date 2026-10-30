@@ -18,10 +18,10 @@ categories:
     description: Fillable forms with plain-language fields, a logical order, and clear instructions.
   - name: Presentations
     description: Slide decks and visual guides that walk people through a process step by step.
-  # HIDDEN FOR NOW. To show Docs as Code again on the Work Samples page
+  # HIDDEN FOR NOW. To show Docs as code again on the Work Samples page
   # and the home page, delete the "hidden: true" line below, then add a
-  # work sample with "category: Docs as Code".
-  - name: Docs as Code
+  # work sample with "category: Docs as code".
+  - name: Docs as code
     description: Documentation written in Markdown, reviewed in Git, and published automatically.
     hidden: true
 ---

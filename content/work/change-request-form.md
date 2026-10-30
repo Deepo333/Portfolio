@@ -1,7 +1,7 @@
 ---
 # Sample 4 of 7. Notes starting with # and <!-- TODO --> never appear on the site.
 
-title: Change Request Form
+title: Change request form
 summary: A three-page fillable form for requesting changes to controlled Wildfire Risk Management documents, with required details, a tracked-changes copy, and supervisor sign-off before submission.
 category: Forms
 

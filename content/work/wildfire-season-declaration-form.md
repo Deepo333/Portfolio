@@ -1,7 +1,7 @@
 ---
 # Sample 3 of 7. Notes starting with # and <!-- TODO --> never appear on the site.
 
-title: Wildfire Season Declaration Form
+title: Wildfire season declaration form
 summary: A two-page fillable form that records each recommendation to activate, modify, or rescind PSE Wildfire Season, from the indicators considered through executive approval.
 category: Forms
 

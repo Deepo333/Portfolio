@@ -39,15 +39,14 @@ const groups = (await getCategories())
         class="category container"
         id={group.slug}
         aria-labelledby={`${group.slug}-heading`}
-        data-reveal
       >
-        <div class="category-heading">
+        <div class="category-heading" data-reveal>
           <h2 id={`${group.slug}-heading`}>{group.name}</h2>
           <p>{group.description}</p>
         </div>
         <div class="category-grid">
-          {group.samples.map((sample) => (
-            <WorkCard sample={sample} showCategory={false} />
+          {group.samples.map((sample, index) => (
+            <WorkCard sample={sample} showCategory={false} revealDelay={(index % 2) * 0.08} />
           ))}
         </div>
       </section>

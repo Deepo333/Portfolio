@@ -22,7 +22,7 @@ export function plainText(text: string): string {
   return text.replace(/_([^_]+)_/g, '$1');
 }
 
-/** Turns "Docs as Code" into "docs-as-code" for use in links. */
+/** Turns "Docs as code" into "docs-as-code" for use in links. */
 export function slugify(text: string): string {
   return text
     .toLowerCase()
@@ -60,6 +60,7 @@ export async function getSettings() {
 
 const homeFiles = {
   homeIntro: 'intro',
+  homeBanner: 'banner',
   homeStats: 'stats',
   homeFeatured: 'featured',
   homeCapabilities: 'capabilities',
