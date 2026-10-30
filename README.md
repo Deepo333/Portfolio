@@ -100,7 +100,7 @@ them or return to a page.
 - **Core capabilities** and **Tools & technologies** headings, and the **stats**, fade in gently.
 - **Other headings, cards, and process steps** fade in and rise into place.
 - **Banner:** the black band under the hero scrolls from right to left in an endless loop that
-  never pauses. An item takes about 6.7 seconds to cross a phone screen and about 8.3 seconds to
+  never pauses. An item takes about 6.7 seconds to cross a phone screen and about 16.7 seconds to
   cross a wide screen.
 - **Hover:** with a mouse or trackpad, cards, tiles, and buttons lift slightly. Touch screens get no
   hover effects.
