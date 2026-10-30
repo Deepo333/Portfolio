@@ -6,7 +6,6 @@
 import { render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Letters from '../components/Letters.astro';
-import Icon from '../components/Icon.astro';
 import { getPage, getSettings, plainText } from '../lib/content';
 
 const settings = await getSettings();
@@ -40,14 +39,12 @@ const linkedinHandle = settings.linkedin
         <a class="contact-row" href={`mailto:${settings.email}`}>
           <span class="label">Email</span>
           <span class="value">{settings.email}</span>
-          <Icon name="arrow" />
         </a>
       </li>
       <li>
         <a class="contact-row" href={settings.linkedin} target="_blank" rel="me noopener">
           <span class="label">LinkedIn</span>
           <span class="value">{linkedinHandle}</span>
-          <Icon name="external" />
         </a>
       </li>
     </ul>
@@ -82,7 +79,7 @@ const linkedinHandle = settings.linkedin
 
   .contact-row {
     display: grid;
-    grid-template-columns: 9rem minmax(0, 1fr) auto;
+    grid-template-columns: 9rem minmax(0, 1fr);
     align-items: center;
     gap: 1rem 2rem;
     padding-block: 1.75rem;
@@ -103,14 +100,6 @@ const linkedinHandle = settings.linkedin
     overflow-wrap: anywhere;
   }
 
-  .contact-row :global(.icon) {
-    transition: transform 0.35s var(--ease);
-  }
-
-  .contact-row:hover :global(.icon) {
-    transform: translateX(4px);
-  }
-
   .contact-row:hover .value {
     text-decoration: underline;
     text-decoration-thickness: 1px;
@@ -124,7 +113,7 @@ const linkedinHandle = settings.linkedin
 
   @media (max-width: 640px) {
     .contact-row {
-      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-columns: minmax(0, 1fr);
     }
 
     .contact-row .label {

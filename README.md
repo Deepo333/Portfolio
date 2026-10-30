@@ -41,12 +41,13 @@ Each section of the home page has its own file in `content/home/`, in the order 
 Your name comes from `content/settings.md` and your photo from `content/pages/about.md`,
 so you only set them once.
 
-**Fonts:** the big page titles (Work samples, About me, Résumé, Contact) and the large section
-headings on the home page use **Abril Fatface**. Your name on the home page and the sample page titles
-use Archivo, smaller headings use Marcellus, and all other text uses Jost.
+**Fonts:** your name on the home page, the big page titles (Work samples, About me, Résumé, Contact),
+and the large section headings use **Abril Fatface**. The line above your name and your title share
+one style in Marcellus, smaller headings use Marcellus, sample page titles use Archivo, and all other
+text, including the intro under your title, uses Jost.
 
-**Accent words:** put underscores around a word in a title to show it in a thin, elegant serif
-italic (Bodoni Moda), for example `title: Let’s work _together_`. Use it sparingly.
+**Accent words:** put underscores around a word in a title to show it in the accent color, for example
+`title: Let’s work _together_`. It uses the same font as the rest of the heading.
 
 **Type sizes:** every page title, every section heading, every card or step heading, and all body
 text each have exactly one size, set once at the top of `src/styles/global.css` (`--text-h1`,
@@ -55,15 +56,18 @@ text each have exactly one size, set once at the top of `src/styles/global.css` 
 **Icons:** each capability has an `icon:` line. The comment at the top of `capabilities.md` lists
 every icon name you can use (for example `procedure`, `form`, `archive`, `edit`, `api`).
 
-**Tool logos:** each tool in `tools.md` can show its real logo from
-[Simple Icons](https://simpleicons.org). Add `logo:` with the name from that logo's address there,
-for example `logo: jira`, or a list for two logos in one tile (`logo: [git, github]`). Tools
-without a logo show their name in a plain text tile. Microsoft, Adobe, Livelink, MadCap Flare, and
-Oxygen XML Editor logos aren't available there, so those tools use text tiles.
+**Tool logos:** each tool in `tools.md` sits in a thin outlined box, in its group's color, and shows its
+real logo. `logo:` takes a name from [Simple Icons](https://simpleicons.org) (for example
+`logo: jira`, or a list such as `logo: [git, github]` for two logos in one box). `logoFile:` points
+to an official logo you've saved in `public/logos/` (MadCap Flare and Oxygen XML Editor use this;
+add `logoPlate: dark` for a logo with white lettering). A tool with neither shows its name in the
+box. Microsoft Word, Excel, PowerPoint, Adobe Acrobat, SharePoint, and Livelink currently do, because
+their official logo files couldn't be downloaded automatically: download one from the company's
+brand page into `public/logos/` and add a `logoFile` line.
 
-**Colors:** the capability boxes take turns using five pastel colors (sage, dusty blue, blush,
-terracotta, and lavender), in order. You don't set them in Markdown; to change a shade, edit the
-`--tint-` lines at the top of `src/styles/global.css`. Each group of tool tiles has its own pastel color (sage, dusty blue, terracotta, lavender, then blush and sand), and logos sit on a white plate so they stay legible.
+**Colors:** the capability cards and the tool boxes share one deep, muted palette: navy, olive, earthy
+brown, and warm mustard. The cards are filled with white text; the tool boxes use the same colors as
+outlines. To change a shade, edit the `--tint-` lines at the top of `src/styles/global.css`.
 
 **Hiding an item:** add `hidden: true` under a capability or a tool to keep it off the site without
 deleting it. Delete that line to show it again.
@@ -100,7 +104,7 @@ them or return to a page.
 - **Core capabilities** and **Tools & technologies** headings, and the **stats**, fade in gently.
 - **Other headings, cards, and process steps** fade in and rise into place.
 - **Banner:** the black band under the hero scrolls from right to left in an endless loop that
-  never pauses. An item takes about 6.7 seconds to cross a phone screen and about 16.7 seconds to
+  never pauses. An item takes about 6.7 seconds to cross a phone screen and about 25 seconds to
   cross a wide screen.
 - **Hover:** with a mouse or trackpad, cards, tiles, and buttons lift slightly. Touch screens get no
   hover effects.

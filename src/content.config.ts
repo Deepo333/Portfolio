@@ -109,6 +109,10 @@ const homeTools = defineCollection({
               z.object({
                 name: z.string(),
                 logo: z.union([z.string(), z.array(z.string()).min(1)]).optional(),
+                // An official logo file in public/logos/, such as /logos/my-tool.svg, and
+                // `logoPlate: dark` if the logo has white lettering that needs a dark backdrop.
+                logoFile: z.string().optional(),
+                logoPlate: z.enum(['dark']).optional(),
                 hidden: z.boolean().default(false),
               }),
             )

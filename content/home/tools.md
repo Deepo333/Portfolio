@@ -7,12 +7,18 @@
 # groups are numbered 01, 02, ... automatically, and each group shows
 # how many tools it has.
 #
-# LOGOS: each tool can show its real logo from Simple Icons
-# (https://simpleicons.org). Add `logo:` with the name shown in the
-# logo's address there, for example `logo: jira`. For two logos in one
-# tile, list both: `logo: [git, github]`. Tools without a logo line
-# show their name in a plain text tile. (Microsoft, Adobe, Livelink,
-# MadCap Flare, and Oxygen XML Editor logos aren't available there.)
+# LOGOS: each tool shows its real logo in an outlined box, colored by group
+# (navy, olive, brown, mustard).
+#   logo:      a logo from Simple Icons (https://simpleicons.org). Use the name
+#              shown in the logo's address there, for example `logo: jira`. For two
+#              logos in one box, list both: `logo: [git, github]`.
+#   logoFile:  an official logo file you've saved in public/logos/, for example
+#              `logoFile: /logos/madcap-flare.svg`. Add `logoPlate: dark` if the
+#              logo has white lettering, so it sits on a dark backdrop.
+# A tool with neither line shows its name in the box. Microsoft Word, Excel,
+# PowerPoint, Adobe Acrobat, SharePoint, and Livelink still do, because their
+# official logo files weren't available for download; once you save one in
+# public/logos/, add a `logoFile` line for it.
 #
 # Add "hidden: true" to a tool to keep it off the site without
 # deleting it; delete that line to show it again.
@@ -39,7 +45,10 @@ groups:
   - name: Docs as code & structured authoring
     items:
       - name: MadCap Flare
+        logoFile: /logos/madcap-flare.svg
       - name: Oxygen XML Editor
+        logoFile: /logos/oxygen-xml-editor.png
+        logoPlate: dark
       - name: Markdown
         logo: markdown
       - name: Git & GitHub

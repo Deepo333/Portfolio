@@ -19,7 +19,7 @@ cards:
   - sample: wildfire-threat-assessment-and-response-procedure
     description: Step-by-step guidance for complex, high-stakes operations.
   - sample: wildfire-season-declaration-form
-    description: Structured forms that capture the right information the first time.
+    description: Structured forms that capture pertinent information in an organized format.
   - sample: technical-writing-review-checklist
     description: Checklists and tools that keep documentation consistent.
 ---

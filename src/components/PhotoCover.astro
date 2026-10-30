@@ -14,16 +14,14 @@ interface Props {
   alt: string;
   /** The id of the heading that names this section. */
   labelledby?: string;
-  /** Also fade the photo's top edge, for when a heading sits right above it. */
-  fadeTop?: boolean;
 }
 
-const { src, alt, labelledby, fadeTop = false } = Astro.props;
+const { src, alt, labelledby } = Astro.props;
 const widths = [640, 960, src.width].filter((w, i, all) => w <= src.width && all.indexOf(w) === i);
 ---
 
 <section
-  class:list={['photo-cover', { 'fade-top': fadeTop }]}
+  class="photo-cover"
   aria-labelledby={labelledby}
   style={`--photo-ratio: ${src.width} / ${src.height}`}
 >
@@ -83,15 +81,6 @@ const widths = [640, 960, src.width].filter((w, i, all) => w <= src.width && all
     mask-image: linear-gradient(to right, transparent, #000 16%);
   }
 
-  .fade-top .photo-cover-photo img {
-    -webkit-mask-image:
-      linear-gradient(to right, transparent, #000 16%), linear-gradient(to bottom, transparent, #000 14%);
-    mask-image:
-      linear-gradient(to right, transparent, #000 16%), linear-gradient(to bottom, transparent, #000 14%);
-    -webkit-mask-composite: source-in;
-    mask-composite: intersect;
-  }
-
   @media (max-width: 760px) {
     .photo-cover {
       grid-template-columns: minmax(0, 1fr);
@@ -108,17 +97,6 @@ const widths = [640, 960, src.width].filter((w, i, all) => w <= src.width && all
       /* On phones the photo spans the screen, so its bottom edge fades instead. */
       -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent);
       mask-image: linear-gradient(to bottom, #000 70%, transparent);
-    }
-
-    .fade-top .photo-cover-photo img {
-      -webkit-mask-image:
-        linear-gradient(to bottom, transparent, #000 14%),
-        linear-gradient(to bottom, #000 70%, transparent);
-      mask-image:
-        linear-gradient(to bottom, transparent, #000 14%),
-        linear-gradient(to bottom, #000 70%, transparent);
-      -webkit-mask-composite: source-in;
-      mask-composite: intersect;
     }
 
     /* The text starts below the photo so it never covers it. */

@@ -58,14 +58,14 @@ const resumeFileName = `${settings.name} - Resume.pdf`;
 const linkedinHandle = settings.linkedin.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
 const number = (index: number) => String(index + 1).padStart(2, '0');
 
-// Capability boxes take turns using these pastel colors
+// Capability cards take turns using these deep colors
 // (defined as --tint-* in src/styles/global.css).
-const tints = ['sage', 'blue', 'blush', 'terracotta', 'lavender'];
+const tints = ['navy', 'olive', 'brown', 'mustard'];
 const capabilityItems = capabilities.data.items
   .filter((item) => !item.hidden)
   .map((item, index) => ({ ...item, tint: tints[index % tints.length] }));
 // Tool tiles show each tool's real logo (from Simple Icons), or its name if no logo exists.
-const groupTints = ['sage', 'blue', 'terracotta', 'lavender', 'blush', 'sand'];
+const groupTints = ['navy', 'olive', 'brown', 'mustard'];
 const toolGroups = tools.data.groups
   .filter((group) => group.items.some((tool) => !tool.hidden))
   .map((group, index) => ({
@@ -73,7 +73,12 @@ const toolGroups = tools.data.groups
     tint: groupTints[index % groupTints.length],
     items: group.items
       .filter((tool) => !tool.hidden)
-      .map((tool) => ({ name: tool.name, logos: getLogos(tool.logo, tool.name) })),
+      .map((tool) => ({
+        name: tool.name,
+        logos: getLogos(tool.logo, tool.name),
+        file: tool.logoFile,
+        plate: tool.logoPlate,
+      })),
   }))
   .filter((group) => group.items.length > 0);
 ---
@@ -87,8 +92,8 @@ const toolGroups = tools.data.groups
         labelledby="hero-name"
       >
         <div class="hero-anim" data-replay style={`--type-count: ${lastTyped + 1}`}>
-          <p class="label hero-tagline">{intro.data.tagline}</p>
-          <h1 id="hero-name" class="hero-name">
+          <p class="hero-tagline hero-line">{intro.data.tagline}</p>
+          <h1 id="hero-name" class="hero-name page-title">
             <span class="visually-hidden">{settings.name}</span>
             <span aria-hidden="true">
               {nameWords.map((word, w) => (
@@ -109,7 +114,7 @@ const toolGroups = tools.data.groups
               ))}
             </span>
           </h1>
-          <p class="hero-role">{settings.role}</p>
+          <p class="hero-role hero-line">{settings.role}</p>
           <div class="hero-intro">
             <IntroText />
           </div>
@@ -246,22 +251,26 @@ const toolGroups = tools.data.groups
                 {group.items.map((tool) => (
                   <li>
                     <span
-                      class:list={['tile', { 'text-tile': tool.logos.length === 0 }]}
+                      class:list={[
+                        'tile',
+                        { 'text-tile': tool.logos.length === 0 && !tool.file },
+                        { 'dark-plate': tool.plate === 'dark' },
+                      ]}
                       aria-hidden="true"
                     >
                       {tool.logos.length > 0 ? (
-                        <span class="plate">
-                          {tool.logos.map((logo) => (
-                            <svg class="logo" viewBox="0 0 24 24" fill={`#${logo.hex}`}>
-                              <path d={logo.path} />
-                            </svg>
-                          ))}
-                        </span>
+                        tool.logos.map((logo) => (
+                          <svg class="logo" viewBox="0 0 24 24" fill={`#${logo.hex}`}>
+                            <path d={logo.path} />
+                          </svg>
+                        ))
+                      ) : tool.file ? (
+                        <img class="logo-file" src={url(tool.file)} alt="" loading="lazy" />
                       ) : (
                         tool.name
                       )}
                     </span>
-                    <span class:list={[tool.logos.length > 0 ? 'tool-name' : 'visually-hidden']}>
+                    <span class:list={[tool.logos.length > 0 || tool.file ? 'tool-name' : 'visually-hidden']}>
                       {tool.name}
                     </span>
                   </li>
@@ -341,7 +350,7 @@ const toolGroups = tools.data.groups
   /* ---------- Hero ---------- */
 
   .hero-name {
-    margin-top: 1.25rem;
+    margin-top: 1rem;
   }
 
   .hero-name .word {
@@ -486,13 +495,18 @@ const toolGroups = tools.data.groups
     }
   }
 
+  /* The line above your name and your title share one style (Marcellus). */
+  .hero-line {
+    color: var(--ink);
+    font-family: var(--font-heading);
+    font-size: clamp(0.9375rem, 1.5vw, 1.25rem);
+    letter-spacing: 0.12em;
+    line-height: 1.35;
+    text-transform: uppercase;
+  }
+
   .hero-role {
     margin-top: 1.25rem;
-    font-family: var(--font-heading);
-    font-size: clamp(1.125rem, 2vw, 1.5rem);
-    letter-spacing: 0.12em;
-    line-height: 1.3;
-    text-transform: uppercase;
   }
 
   .hero-intro {
@@ -572,8 +586,10 @@ const toolGroups = tools.data.groups
   }
 
   .capability {
-    /* Darker text keeps the descriptions easy to read on the richer tints. */
-    --text-muted: light-dark(#3f3b37, #d9d4ce);
+    /* White text on the deep colors. */
+    --text-muted: #ffffff;
+    --heading: #ffffff;
+    color: #ffffff;
     padding: clamp(1rem, 2.5vw, 1.75rem);
     background: var(--tint);
     border-top: 1px solid var(--border-strong);
@@ -644,35 +660,37 @@ const toolGroups = tools.data.groups
     text-align: center;
   }
 
-  /* Each group has its own pastel color. Logos sit on a white plate so they stay
-     legible; tools without a logo show their name on the color. */
+  /* A thin outline box around each logo, in the group's color; no fill, so the focus
+     stays on the logo. In dark mode the box gets a light backdrop so dark logos show. */
   .tile {
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 8%;
     width: 100%;
     aspect-ratio: 1;
-    padding: 0.5rem;
-    background: var(--tint);
-    border: 1px solid transparent;
-    color: var(--tint-ink);
+    padding: 0.75rem;
+    background: transparent;
+    border: 1.5px solid var(--tint-line);
+    color: var(--ink);
     transition:
       border-color 0.25s var(--ease),
       transform 0.3s var(--ease-out);
   }
 
-  .tool-tiles li:hover .tile {
-    border-color: var(--tint-ink);
+  :global(:root[data-theme='dark']) .tile {
+    background: #f5f4f1;
+    color: #2b2826;
   }
 
-  .plate {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8%;
-    width: 72%;
-    height: 72%;
-    background: #ffffff;
+  /* Logos with white lettering sit on a dark backdrop. */
+  .tile.dark-plate,
+  :global(:root[data-theme='dark']) .tile.dark-plate {
+    background: #2b2b2b;
+  }
+
+  .tool-tiles li:hover .tile {
+    border-color: var(--ink);
   }
 
   .logo {
@@ -681,14 +699,20 @@ const toolGroups = tools.data.groups
     flex: none;
   }
 
-  /* Two logos share one plate (for example Git and GitHub). */
+  /* Two logos share one box (for example Git and GitHub). */
   .logo:not(:only-child) {
     width: 36%;
   }
 
+  .logo-file {
+    width: 82%;
+    height: auto;
+    max-height: 82%;
+    object-fit: contain;
+  }
+
   /* Tools without a logo show their name instead. */
   .text-tile {
-    color: var(--ink);
     font-size: clamp(0.75rem, 1vw, 0.875rem);
     font-weight: 600;
     line-height: 1.25;
