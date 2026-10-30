@@ -27,6 +27,8 @@ const { title, description, lead, headshot, headshotAlt } = page.data;
             class="button button-primary"
             href={resume.data.pdf ? url(resume.data.pdf) : url('/resume/')}
             download={resume.data.pdf ? `${settings.name} - Resume.pdf` : undefined}
+            target={resume.data.pdf ? '_blank' : undefined}
+            rel={resume.data.pdf ? 'noopener' : undefined}
           >
             <Icon name="download" />
             Download résumé

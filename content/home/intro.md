@@ -7,10 +7,10 @@
 # ─────────────────────────────────────────────────────────────
 
 # The small uppercase line above your name.
-tagline: Procedures · Forms · Document Control
+tagline: Technical documentation · Training · Knowledge management
 
 # Shown by search engines and link previews for the home page.
-description: Dairyia Porter is a technical writer specializing in operational procedures, forms, and document control.
+description: Dairyia Porter is a senior technical writer specializing in technical documentation, training, and knowledge management.
 
 # Button labels. The first opens your Work Samples page; the second
 # downloads the résumé PDF set in content/pages/resume.md.
@@ -18,4 +18,4 @@ primaryButton: View My Work
 secondaryButton: Download Résumé
 ---
 
-I work with subject matter experts to turn complex processes into clear procedures, forms, and reference documents, and I keep that content accurate through document control.
+I turn complex technical information into clear, accurate documentation that people can follow and trust.

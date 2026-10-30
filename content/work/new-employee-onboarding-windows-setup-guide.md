@@ -11,7 +11,6 @@ date: 2025-03-12
 
 cover: ./images/new-employee-onboarding-windows-setup-guide-cover.png
 coverAlt: Title slide of the onboarding guide, reading "Hello, and welcome to the Bluetooth SIG team!" beside a photo of a busy train station.
-featured: false
 
 # TODO: Add your role, for example "Writer and designer" or "Editor". The PDF lists another
 # person as its author, so say exactly what you did. Until you add it, the "My role" line is hidden.
@@ -31,32 +30,12 @@ Company Portal, followed by troubleshooting steps and where to get help.
 
 <!-- TODO: Say what you did on this guide (for example, wrote it, edited it, or redesigned it). -->
 
-## The problem
-
-New employees set up their own laptops, and some choices are easy to get wrong. Signing in with a
-personal Microsoft account instead of a company address, for example, stops the device from enrolling
-correctly. People need to know what each screen will ask, what to choose, and where to get help when
-something doesn't match.
-
 ## My approach
 
-The guide is organized around what a new employee sees on screen:
+The guide is organized around what a new employee sees on screen, with one step per slide and a
+screenshot of each screen. It calls out the choices that matter most, such as which account to sign in
+with, and sets expectations for waits, such as enrollment taking up to 30 minutes. The IT help desk
+contact appears at each point where setup can go wrong.
 
-- One step per slide, in the order the screens appear, each with a screenshot of the screen it
-  describes.
-- Clear warnings for the choices that matter most, such as which account to sign in with.
-- A device naming format with an example, and where to find the laptop's serial number.
-- Expected wait times, such as enrollment taking up to 30 minutes, so people don't think setup has
-  stalled.
-- The IT help desk contact at each point where setup can go wrong.
-
-<!-- TODO: Rewrite these bullets to describe your own decisions (for example "I broke the setup into one
-step per slide..."), once you've confirmed which parts were yours. -->
-
-## The result
-
-The guide takes a new employee from the first Windows setup screen to a desktop with Microsoft 365 apps
-ready to use, while other company software installs in the background.
-
-<!-- TODO: Add real results if you have them, such as how many new hires used it or feedback from IT.
-Only add numbers you can back up. -->
+<!-- TODO: Once you've confirmed which parts were yours, rewrite this section in the first person
+(for example "I broke the setup into one step per slide..."). -->

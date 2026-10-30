@@ -22,7 +22,13 @@ const downloadName = `${settings.name} - Resume.pdf`;
     {
       pdf && (
         <div class="button-row">
-          <a class="button button-primary" href={url(pdf)} download={downloadName}>
+          <a
+            class="button button-primary"
+            href={url(pdf)}
+            download={downloadName}
+            target="_blank"
+            rel="noopener"
+          >
             <Icon name="download" />
             Download PDF
           </a>

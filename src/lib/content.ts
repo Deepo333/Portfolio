@@ -125,6 +125,38 @@ export async function getWorkSamples(): Promise<WorkSample[]> {
     .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 }
 
+/**
+ * The samples listed in content/home/featured.md, in that order. Each must be
+ * from a different category, so two cards from the same category never sit
+ * side by side.
+ */
+export async function getFeaturedSamples(names: string[]): Promise<WorkSample[]> {
+  const samples = await getWorkSamples();
+  const featured = names.map((name) => {
+    const sample = samples.find((entry) => entry.id === name);
+    if (!sample) {
+      throw new Error(
+        `content/home/featured.md lists "${name}", but there is no published work sample with that name. ` +
+          `Use a file name from content/work/ without ".md", for example "${samples[0]?.id}".`,
+      );
+    }
+    return sample;
+  });
+
+  const seen = new Map<string, string>();
+  for (const sample of featured) {
+    const other = seen.get(sample.data.category);
+    if (other) {
+      throw new Error(
+        `content/home/featured.md lists "${other}" and "${sample.id}", which are both in ${sample.data.category}. ` +
+          'Pick featured samples from different categories.',
+      );
+    }
+    seen.set(sample.data.category, sample.id);
+  }
+  return featured;
+}
+
 export function categoryHref(category: string): string {
   return url(`/work/#${slugify(category)}`);
 }

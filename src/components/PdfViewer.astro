@@ -1,4 +1,17 @@
 ---
+/*
+ * Shows a PDF inside the page, with "Full screen" and "Download" buttons.
+ *
+ * - On computers, the browser's own PDF viewer is embedded in the page.
+ * - On phones and tablets, browsers can't show a PDF inside a page, so each
+ *   page of the PDF is drawn into the page instead (using PDF.js). Visitors
+ *   never leave the site to read a sample.
+ * - "Full screen" opens the PDF in an overlay with a large Close button. The
+ *   phone's Back gesture also closes it.
+ * - "Download" saves the file. If a browser ignores the download request
+ *   (some in-app browsers do), the PDF opens in a new tab, so the site stays open.
+ */
+import Icon from './Icon.astro';
 import { url } from '../lib/content';
 
 interface Props {
@@ -13,30 +26,194 @@ interface Props {
 const { src, title, downloadName } = Astro.props;
 const href = url(src);
 const fileName = downloadName ?? src.split('/').pop();
+const id = `pdf-${src.replace(/[^a-z0-9]+/gi, '-')}`;
 ---
 
-<figure class="pdf-viewer">
+<figure class="pdf-viewer" data-pdf-viewer data-src={href} data-title={title}>
   <div class="toolbar">
     <span class="file">
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path>
         <path d="M14 3v5h5"></path>
       </svg>
-      {fileName}
+      <span>{fileName}<span class="page-count" data-pdf-count></span></span>
     </span>
     <span class="actions">
-      <a class="button button-secondary button-small" href={href} target="_blank" rel="noopener">
-        Open
-        <span class="visually-hidden">{title} (PDF) in a new tab</span>
-      </a>
-      <a class="button button-primary button-small" href={href} download={fileName}>
+      <button class="button button-secondary button-small" type="button" data-pdf-open>
+        <Icon name="expand" size={16} />
+        Full screen
+        <span class="visually-hidden">view of {title} (PDF)</span>
+      </button>
+      <a
+        class="button button-primary button-small"
+        href={href}
+        download={fileName}
+        target="_blank"
+        rel="noopener"
+      >
+        <Icon name="download" size={16} />
         Download
         <span class="visually-hidden">{title} (PDF)</span>
       </a>
     </span>
   </div>
-  <iframe src={`${href}#view=FitH`} title={`${title} (PDF)`} loading="lazy"></iframe>
+
+  <div class="pdf-frame" data-pdf-frame>
+    <noscript>
+      <iframe src={`${href}#view=FitH`} title={`${title} (PDF)`}></iframe>
+    </noscript>
+  </div>
+
+  <dialog class="pdf-dialog" aria-labelledby={`${id}-title`} data-pdf-dialog>
+    <div class="pdf-dialog-bar">
+      <p class="pdf-dialog-title" id={`${id}-title`}>{title}</p>
+      <a
+        class="button button-secondary button-small"
+        href={href}
+        download={fileName}
+        target="_blank"
+        rel="noopener"
+      >
+        <Icon name="download" size={16} />
+        <span class="dialog-download-label">Download</span>
+        <span class="visually-hidden">{title} (PDF)</span>
+      </a>
+      <button class="button button-primary button-small pdf-close" type="button" data-pdf-close>
+        <Icon name="close" size={18} />
+        Close
+        <span class="visually-hidden">full-screen view</span>
+      </button>
+    </div>
+    <div class="pdf-dialog-body" data-pdf-dialog-frame></div>
+  </dialog>
 </figure>
+
+<script>
+  import workerUrl from 'pdfjs-dist/legacy/build/pdf.worker.min.mjs?url';
+
+  type PdfDocument = import('pdfjs-dist').PDFDocumentProxy;
+
+  // Phones and tablets can't show a PDF inside a page, so we draw the pages ourselves.
+  const drawPages = window.matchMedia('(max-width: 760px), (pointer: coarse)').matches;
+  const documents = new Map<string, Promise<PdfDocument>>();
+
+  function loadPdf(src: string): Promise<PdfDocument> {
+    if (!documents.has(src)) {
+      documents.set(
+        src,
+        import('pdfjs-dist/legacy/build/pdf.mjs').then((pdfjs) => {
+          pdfjs.GlobalWorkerOptions.workerSrc = workerUrl;
+          return pdfjs.getDocument({ url: src }).promise;
+        }),
+      );
+    }
+    return documents.get(src)!;
+  }
+
+  function embedIframe(frame: HTMLElement, src: string, title: string) {
+    const iframe = document.createElement('iframe');
+    iframe.src = `${src}#view=FitH`;
+    iframe.title = `${title} (PDF)`;
+    iframe.loading = 'lazy';
+    frame.replaceChildren(iframe);
+  }
+
+  /** Draws each page of the PDF as an image, rendering pages as they scroll into view. */
+  async function embedPages(frame: HTMLElement, src: string, title: string) {
+    const pages = document.createElement('div');
+    pages.className = 'pdf-pages';
+    pages.tabIndex = 0;
+    pages.setAttribute('role', 'region');
+    pages.setAttribute('aria-label', `${title} (PDF), scroll to read`);
+    const status = document.createElement('p');
+    status.className = 'pdf-status';
+    status.textContent = 'Loading the PDF…';
+    pages.append(status);
+    frame.replaceChildren(pages);
+
+    let pdf: PdfDocument;
+    try {
+      pdf = await loadPdf(src);
+    } catch {
+      status.textContent = 'This PDF could not be shown here. Use Download to open it.';
+      return null;
+    }
+    status.remove();
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          observer.unobserve(entry.target);
+          renderPage(pdf, entry.target as HTMLElement);
+        }
+      },
+      { root: pages, rootMargin: '800px 0px' },
+    );
+
+    for (let number = 1; number <= pdf.numPages; number++) {
+      const page = await pdf.getPage(number);
+      const { width, height } = page.getViewport({ scale: 1 });
+      const holder = document.createElement('div');
+      holder.className = 'pdf-page';
+      holder.dataset.page = String(number);
+      holder.style.aspectRatio = `${width} / ${height}`;
+      holder.setAttribute('role', 'img');
+      holder.setAttribute('aria-label', `Page ${number} of ${pdf.numPages}`);
+      pages.append(holder);
+      observer.observe(holder);
+    }
+    return pdf;
+  }
+
+  async function renderPage(pdf: PdfDocument, holder: HTMLElement) {
+    const page = await pdf.getPage(Number(holder.dataset.page));
+    const base = page.getViewport({ scale: 1 });
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+    const viewport = page.getViewport({ scale: (holder.clientWidth * pixelRatio) / base.width });
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.floor(viewport.width);
+    canvas.height = Math.floor(viewport.height);
+    canvas.setAttribute('aria-hidden', 'true');
+    holder.append(canvas);
+    await page.render({ canvas, viewport }).promise;
+  }
+
+  function show(frame: HTMLElement, src: string, title: string) {
+    return drawPages ? embedPages(frame, src, title) : (embedIframe(frame, src, title), null);
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-pdf-viewer]').forEach((viewer) => {
+    const src = viewer.dataset.src!;
+    const title = viewer.dataset.title!;
+    const frame = viewer.querySelector<HTMLElement>('[data-pdf-frame]')!;
+    const dialog = viewer.querySelector<HTMLDialogElement>('[data-pdf-dialog]')!;
+    const dialogFrame = viewer.querySelector<HTMLElement>('[data-pdf-dialog-frame]')!;
+    const count = viewer.querySelector<HTMLElement>('[data-pdf-count]')!;
+
+    Promise.resolve(show(frame, src, title)).then((pdf) => {
+      if (pdf) count.textContent = ` · ${pdf.numPages} ${pdf.numPages === 1 ? 'page' : 'pages'}`;
+    });
+
+    // Full-screen overlay. Opening it adds a history entry, so the phone's
+    // Back gesture closes the overlay instead of leaving the page.
+    const marker = { pdfOverlay: src };
+    viewer.querySelector('[data-pdf-open]')!.addEventListener('click', () => {
+      if (!dialogFrame.hasChildNodes()) show(dialogFrame, src, title);
+      dialog.showModal();
+      document.documentElement.classList.add('pdf-overlay-open');
+      history.pushState(marker, '');
+    });
+    viewer.querySelector('[data-pdf-close]')!.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('close', () => {
+      document.documentElement.classList.remove('pdf-overlay-open');
+      if (history.state?.pdfOverlay === src) history.back();
+    });
+    window.addEventListener('popstate', () => {
+      if (dialog.open) dialog.close();
+    });
+  });
+</script>
 
 <style>
   .pdf-viewer {
@@ -79,21 +256,142 @@ const fileName = downloadName ?? src.split('/').pop();
     stroke-linejoin: round;
   }
 
+  .page-count {
+    white-space: nowrap;
+  }
+
   .actions {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.5rem;
   }
 
-  iframe {
+  .actions .button,
+  .pdf-dialog-bar .button {
+    gap: 0.5rem;
+  }
+
+  .pdf-viewer :global(iframe) {
+    display: block;
     width: 100%;
     height: min(85vh, 1000px);
     border: 0;
     background: var(--bg-soft);
   }
 
+  /* Pages drawn on phones and tablets: a scrolling box inside the page. */
+  .pdf-viewer :global(.pdf-pages) {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    height: 70vh;
+    padding: 0.75rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .pdf-viewer :global(.pdf-page) {
+    flex: none;
+    width: 100%;
+    background: #fff;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.12);
+  }
+
+  .pdf-viewer :global(.pdf-page canvas) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .pdf-viewer :global(.pdf-status) {
+    margin: auto;
+    color: var(--text-muted);
+    font-size: 0.9375rem;
+    text-align: center;
+  }
+
+  /* ---------- Full-screen overlay ---------- */
+
+  .pdf-dialog {
+    width: 100vw;
+    max-width: none;
+    height: 100vh;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: var(--bg-soft);
+    color: var(--ink);
+  }
+
+  .pdf-dialog[open] {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pdf-dialog::backdrop {
+    background: rgb(0 0 0 / 0.6);
+  }
+
+  .pdf-dialog-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem var(--gutter);
+    background: var(--bg);
+    border-bottom: 1px solid var(--border-strong);
+  }
+
+  .pdf-dialog-title {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    font-family: var(--font-heading);
+    font-size: 1.125rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .pdf-close {
+    min-height: 44px;
+  }
+
+  .pdf-dialog-body {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .pdf-dialog-body :global(iframe) {
+    height: 100%;
+  }
+
+  .pdf-dialog-body :global(.pdf-pages) {
+    height: 100%;
+  }
+
+  :global(html.pdf-overlay-open) {
+    overflow: hidden;
+  }
+
   @media (max-width: 720px) {
-    iframe {
-      height: 70vh;
+    .toolbar {
+      padding-left: 1rem;
+    }
+
+    .pdf-dialog-title {
+      font-size: 1rem;
+    }
+
+    /* Keep the overlay's bar to one row on small phones. */
+    .dialog-download-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
     }
   }
 </style>

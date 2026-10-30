@@ -11,7 +11,6 @@ date: 2026-10-29
 
 cover: ./images/technical-writing-review-checklist-cover.png
 coverAlt: First page of the Technical Writing Review Checklist, document QA-CL-001, Version 1.0, showing its purpose statement and table of contents.
-featured: false
 
 role: Author
 audience: Reviewers checking new and revised documents before approval
@@ -26,35 +25,15 @@ pdf: /files/technical-writing-review-checklist.pdf
 
 The Technical Writing Review Checklist (QA-CL-001) is a quality assurance tool for checking a document
 before it's approved. Reviewers use it on every new document and on any revision that materially
-changes content. Each item is marked Pass, Fail, or N/A, and the review ends with a summary and
-sign-off.
+changes content, marking each item Pass, Fail, or N/A.
 
 <!-- TODO: Confirm where this checklist is used, for example as part of the document management
 framework you built for the WRM team at Puget Sound Energy. -->
 
-## The problem
-
-A document shouldn't be approved until it meets the standard, but a review without a shared list
-depends on what each reviewer remembers to check. The checklist gives every reviewer the same standard,
-in the same order, and leaves a record of what passed and what needs fixing.
-
 ## My approach
 
-- Ordered twelve sections so each builds on the last: structure first, then clarity, then formatting,
-  and finally compliance.
-- Started with the required sections of a standard operating procedure, and told reviewers to return
-  the document to the author if any are missing before reviewing further.
-- Wrote each item as a specific statement a reviewer can check, such as "Every list is introduced with
-  a complete lead-in sentence ending in a colon."
-- Marked procedural accuracy as the highest-stakes section and called for validating steps with the
-  subject matter experts responsible for the work.
-- Included accessibility checks for alt text, table header rows, reading order, and descriptive links.
-- Made it fillable, with Pass, Fail, and N/A boxes and a notes field for every item, a document
-  identification block, and sign-off lines for the reviewer, document owner, and approver.
-
-## The result
-
-Version 1.0 is a fillable PDF that reviewers can complete on screen.
-
-<!-- TODO: Add real results if you have them, such as how many documents have been reviewed with it or
-the kinds of issues it catches. Only add numbers you can back up. -->
+I ordered its twelve sections so each builds on the last: structure first, then clarity, then
+formatting, and finally compliance. Each item is a specific statement a reviewer can check, and
+procedural accuracy is marked as the highest-stakes section, to be validated with the responsible
+subject matter experts. The PDF is fillable, with Pass, Fail, and N/A boxes, a notes field for every
+item, and sign-off lines for the reviewer, document owner, and approver.

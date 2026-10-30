@@ -12,6 +12,13 @@ export const icons = {
   code: '<path d="m8 7-5 5 5 5"/><path d="m16 7 5 5-5 5"/><path d="m13.5 4-3 16"/>',
   training:
     '<path d="M2.5 4h19"/><path d="M4 4v10a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V4"/><path d="M12 15v3"/><path d="m8 21 4-3 4 3"/><path d="m8 11 3-3 2 2 3-3"/>',
+  megaphone:
+    '<path d="M3.5 10v4a1 1 0 0 0 1 1h2.5l5.5 4.5v-15L7 9H4.5a1 1 0 0 0-1 1z"/><path d="M16 9a3.5 3.5 0 0 1 0 6"/><path d="M18.5 6a7.5 7.5 0 0 1 0 12"/>',
+  onboarding:
+    '<circle cx="9" cy="8" r="3.25"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M19 8.5v6"/><path d="M16 11.5h6"/>',
+  archive:
+    '<rect x="3" y="4" width="18" height="4.5" rx="1"/><path d="M5 8.5V19a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8.5"/><path d="M10 12.5h4"/>',
+  edit: '<path d="M4 20h4.5L19.6 8.9a2.1 2.1 0 0 0-3-3L5.5 17v3"/><path d="m14.5 8 3 3"/><path d="M13 20h7"/>',
   people:
     '<circle cx="9" cy="8" r="3.25"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M15.5 4.9a3.25 3.25 0 0 1 0 6.2"/><path d="M17.5 14.4A6 6 0 0 1 21 20"/>',
   // Tools
@@ -43,6 +50,8 @@ export const icons = {
   linkedin:
     '<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10.5V17"/><path d="M8 7.5v.01"/><path d="M12 17v-3.75a2.25 2.25 0 0 1 4.5 0V17"/><path d="M12 10.5V17"/>',
   external: '<path d="M7 17 17 7"/><path d="M8 7h9v9"/>',
+  close: '<path d="M6 6l12 12"/><path d="M18 6 6 18"/>',
+  expand: '<path d="M4 9V4h5"/><path d="M20 9V4h-5"/><path d="M4 15v5h5"/><path d="M20 15v5h-5"/>',
 } as const;
 
 export type IconName = keyof typeof icons;
