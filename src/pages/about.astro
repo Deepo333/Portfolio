@@ -3,13 +3,12 @@
 import { render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Letters from '../components/Letters.astro';
-import Icon from '../components/Icon.astro';
+import Typewriter from '../components/Typewriter.astro';
 import { Image } from 'astro:assets';
 import { getPage, getSettings, plainText, url } from '../lib/content';
 
 const settings = await getSettings();
 const page = await getPage('about');
-const resume = await getPage('resume');
 const { Content } = await render(page);
 const { title, description, lead, headshot, headshotAlt } = page.data;
 const widths = headshot
@@ -26,23 +25,13 @@ const widths = headshot
         style={`--photo-ratio: ${headshot.width} / ${headshot.height}`}
       >
         <div class="about-heading">
-          <h1 id="about-title" class="about-title page-title" data-reveal="letters">
-            <Letters text={plainText(title)} />
+          <h1 id="about-title" class="about-title page-title typed" data-replay>
+            <Typewriter text={plainText(title)} />
           </h1>
           {lead && <p class="about-lead">{lead}</p>}
         </div>
         <div class="about-text">
           <div class="button-row">
-            <a
-              class="button button-primary"
-              href={resume.data.pdf ? url(resume.data.pdf) : url('/resume/')}
-              download={resume.data.pdf ? `${settings.name} - Resume.pdf` : undefined}
-              target={resume.data.pdf ? '_blank' : undefined}
-              rel={resume.data.pdf ? 'noopener' : undefined}
-            >
-              <Icon name="download" />
-              Download résumé
-            </a>
             <a class="button button-secondary" href={url('/contact/')}>
               Get in touch
             </a>
@@ -105,6 +94,8 @@ const widths = headshot
     grid-area: heading;
     align-self: center;
     container-type: inline-size;
+    /* The typing cursor can sit just past the word; don't let it widen the page. */
+    overflow-x: clip;
     padding: clamp(1rem, 3vw, 2.5rem) clamp(1.5rem, 4vw, 4rem) 0 var(--edge);
   }
 
@@ -112,10 +103,6 @@ const widths = headshot
     font-size: 36cqi;
     line-height: 0.85;
     letter-spacing: 0;
-  }
-
-  .about-title :global(.letters-word) {
-    display: block;
   }
 
   .about-text {
@@ -173,6 +160,8 @@ const widths = headshot
 
   .about-lead {
     margin-top: 1rem;
+    /* Indented so it starts further right under "me". */
+    margin-left: 10cqi;
     max-width: 46ch;
     color: var(--text-muted);
   }

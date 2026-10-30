@@ -64,9 +64,7 @@ backdrop, and `logoPlate: app` rounds the corners of an app icon. A tool with no
 name in the box; Livelink does, because no official logo file was available. To add one, save the file
 in `public/logos/` and add a `logoFile` line.
 
-**Colors:** the capability cards and the tool boxes share one deep, muted palette: navy, olive, earthy
-brown, and warm mustard. The cards are 75% opaque with white text; the tool boxes use the same colors as
-outlines. To change a shade, edit the `--tint-` lines at the top of `src/styles/global.css`.
+**Colors:** the capability cards take turns using navy, olive, ivory beige, and autumn yellow, at 75% opacity (white text on navy and olive, dark text on the light two). The tool boxes use navy, olive, brown, and mustard as outlines. To change a shade, edit the `--tint-` lines at the top of `src/styles/global.css`.
 
 **Hiding an item:** add `hidden: true` under a capability or a tool to keep it off the site without
 deleting it. Delete that line to show it again.
@@ -98,7 +96,8 @@ them or return to a page.
 - **Home hero:** the line above your name drops in from the top; your name types out letter by
   letter with a blinking cursor, which blinks a few times and fades away; your title slides in from
   the left; and the intro rises up from below. The Download résumé button doesn't move.
-- **Page titles** (Work samples, About me, Résumé, Contact) and the **My process** heading slide in
+- **About me** types out letter by letter with a blinking cursor, exactly like your name on the home
+  page. The **page titles** (Work samples, Résumé, Contact) and the **My process** heading slide in
   from the left while their letters fade in one by one.
 - **Core capabilities** and **Tools & technologies** headings, and the **stats**, fade in gently.
 - **Other headings, cards, and process steps** fade in and rise into place.
@@ -316,7 +315,7 @@ You don't need this to publish, but it lets you see changes before pushing them.
 | File or folder | What it does |
 | --- | --- |
 | `src/pages/` | One template per page type. `src/pages/work/[id].astro` is the work sample detail template. |
-| `src/components/` | Reusable pieces: header, footer, the "Back" link bar, sample cards, the two-column photo section, the scrolling banner (`Marquee.astro`), the black category bar on the Work Samples page, accent words, icons, and the PDF viewer (which uses PDF.js to draw PDFs on phones). |
+| `src/components/` | Reusable pieces: header, footer (email and LinkedIn only), the "Back" link bar, sample cards, the two-column photo section, the scrolling banner (`Marquee.astro`), the typewriter text (`Typewriter.astro`), the black category bar on the Work Samples page, accent words, icons, and the PDF viewer (which uses PDF.js to draw PDFs on phones). |
 | `src/lib/icons.ts` | The thin-line icons you can pick with `icon:` in Markdown. |
 | `src/styles/global.css` | Colors, the type scale, fonts (Abril Fatface for big page titles and home section headings, Archivo for your name and sample titles, Marcellus for smaller headings, Jost for text, Bodoni Moda italic for accent words), animations, spacing, and light/dark mode. |
 | `src/lib/logos.ts` | Looks up tool logos from Simple Icons by name. |

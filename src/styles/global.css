@@ -44,6 +44,11 @@
   --tint-mustard: #6e4c05;
   --tint-mustard-ink: #f5dc9a;
   --tint-mustard-line: light-dark(#8f6612, #d6ab45);
+  /* Light capability cards (ivory beige, autumn yellow) use dark text. */
+  --tint-ivory: #efe4cb;
+  --tint-ivory-ink: #2b2010;
+  --tint-yellow: #e2a22a;
+  --tint-yellow-ink: #2b2010;
 
   /* Inverse bands (near-black with white text) */
   --inverse-bg: light-dark(#0d0d0d, #e8e4de);
@@ -260,6 +265,102 @@ h2.section-title {
   text-transform: none;
 }
 
+/* Typewriter text (see src/components/Typewriter.astro): characters appear one at a
+   time with a blinking cursor, which blinks three times and fades away. Plays when
+   the element loads and again each time it scrolls back into view (.is-reset). */
+.typed {
+  --type-start: 0.35s;
+  --type-step: 0.11s;
+}
+
+.typed .ch {
+  position: relative;
+}
+
+/* The text cursor: a thin bar just after the character being typed. */
+.typed .ch::after {
+  content: '';
+  position: absolute;
+  top: 0.1em;
+  bottom: 0.06em;
+  left: 100%;
+  width: 0.06em;
+  margin-left: 0.05em;
+  background: currentColor;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .typed:not(.is-reset) .ch {
+    animation: type-in 0.06s linear both;
+    animation-delay: calc(var(--type-start) + var(--i) * var(--type-step));
+  }
+
+  .typed:not(.is-reset) .ch::after {
+    animation: caret-pass var(--type-step) linear;
+    animation-delay: calc(var(--type-start) + var(--i) * var(--type-step));
+  }
+
+  /* At the line break, the cursor waits one extra beat before moving on. */
+  .typed:not(.is-reset) .ch-pause::after {
+    animation-duration: calc(var(--type-step) * 2);
+  }
+
+  .typed:not(.is-reset) .ch-last::after {
+    animation: caret-end 2.4s linear forwards;
+    animation-delay: calc(var(--type-start) + var(--i) * var(--type-step));
+  }
+}
+
+@keyframes type-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes caret-pass {
+  0%,
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Three blinks, then a gentle fade. */
+@keyframes caret-end {
+  0%,
+  16% {
+    opacity: 1;
+  }
+
+  17%,
+  32% {
+    opacity: 0;
+  }
+
+  33%,
+  49% {
+    opacity: 1;
+  }
+
+  50%,
+  65% {
+    opacity: 0;
+  }
+
+  66%,
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
 /* Big, bold display type (the same family as the name on the home page). */
 .display {
   font-family: var(--font-display);
@@ -367,12 +468,14 @@ h2.section-title {
 
 /* Picks one of the --tint-* colors above, e.g. data-tint="navy". */
 [data-tint='navy'] {
+  --tint-text: #ffffff;
   --tint: var(--tint-navy);
   --tint-ink: var(--tint-navy-ink);
   --tint-line: var(--tint-navy-line);
 }
 
 [data-tint='olive'] {
+  --tint-text: #ffffff;
   --tint: var(--tint-olive);
   --tint-ink: var(--tint-olive-ink);
   --tint-line: var(--tint-olive-line);
@@ -382,6 +485,18 @@ h2.section-title {
   --tint: var(--tint-brown);
   --tint-ink: var(--tint-brown-ink);
   --tint-line: var(--tint-brown-line);
+}
+
+[data-tint='ivory'] {
+  --tint: var(--tint-ivory);
+  --tint-ink: var(--tint-ivory-ink);
+  --tint-text: #1b1612;
+}
+
+[data-tint='yellow'] {
+  --tint: var(--tint-yellow);
+  --tint-ink: var(--tint-yellow-ink);
+  --tint-text: #1b1612;
 }
 
 [data-tint='mustard'] {
