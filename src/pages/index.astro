@@ -255,6 +255,7 @@ const toolGroups = tools.data.groups
                         'tile',
                         { 'text-tile': tool.logos.length === 0 && !tool.file },
                         { 'dark-plate': tool.plate === 'dark' },
+                        { 'app-icon': tool.plate === 'app' },
                       ]}
                       aria-hidden="true"
                     >
@@ -591,7 +592,9 @@ const toolGroups = tools.data.groups
     --heading: #ffffff;
     color: #ffffff;
     padding: clamp(1rem, 2.5vw, 1.75rem);
-    background: var(--tint);
+    /* 75% opaque: 25% more see-through than a solid fill. The base colors are deep
+       enough that the white text stays readable. */
+    background: color-mix(in srgb, var(--tint) 75%, transparent);
     border-top: 1px solid var(--border-strong);
   }
 
@@ -709,6 +712,12 @@ const toolGroups = tools.data.groups
     height: auto;
     max-height: 82%;
     object-fit: contain;
+  }
+
+  /* App icons keep the rounded corners they have in the App Store. */
+  .app-icon .logo-file {
+    width: 72%;
+    border-radius: 22%;
   }
 
   /* Tools without a logo show their name instead. */
