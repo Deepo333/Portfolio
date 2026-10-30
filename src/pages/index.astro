@@ -65,9 +65,12 @@ const capabilityItems = capabilities.data.items
   .filter((item) => !item.hidden)
   .map((item, index) => ({ ...item, tint: tints[index % tints.length] }));
 // Tool tiles show each tool's real logo (from Simple Icons), or its name if no logo exists.
+const groupTints = ['sage', 'blue', 'terracotta', 'lavender', 'blush', 'sand'];
 const toolGroups = tools.data.groups
-  .map((group) => ({
+  .filter((group) => group.items.some((tool) => !tool.hidden))
+  .map((group, index) => ({
     name: group.name,
+    tint: groupTints[index % groupTints.length],
     items: group.items
       .filter((tool) => !tool.hidden)
       .map((tool) => ({ name: tool.name, logos: getLogos(tool.logo, tool.name) })),
@@ -239,20 +242,24 @@ const toolGroups = tools.data.groups
                   {group.items.length} {group.items.length === 1 ? 'tool' : 'tools'}
                 </span>
               </div>
-              <ul class="tool-tiles">
+              <ul class="tool-tiles" data-tint={group.tint}>
                 {group.items.map((tool) => (
                   <li>
                     <span
                       class:list={['tile', { 'text-tile': tool.logos.length === 0 }]}
                       aria-hidden="true"
                     >
-                      {tool.logos.length > 0
-                        ? tool.logos.map((logo) => (
+                      {tool.logos.length > 0 ? (
+                        <span class="plate">
+                          {tool.logos.map((logo) => (
                             <svg class="logo" viewBox="0 0 24 24" fill={`#${logo.hex}`}>
                               <path d={logo.path} />
                             </svg>
-                          ))
-                        : tool.name}
+                          ))}
+                        </span>
+                      ) : (
+                        tool.name
+                      )}
                     </span>
                     <span class:list={[tool.logos.length > 0 ? 'tool-name' : 'visually-hidden']}>
                       {tool.name}
@@ -637,41 +644,51 @@ const toolGroups = tools.data.groups
     text-align: center;
   }
 
-  /* White tiles in light and dark mode, so every logo shows in its own colors. */
+  /* Each group has its own pastel color. Logos sit on a white plate so they stay
+     legible; tools without a logo show their name on the color. */
   .tile {
-    color-scheme: light;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12%;
     width: 100%;
     aspect-ratio: 1;
     padding: 0.5rem;
-    background: #ffffff;
-    border: 1px solid #e3dfd8;
-    color: #2b2826;
+    background: var(--tint);
+    border: 1px solid transparent;
+    color: var(--tint-ink);
     transition:
       border-color 0.25s var(--ease),
       transform 0.3s var(--ease-out);
   }
 
   .tool-tiles li:hover .tile {
-    border-color: #8a847d;
+    border-color: var(--tint-ink);
+  }
+
+  .plate {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8%;
+    width: 72%;
+    height: 72%;
+    background: #ffffff;
   }
 
   .logo {
-    width: 40%;
+    width: 52%;
     height: auto;
     flex: none;
   }
 
-  /* Two logos share one tile (for example Git and GitHub). */
+  /* Two logos share one plate (for example Git and GitHub). */
   .logo:not(:only-child) {
-    width: 32%;
+    width: 36%;
   }
 
   /* Tools without a logo show their name instead. */
   .text-tile {
+    color: var(--ink);
     font-size: clamp(0.75rem, 1vw, 0.875rem);
     font-weight: 600;
     line-height: 1.25;

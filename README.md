@@ -63,7 +63,7 @@ Oxygen XML Editor logos aren't available there, so those tools use text tiles.
 
 **Colors:** the capability boxes take turns using five pastel colors (sage, dusty blue, blush,
 terracotta, and lavender), in order. You don't set them in Markdown; to change a shade, edit the
-`--tint-` lines at the top of `src/styles/global.css`. Tool tiles are white so the logos stand out.
+`--tint-` lines at the top of `src/styles/global.css`. Each group of tool tiles has its own pastel color (sage, dusty blue, terracotta, lavender, then blush and sand), and logos sit on a white plate so they stay legible.
 
 **Hiding an item:** add `hidden: true` under a capability or a tool to keep it off the site without
 deleting it. Delete that line to show it again.
