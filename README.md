@@ -57,16 +57,15 @@ text each have exactly one size, set once at the top of `src/styles/global.css` 
 every icon name you can use (for example `procedure`, `form`, `archive`, `edit`, `api`).
 
 **Tool logos:** each tool in `tools.md` sits in a thin outlined box, in its group's color, and shows its
-real logo. `logo:` takes a name from [Simple Icons](https://simpleicons.org) (for example
-`logo: jira`, or a list such as `logo: [git, github]` for two logos in one box). `logoFile:` points
-to an official logo you've saved in `public/logos/` (MadCap Flare and Oxygen XML Editor use this;
-add `logoPlate: dark` for a logo with white lettering). A tool with neither shows its name in the
-box. Microsoft Word, Excel, PowerPoint, Adobe Acrobat, SharePoint, and Livelink currently do, because
-their official logo files couldn't be downloaded automatically: download one from the company's
-brand page into `public/logos/` and add a `logoFile` line.
+real logo. `logo:` takes a name from [Simple Icons](https://simpleicons.org). `logoFile:` points to a
+logo file saved in `public/logos/` (the `README.txt` there lists where each came from: vendor websites
+and the vendors' own App Store listings). `logoPlate: dark` gives a logo with white lettering a dark
+backdrop, and `logoPlate: app` rounds the corners of an app icon. A tool with none of these shows its
+name in the box; Livelink does, because no official logo file was available. To add one, save the file
+in `public/logos/` and add a `logoFile` line.
 
 **Colors:** the capability cards and the tool boxes share one deep, muted palette: navy, olive, earthy
-brown, and warm mustard. The cards are filled with white text; the tool boxes use the same colors as
+brown, and warm mustard. The cards are 75% opaque with white text; the tool boxes use the same colors as
 outlines. To change a shade, edit the `--tint-` lines at the top of `src/styles/global.css`.
 
 **Hiding an item:** add `hidden: true` under a capability or a tool to keep it off the site without

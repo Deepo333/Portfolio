@@ -29,9 +29,9 @@ const widths = headshot
           <h1 id="about-title" class="about-title page-title" data-reveal="letters">
             <Letters text={plainText(title)} />
           </h1>
+          {lead && <p class="about-lead">{lead}</p>}
         </div>
         <div class="about-text">
-          {lead && <p class="about-lead">{lead}</p>}
           <div class="button-row">
             <a
               class="button button-primary"
@@ -120,7 +120,7 @@ const widths = headshot
 
   .about-text {
     grid-area: text;
-    padding: 1.25rem clamp(1.5rem, 4vw, 4rem) clamp(1.5rem, 4vw, 3rem) var(--edge);
+    padding: 0 clamp(1.5rem, 4vw, 4rem) clamp(1.5rem, 4vw, 3rem) var(--edge);
   }
 
   .about-photo {
@@ -172,7 +172,7 @@ const widths = headshot
   }
 
   .about-lead {
-    margin-top: 1.25rem;
+    margin-top: 1rem;
     max-width: 46ch;
     color: var(--text-muted);
   }

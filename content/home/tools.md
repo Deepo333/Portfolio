@@ -12,13 +12,13 @@
 #   logo:      a logo from Simple Icons (https://simpleicons.org). Use the name
 #              shown in the logo's address there, for example `logo: jira`. For two
 #              logos in one box, list both: `logo: [git, github]`.
-#   logoFile:  an official logo file you've saved in public/logos/, for example
-#              `logoFile: /logos/madcap-flare.svg`. Add `logoPlate: dark` if the
-#              logo has white lettering, so it sits on a dark backdrop.
-# A tool with neither line shows its name in the box. Microsoft Word, Excel,
-# PowerPoint, Adobe Acrobat, SharePoint, and Livelink still do, because their
-# official logo files weren't available for download; once you save one in
-# public/logos/, add a `logoFile` line for it.
+#   logoFile:  an official logo file saved in public/logos/ (see the README.txt
+#              there for where each one came from), for example
+#              `logoFile: /logos/madcap-flare.svg`.
+#   logoPlate: `dark` gives a logo with white lettering a dark backdrop; `app`
+#              rounds the corners of an app icon.
+# A tool with none of these shows its name in the box. Livelink does, because
+# no official logo file was available.
 #
 # Add "hidden: true" to a tool to keep it off the site without
 # deleting it; delete that line to show it again.
@@ -31,12 +31,22 @@ groups:
   - name: Writing & publishing
     items:
       - name: Microsoft Word
+        logoFile: /logos/microsoft-word.png
+        logoPlate: app
       - name: Excel
+        logoFile: /logos/microsoft-excel.png
+        logoPlate: app
       - name: PowerPoint
+        logoFile: /logos/microsoft-powerpoint.png
+        logoPlate: app
       - name: Adobe Acrobat
+        logoFile: /logos/adobe-acrobat.png
+        logoPlate: app
   - name: Content & collaboration
     items:
       - name: SharePoint
+        logoFile: /logos/microsoft-sharepoint.png
+        logoPlate: app
       - name: Confluence
         logo: confluence
       - name: Jira
@@ -61,6 +71,21 @@ groups:
         logo: claude
       - name: Claude Code
         logo: claudecode
+      - name: ChatGPT
+        logoFile: /logos/chatgpt.png
+        logoPlate: app
+      - name: Gemini
+        logoFile: /logos/google-gemini.png
+        logoPlate: app
+      - name: Copilot
+        logoFile: /logos/microsoft-copilot.png
+        logoPlate: app
+      - name: Grok
+        logoFile: /logos/grok.png
+        logoPlate: app
+      - name: Muse
+        logoFile: /logos/muse-from-meta.png
+        logoPlate: app
 ---
 
 The software I use to write, review, track, and publish documentation.
