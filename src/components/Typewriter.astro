@@ -1,0 +1,52 @@
+---
+/*
+ * Types a heading out letter by letter, with a blinking cursor that fades away
+ * at the end. Used for your name on the home page and the "About me" heading.
+ * Put it inside an element with the "typed" class (and data-replay, so it plays
+ * again when scrolled back to). Screen readers hear the text once, as normal text.
+ * The timing lives in src/styles/global.css (--type-start and --type-step).
+ */
+interface Props {
+  text: string;
+}
+
+const { text } = Astro.props;
+
+// Each letter gets a position (--i). The space between words counts as one beat,
+// so the cursor pauses a moment at the line break.
+let index = 0;
+const words = text.split(' ').map((word, w) => {
+  if (w > 0) index++;
+  return [...word].map((letter) => ({ letter, i: index++ }));
+});
+const last = index - 1;
+---
+
+<span class="visually-hidden">{text}</span>
+<span aria-hidden="true">
+  {
+    words.map((word, w) => (
+      <span class="word">
+        {word.map(({ letter, i }) => (
+          <span
+            class:list={[
+              'ch',
+              { 'ch-last': i === last },
+              { 'ch-pause': w < words.length - 1 && i === word[word.length - 1].i },
+            ]}
+            style={`--i: ${i}`}
+          >
+            {letter}
+          </span>
+        ))}
+      </span>
+    ))
+  }
+</span>
+
+<style>
+  .word {
+    display: block;
+    white-space: nowrap;
+  }
+</style>

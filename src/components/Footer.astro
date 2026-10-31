@@ -14,14 +14,6 @@ interface Props {
 const { settings } = Astro.props;
 const year = new Date().getFullYear();
 
-// Every page on the site, so each one is always reachable from the footer.
-const pages = [
-  { label: 'Home', href: '/' },
-  { label: 'Work samples', href: '/work/' },
-  { label: 'About', href: '/about/' },
-  { label: 'Résumé', href: '/resume/' },
-  { label: 'Contact', href: '/contact/' },
-];
 ---
 
 <footer class="site-footer">
@@ -30,17 +22,6 @@ const pages = [
       <a class="footer-name" href={url('/')}>{settings.name}</a>
       <p>{settings.role}</p>
     </div>
-    <nav class="footer-pages" aria-label="All pages">
-      <ul class="footer-links">
-        {
-          pages.map((page) => (
-            <li>
-              <a href={url(page.href)}>{page.label}</a>
-            </li>
-          ))
-        }
-      </ul>
-    </nav>
     <ul class="footer-links footer-contact">
       <li><a href={`mailto:${settings.email}`}>Email</a></li>
       <li><a href={settings.linkedin} rel="me noopener" target="_blank">LinkedIn</a></li>
@@ -71,12 +52,6 @@ const pages = [
     align-items: center;
     gap: 1.25rem 2rem;
     padding-block: 2.5rem 2rem;
-  }
-
-  .footer-pages {
-    grid-column: 1 / -1;
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--border);
   }
 
   .identity {

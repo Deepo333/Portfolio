@@ -2,7 +2,7 @@
 # ─────────────────────────────────────────────────────────────
 # HOME PAGE · CORE CAPABILITIES
 # Each item has a name, an icon, and a one-sentence description.
-# The cards take turns using four deep colors (navy, olive, brown, mustard), in order.
+# The cards take turns using four colors (navy, olive, ivory beige, autumn yellow), in order.
 # Icon names you can use:
 #   procedure, form, control, code, training, onboarding, megaphone,
 #   archive, edit, layers, sparkle, api, xml, people, document, pdf,

@@ -16,6 +16,7 @@ import { render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Accent from '../components/Accent.astro';
 import Letters from '../components/Letters.astro';
+import Typewriter from '../components/Typewriter.astro';
 import Marquee from '../components/Marquee.astro';
 import Icon from '../components/Icon.astro';
 import PhotoCover from '../components/PhotoCover.astro';
@@ -45,14 +46,8 @@ const { Content: ClosingText } = await render(closing);
 
 const featuredSamples = await getFeaturedSamples(featured.data.cards.map((card) => card.sample));
 
-// Your name, split into letters for the typewriter effect. A one-letter pause
-// at the line break keeps the rhythm natural.
-let typeIndex = 0;
-const nameWords = settings.name.split(' ').map((word, w) => {
-  if (w > 0) typeIndex++;
-  return [...word].map((letter) => ({ letter, i: typeIndex++ }));
-});
-const lastTyped = typeIndex - 1;
+// The name types out one character at a time (see Typewriter.astro).
+const typeCount = settings.name.length;
 const resumeHref = resume.data.pdf ? url(resume.data.pdf) : url('/resume/');
 const resumeFileName = `${settings.name} - Resume.pdf`;
 const linkedinHandle = settings.linkedin.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
@@ -60,7 +55,7 @@ const number = (index: number) => String(index + 1).padStart(2, '0');
 
 // Capability cards take turns using these deep colors
 // (defined as --tint-* in src/styles/global.css).
-const tints = ['navy', 'olive', 'brown', 'mustard'];
+const tints = ['navy', 'olive', 'ivory', 'yellow'];
 const capabilityItems = capabilities.data.items
   .filter((item) => !item.hidden)
   .map((item, index) => ({ ...item, tint: tints[index % tints.length] }));
@@ -91,28 +86,10 @@ const toolGroups = tools.data.groups
         alt={about.data.headshotAlt ?? settings.name}
         labelledby="hero-name"
       >
-        <div class="hero-anim" data-replay style={`--type-count: ${lastTyped + 1}`}>
+        <div class="hero-anim typed" data-replay style={`--type-count: ${typeCount}`}>
           <p class="hero-tagline hero-line">{intro.data.tagline}</p>
           <h1 id="hero-name" class="hero-name page-title">
-            <span class="visually-hidden">{settings.name}</span>
-            <span aria-hidden="true">
-              {nameWords.map((word, w) => (
-                <span class="word">
-                  {word.map(({ letter, i }) => (
-                    <span
-                      class:list={[
-                        'ch',
-                        { 'ch-last': i === lastTyped },
-                        { 'ch-pause': w < nameWords.length - 1 && i === word[word.length - 1].i },
-                      ]}
-                      style={`--i: ${i}`}
-                    >
-                      {letter}
-                    </span>
-                  ))}
-                </span>
-              ))}
-            </span>
+            <Typewriter text={settings.name} />
           </h1>
           <p class="hero-role hero-line">{settings.role}</p>
           <div class="hero-intro">
@@ -354,10 +331,6 @@ const toolGroups = tools.data.groups
     margin-top: 1rem;
   }
 
-  .hero-name .word {
-    display: block;
-  }
-
   /* ---------- Hero animation ----------
      Plays on load, and again whenever the hero scrolls back into view
      (src/layouts/BaseLayout.astro adds and removes .is-reset).
@@ -368,51 +341,12 @@ const toolGroups = tools.data.groups
        4. The intro rises up from below.
      The Download résumé button doesn't move. */
   .hero-anim {
-    --type-start: 0.35s;
-    --type-step: 0.11s;
     --type-end: calc(var(--type-start) + var(--type-count) * var(--type-step));
-  }
-
-  .ch {
-    position: relative;
-  }
-
-  /* The text cursor: a thin bar just after the letter being typed. */
-  .ch::after {
-    content: '';
-    position: absolute;
-    top: 0.1em;
-    bottom: 0.06em;
-    left: 100%;
-    width: 0.06em;
-    margin-left: 0.05em;
-    background: currentColor;
-    opacity: 0;
   }
 
   @media (prefers-reduced-motion: no-preference) {
     .hero-anim:not(.is-reset) .hero-tagline {
       animation: drop-in 1s var(--ease-soft) both;
-    }
-
-    .hero-anim:not(.is-reset) .ch {
-      animation: type-in 0.06s linear both;
-      animation-delay: calc(var(--type-start) + var(--i) * var(--type-step));
-    }
-
-    .hero-anim:not(.is-reset) .ch::after {
-      animation: caret-pass var(--type-step) linear;
-      animation-delay: calc(var(--type-start) + var(--i) * var(--type-step));
-    }
-
-    /* At the line break, the cursor waits one extra beat before moving on. */
-    .hero-anim:not(.is-reset) .ch-pause::after {
-      animation-duration: calc(var(--type-step) * 2);
-    }
-
-    .hero-anim:not(.is-reset) .ch-last::after {
-      animation: caret-end 2.4s linear forwards;
-      animation-delay: calc(var(--type-start) + var(--i) * var(--type-step));
     }
 
     .hero-anim:not(.is-reset) .hero-role {
@@ -430,55 +364,6 @@ const toolGroups = tools.data.groups
     from {
       opacity: 0;
       transform: translateY(-24px);
-    }
-  }
-
-  @keyframes type-in {
-    from {
-      opacity: 0;
-    }
-
-    to {
-      opacity: 1;
-    }
-  }
-
-  @keyframes caret-pass {
-    0%,
-    100% {
-      opacity: 1;
-    }
-  }
-
-  /* Three blinks, then a gentle fade. */
-  @keyframes caret-end {
-    0%,
-    16% {
-      opacity: 1;
-    }
-
-    17%,
-    32% {
-      opacity: 0;
-    }
-
-    33%,
-    49% {
-      opacity: 1;
-    }
-
-    50%,
-    65% {
-      opacity: 0;
-    }
-
-    66%,
-    80% {
-      opacity: 1;
-    }
-
-    100% {
-      opacity: 0;
     }
   }
 
@@ -587,10 +472,10 @@ const toolGroups = tools.data.groups
   }
 
   .capability {
-    /* White text on the deep colors. */
-    --text-muted: #ffffff;
-    --heading: #ffffff;
-    color: #ffffff;
+    /* White text on the deep cards (navy, olive); dark text on the light ones. */
+    --text-muted: var(--tint-text);
+    --heading: var(--tint-text);
+    color: var(--tint-text);
     padding: clamp(1rem, 2.5vw, 1.75rem);
     /* 75% opaque: 25% more see-through than a solid fill. The base colors are deep
        enough that the white text stays readable. */
